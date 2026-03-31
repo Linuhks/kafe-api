@@ -109,6 +109,15 @@ export class DrizzleIngredientRepository extends IIngredientRepository {
     return rows;
   }
 
+  async findByName(name: string): Promise<Ingredient | null> {
+    const rows = await this.db
+      .select()
+      .from(ingredients)
+      .where(eq(ingredients.name, name))
+      .limit(1);
+    return rows[0] ? mapToIngredient(rows[0]) : null;
+  }
+
   async findLowStock(): Promise<Ingredient[]> {
     const rows = await this.db
       .select()

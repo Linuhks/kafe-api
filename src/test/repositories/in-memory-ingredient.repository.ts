@@ -94,6 +94,10 @@ export class InMemoryIngredientRepository extends IIngredientRepository {
       .map((r) => ({ ingredientId: r.ingredientId, quantity: r.quantity }));
   }
 
+  async findByName(name: string): Promise<Ingredient | null> {
+    return this.items.find((i) => i.name === name) ?? null;
+  }
+
   async findLowStock(): Promise<Ingredient[]> {
     return this.items.filter((i) => parseFloat(i.currentStock) < parseFloat(i.minimumStock));
   }

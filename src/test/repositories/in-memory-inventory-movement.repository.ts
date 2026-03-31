@@ -2,6 +2,7 @@ import { InventoryMovement } from '../../domain/entities/inventory-movement.enti
 import {
   IInventoryMovementRepository,
   CreateMovementData,
+  FindMovementsFilters,
 } from '../../domain/repositories/inventory-movement.repository.js';
 
 export class InMemoryInventoryMovementRepository extends IInventoryMovementRepository {
@@ -33,6 +34,17 @@ export class InMemoryInventoryMovementRepository extends IInventoryMovementRepos
     limit: number,
   ): Promise<{ data: InventoryMovement[]; total: number }> {
     const filtered = this.items.filter((m) => m.ingredientId === ingredientId);
+    const start = (page - 1) * limit;
+    return { data: filtered.slice(start, start + limit), total: filtered.length };
+  }
+
+  async findMovements(filters: FindMovementsFilters): Promise<{ data: InventoryMovement[]; total: number }> {
+    const { ingredientId, orderId, from, to, page, limit } = filters;
+    let filtered = this.items;
+    if (ingredientId) filtered = filtered.filter((m) => m.ingredientId === ingredientId);
+    if (orderId) filtered = filtered.filter((m) => m.orderId === orderId);
+    if (from) filtered = filtered.filter((m) => m.createdAt >= from);
+    if (to) filtered = filtered.filter((m) => m.createdAt <= to);
     const start = (page - 1) * limit;
     return { data: filtered.slice(start, start + limit), total: filtered.length };
   }

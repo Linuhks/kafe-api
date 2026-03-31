@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { eq, desc, count } from 'drizzle-orm';
+import { and, eq, desc, count, gte, lte, SQL } from 'drizzle-orm';
 import { DrizzleService } from '../drizzle.service.js';
 import { inventoryMovements } from '../schema.js';
 import { InventoryMovement, MovementType } from '../../../domain/entities/inventory-movement.entity.js';
 import {
   IInventoryMovementRepository,
   CreateMovementData,
+  FindMovementsFilters,
 } from '../../../domain/repositories/inventory-movement.repository.js';
 
 function mapToMovement(row: typeof inventoryMovements.$inferSelect): InventoryMovement {
@@ -65,6 +66,31 @@ export class DrizzleInventoryMovementRepository extends IInventoryMovementReposi
   ): Promise<{ data: InventoryMovement[]; total: number }> {
     const offset = (page - 1) * limit;
     const where = eq(inventoryMovements.ingredientId, ingredientId);
+    const [rows, [countRow]] = await Promise.all([
+      this.db
+        .select()
+        .from(inventoryMovements)
+        .where(where)
+        .orderBy(desc(inventoryMovements.createdAt))
+        .limit(limit)
+        .offset(offset),
+      this.db.select({ total: count() }).from(inventoryMovements).where(where),
+    ]);
+    return { data: rows.map(mapToMovement), total: Number(countRow.total) };
+  }
+
+  async findMovements(filters: FindMovementsFilters): Promise<{ data: InventoryMovement[]; total: number }> {
+    const { ingredientId, orderId, from, to, page, limit } = filters;
+    const offset = (page - 1) * limit;
+
+    const conditions: SQL[] = [];
+    if (ingredientId) conditions.push(eq(inventoryMovements.ingredientId, ingredientId));
+    if (orderId) conditions.push(eq(inventoryMovements.orderId, orderId));
+    if (from) conditions.push(gte(inventoryMovements.createdAt, from));
+    if (to) conditions.push(lte(inventoryMovements.createdAt, to));
+
+    const where = conditions.length > 0 ? and(...conditions) : undefined;
+
     const [rows, [countRow]] = await Promise.all([
       this.db
         .select()

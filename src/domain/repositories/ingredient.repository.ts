@@ -20,6 +20,7 @@ export interface ProductIngredientRow {
 
 export abstract class IIngredientRepository {
   abstract findById(id: string): Promise<Ingredient | null>;
+  abstract findByName(name: string): Promise<Ingredient | null>;
   abstract findAll(page: number, limit: number): Promise<{ data: Ingredient[]; total: number }>;
   abstract create(data: CreateIngredientData): Promise<Ingredient>;
   abstract update(id: string, data: UpdateIngredientData): Promise<Ingredient>;
