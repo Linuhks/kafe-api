@@ -9,6 +9,7 @@ import { AuthModule } from './auth.module.js';
 import { MenuModule } from './menu.module.js';
 import { OrdersModule } from './orders.module.js';
 import { InventoryModule } from './inventory.module.js';
+import { DashboardModule } from './dashboard.module.js';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { InventoryModule } from './inventory.module.js';
     MenuModule,
     OrdersModule,
     InventoryModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

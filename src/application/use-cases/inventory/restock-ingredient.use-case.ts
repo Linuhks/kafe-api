@@ -19,7 +19,7 @@ export class RestockIngredientUseCase {
       ingredientId: id,
       type: 'RESTOCK',
       quantity,
-      note: note ?? null,
+      note,
     });
     return updated;
   }
