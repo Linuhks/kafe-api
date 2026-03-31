@@ -6,6 +6,7 @@ import { DrizzleModule } from './infrastructure/db/drizzle.module.js';
 import { BetterAuthModule } from './infrastructure/auth/better-auth.module.js';
 import { UsersModule } from './users.module.js';
 import { AuthModule } from './auth.module.js';
+import { MenuModule } from './menu.module.js';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthModule } from './auth.module.js';
     BetterAuthModule,
     AuthModule,
     UsersModule,
+    MenuModule,
   ],
   controllers: [AppController],
   providers: [AppService],
