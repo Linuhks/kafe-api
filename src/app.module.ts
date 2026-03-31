@@ -8,6 +8,7 @@ import { UsersModule } from './users.module.js';
 import { AuthModule } from './auth.module.js';
 import { MenuModule } from './menu.module.js';
 import { OrdersModule } from './orders.module.js';
+import { InventoryModule } from './inventory.module.js';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { OrdersModule } from './orders.module.js';
     UsersModule,
     MenuModule,
     OrdersModule,
+    InventoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
