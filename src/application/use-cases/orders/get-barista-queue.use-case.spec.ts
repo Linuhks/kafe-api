@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { GetBaristaQueueUseCase } from './get-barista-queue.use-case.js';
 import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository.js';
 

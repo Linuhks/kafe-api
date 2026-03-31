@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { CreateUserUseCase } from './create-user.use-case.js';
 import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user.repository.js';
 import { ConflictError } from '../../../domain/errors/domain.error.js';

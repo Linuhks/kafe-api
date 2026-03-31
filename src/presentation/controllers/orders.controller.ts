@@ -10,7 +10,8 @@ import {
   Request,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AllowAnonymous, Roles } from '@thallesp/nestjs-better-auth';
+import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
+import { Roles } from '../decorators/roles.decorator.js';
 import { CreateOrderUseCase } from '../../application/use-cases/orders/create-order.use-case.js';
 import { GetBaristaQueueUseCase } from '../../application/use-cases/orders/get-barista-queue.use-case.js';
 import { GetMyOrdersUseCase } from '../../application/use-cases/orders/get-my-orders.use-case.js';

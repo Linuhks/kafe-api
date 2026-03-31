@@ -14,7 +14,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { Roles } from '@thallesp/nestjs-better-auth';
+import { Roles } from '../decorators/roles.decorator.js';
 import { CreateUserUseCase } from '../../application/use-cases/users/create-user.use-case.js';
 import { DeleteUserUseCase } from '../../application/use-cases/users/delete-user.use-case.js';
 import { GetUserUseCase } from '../../application/use-cases/users/get-user.use-case.js';

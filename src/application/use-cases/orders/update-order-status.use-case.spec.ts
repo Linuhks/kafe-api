@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { UpdateOrderStatusUseCase } from './update-order-status.use-case.js';
 import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository.js';
 import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository.js';

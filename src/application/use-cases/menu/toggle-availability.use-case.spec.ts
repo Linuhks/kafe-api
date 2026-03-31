@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { ToggleAvailabilityUseCase } from './toggle-availability.use-case.js';
 import { InMemoryProductRepository } from '../../../test/repositories/in-memory-product.repository.js';
 
