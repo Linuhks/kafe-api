@@ -1,0 +1,29 @@
+import { describe, it, expect, beforeEach } from '@jest/globals';
+import { DeleteUserUseCase } from './delete-user.use-case.js';
+import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user.repository.js';
+import { NotFoundError } from '../../../domain/errors/domain.error.js';
+import { User } from '../../../domain/entities/user.entity.js';
+
+describe('DeleteUserUseCase', () => {
+  let userRepo: InMemoryUserRepository;
+  let sut: DeleteUserUseCase;
+
+  beforeEach(() => {
+    userRepo = new InMemoryUserRepository();
+    sut = new DeleteUserUseCase(userRepo);
+  });
+
+  it('should remove the user from repository', async () => {
+    userRepo.items.push(
+      new User('u-1', 'Pedro', 'pedro@example.com', 'CLIENT', true, new Date(), new Date()),
+    );
+
+    await sut.execute('u-1');
+
+    expect(userRepo.items).toHaveLength(0);
+  });
+
+  it('should throw NotFoundError if user does not exist', async () => {
+    await expect(sut.execute('non-existent')).rejects.toThrow(NotFoundError);
+  });
+});

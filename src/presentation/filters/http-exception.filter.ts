@@ -6,6 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { DomainError } from '../../domain/errors/domain.error.js';
 
 interface ErrorDetail {
   field?: string;
@@ -24,7 +25,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let message = 'Internal server error';
     let details: ErrorDetail[] | undefined;
 
-    if (exception instanceof HttpException) {
+    if (exception instanceof DomainError) {
+      status = exception.statusCode;
+      code = exception.code;
+      message = exception.message;
+    } else if (exception instanceof HttpException) {
       status = exception.getStatus();
       const exceptionResponse = exception.getResponse();
 

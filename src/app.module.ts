@@ -4,12 +4,14 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { DrizzleModule } from './infrastructure/db/drizzle.module.js';
 import { BetterAuthModule } from './infrastructure/auth/better-auth.module.js';
+import { UsersModule } from './users.module.js';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     DrizzleModule,
     BetterAuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

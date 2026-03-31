@@ -3,22 +3,26 @@ import { ConfigService } from '@nestjs/config';
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 import * as schema from './schema.js';
+import * as authSchema from './auth-schema.js';
 
 export type DrizzleDB = NodePgDatabase<typeof schema>;
+export type AuthDrizzleDB = NodePgDatabase<typeof authSchema>;
 
 @Injectable()
 export class DrizzleService implements OnModuleDestroy {
-  private pool: Pool;
+  private _pool: Pool;
   readonly db: DrizzleDB;
+  readonly authDb: AuthDrizzleDB;
 
   constructor(private readonly config: ConfigService) {
-    this.pool = new Pool({
+    this._pool = new Pool({
       connectionString: this.config.getOrThrow<string>('DATABASE_URL'),
     });
-    this.db = drizzle(this.pool, { schema });
+    this.db = drizzle(this._pool, { schema });
+    this.authDb = drizzle(this._pool, { schema: authSchema });
   }
 
   async onModuleDestroy() {
-    await this.pool.end();
+    await this._pool.end();
   }
 }
