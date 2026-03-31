@@ -24,6 +24,30 @@ export interface ListOrdersFilter {
   limit: number;
 }
 
+export interface DateRange {
+  from?: string;
+  to?: string;
+}
+
+export interface OrderSummaryData {
+  totalOrders: number;
+  totalRevenue: string;
+  avgOrderValue: string;
+  ordersByStatus: Record<OrderStatus, number>;
+}
+
+export interface TopProductData {
+  productId: string;
+  productName: string;
+  quantitySold: number;
+  revenue: string;
+}
+
+export interface PeakHourData {
+  hour: number;
+  orderCount: number;
+}
+
 export abstract class IOrderRepository {
   abstract findById(id: string): Promise<Order | null>;
   abstract findAll(filter: ListOrdersFilter): Promise<{ data: Order[]; total: number }>;
@@ -31,4 +55,7 @@ export abstract class IOrderRepository {
   abstract findQueue(): Promise<Order[]>;
   abstract create(data: CreateOrderData): Promise<Order>;
   abstract updateStatus(id: string, status: OrderStatus, baristaId?: string): Promise<Order>;
+  abstract getSummary(dateRange: DateRange): Promise<OrderSummaryData>;
+  abstract getTopProducts(limit: number, dateRange: DateRange): Promise<TopProductData[]>;
+  abstract getPeakHours(dateRange: DateRange): Promise<PeakHourData[]>;
 }

@@ -4,6 +4,10 @@ import {
   IOrderRepository,
   CreateOrderData,
   ListOrdersFilter,
+  DateRange,
+  OrderSummaryData,
+  TopProductData,
+  PeakHourData,
 } from '../../domain/repositories/order.repository.js';
 
 export class InMemoryOrderRepository extends IOrderRepository {
@@ -87,5 +91,76 @@ export class InMemoryOrderRepository extends IOrderRepository {
     );
     this.items[idx] = updated;
     return updated;
+  }
+
+  async getSummary(dateRange: DateRange): Promise<OrderSummaryData> {
+    let filtered = this.items;
+    if (dateRange.from) filtered = filtered.filter((o) => o.createdAt >= new Date(dateRange.from!));
+    if (dateRange.to) filtered = filtered.filter((o) => o.createdAt <= new Date(dateRange.to!));
+
+    const nonCancelled = filtered.filter((o) => o.status !== 'CANCELLED');
+    const totalRevenueCents = nonCancelled.reduce(
+      (sum, o) => sum + Math.round(parseFloat(o.totalAmount) * 100),
+      0,
+    );
+    const avgCents = nonCancelled.length > 0 ? totalRevenueCents / nonCancelled.length : 0;
+
+    const ordersByStatus = {
+      RECEIVED: 0,
+      IN_PREPARATION: 0,
+      READY: 0,
+      DELIVERED: 0,
+      CANCELLED: 0,
+    } as Record<OrderStatus, number>;
+    for (const o of filtered) ordersByStatus[o.status]++;
+
+    return {
+      totalOrders: filtered.length,
+      totalRevenue: (totalRevenueCents / 100).toFixed(2),
+      avgOrderValue: (avgCents / 100).toFixed(2),
+      ordersByStatus,
+    };
+  }
+
+  async getTopProducts(limit: number, dateRange: DateRange): Promise<TopProductData[]> {
+    let filtered = this.items.filter((o) => o.status !== 'CANCELLED');
+    if (dateRange.from) filtered = filtered.filter((o) => o.createdAt >= new Date(dateRange.from!));
+    if (dateRange.to) filtered = filtered.filter((o) => o.createdAt <= new Date(dateRange.to!));
+
+    const map = new Map<string, { productName: string; quantitySold: number; revenueCents: number }>();
+    for (const order of filtered) {
+      for (const item of order.items) {
+        const entry = map.get(item.productId) ?? { productName: item.productName, quantitySold: 0, revenueCents: 0 };
+        entry.quantitySold += item.quantity;
+        entry.revenueCents += Math.round(parseFloat(item.subtotal) * 100);
+        map.set(item.productId, entry);
+      }
+    }
+
+    return Array.from(map.entries())
+      .sort((a, b) => b[1].quantitySold - a[1].quantitySold)
+      .slice(0, limit)
+      .map(([productId, data]) => ({
+        productId,
+        productName: data.productName,
+        quantitySold: data.quantitySold,
+        revenue: (data.revenueCents / 100).toFixed(2),
+      }));
+  }
+
+  async getPeakHours(dateRange: DateRange): Promise<PeakHourData[]> {
+    let filtered = this.items;
+    if (dateRange.from) filtered = filtered.filter((o) => o.createdAt >= new Date(dateRange.from!));
+    if (dateRange.to) filtered = filtered.filter((o) => o.createdAt <= new Date(dateRange.to!));
+
+    const map = new Map<number, number>();
+    for (const o of filtered) {
+      const hour = o.createdAt.getHours();
+      map.set(hour, (map.get(hour) ?? 0) + 1);
+    }
+
+    return Array.from(map.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([hour, orderCount]) => ({ hour, orderCount }));
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { eq, and, inArray, gte, lte, desc, asc, count, SQL } from 'drizzle-orm';
+import { eq, and, inArray, gte, lte, desc, asc, count, ne, sql, SQL } from 'drizzle-orm';
 import { DrizzleService } from '../drizzle.service.js';
 import { orders, orderItems } from '../schema.js';
 import { Order, OrderStatus } from '../../../domain/entities/order.entity.js';
@@ -8,6 +8,10 @@ import {
   IOrderRepository,
   CreateOrderData,
   ListOrdersFilter,
+  DateRange,
+  OrderSummaryData,
+  TopProductData,
+  PeakHourData,
 } from '../../../domain/repositories/order.repository.js';
 
 function mapToOrderItem(row: typeof orderItems.$inferSelect): OrderItem {
@@ -166,5 +170,95 @@ export class DrizzleOrderRepository extends IOrderRepository {
     if (baristaId !== undefined) values.baristaId = baristaId;
     await this.db.update(orders).set(values).where(eq(orders.id, id));
     return this.findById(id) as Promise<Order>;
+  }
+
+  async getSummary(dateRange: DateRange): Promise<OrderSummaryData> {
+    const conditions: SQL[] = [];
+    if (dateRange.from) conditions.push(gte(orders.createdAt, new Date(dateRange.from)));
+    if (dateRange.to) conditions.push(lte(orders.createdAt, new Date(dateRange.to)));
+    const where = conditions.length ? and(...conditions) : undefined;
+
+    const [totalsRow] = await this.db
+      .select({
+        totalOrders: count(),
+        totalRevenue: sql<string>`COALESCE(SUM(CASE WHEN ${orders.status} != 'CANCELLED' THEN ${orders.totalAmount}::numeric ELSE 0 END), 0)`,
+        avgOrderValue: sql<string>`COALESCE(AVG(CASE WHEN ${orders.status} != 'CANCELLED' THEN ${orders.totalAmount}::numeric END), 0)`,
+      })
+      .from(orders)
+      .where(where);
+
+    const statusRows = await this.db
+      .select({ status: orders.status, cnt: count() })
+      .from(orders)
+      .where(where)
+      .groupBy(orders.status);
+
+    const ordersByStatus = {
+      RECEIVED: 0,
+      IN_PREPARATION: 0,
+      READY: 0,
+      DELIVERED: 0,
+      CANCELLED: 0,
+    } as Record<OrderStatus, number>;
+
+    for (const row of statusRows) {
+      ordersByStatus[row.status as OrderStatus] = Number(row.cnt);
+    }
+
+    return {
+      totalOrders: Number(totalsRow.totalOrders),
+      totalRevenue: parseFloat(totalsRow.totalRevenue).toFixed(2),
+      avgOrderValue: parseFloat(totalsRow.avgOrderValue).toFixed(2),
+      ordersByStatus,
+    };
+  }
+
+  async getTopProducts(limit: number, dateRange: DateRange): Promise<TopProductData[]> {
+    const conditions: SQL[] = [ne(orders.status, 'CANCELLED')];
+    if (dateRange.from) conditions.push(gte(orders.createdAt, new Date(dateRange.from)));
+    if (dateRange.to) conditions.push(lte(orders.createdAt, new Date(dateRange.to)));
+
+    const rows = await this.db
+      .select({
+        productId: orderItems.productId,
+        productName: orderItems.productName,
+        quantitySold: sql<number>`SUM(${orderItems.quantity})::int`,
+        revenue: sql<string>`SUM(${orderItems.subtotal}::numeric)`,
+      })
+      .from(orderItems)
+      .innerJoin(orders, eq(orderItems.orderId, orders.id))
+      .where(and(...conditions))
+      .groupBy(orderItems.productId, orderItems.productName)
+      .orderBy(desc(sql`SUM(${orderItems.quantity})`))
+      .limit(limit);
+
+    return rows.map((r) => ({
+      productId: r.productId,
+      productName: r.productName,
+      quantitySold: Number(r.quantitySold),
+      revenue: parseFloat(r.revenue).toFixed(2),
+    }));
+  }
+
+  async getPeakHours(dateRange: DateRange): Promise<PeakHourData[]> {
+    const conditions: SQL[] = [];
+    if (dateRange.from) conditions.push(gte(orders.createdAt, new Date(dateRange.from)));
+    if (dateRange.to) conditions.push(lte(orders.createdAt, new Date(dateRange.to)));
+    const where = conditions.length ? and(...conditions) : undefined;
+
+    const rows = await this.db
+      .select({
+        hour: sql<number>`EXTRACT(HOUR FROM ${orders.createdAt})::int`,
+        orderCount: count(),
+      })
+      .from(orders)
+      .where(where)
+      .groupBy(sql`EXTRACT(HOUR FROM ${orders.createdAt})`)
+      .orderBy(desc(count()));
+
+    return rows.map((r) => ({
+      hour: Number(r.hour),
+      orderCount: Number(r.orderCount),
+    }));
   }
 }
