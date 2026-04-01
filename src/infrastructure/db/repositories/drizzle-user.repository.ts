@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { eq, count } from 'drizzle-orm';
 import { hashPassword } from 'better-auth/crypto';
-import { DrizzleService } from '../drizzle.service.js';
-import { user as userTable, account as accountTable } from '../auth-schema.js';
+import { count, eq } from 'drizzle-orm';
 import { User } from '../../../domain/entities/user.entity.js';
 import {
-  CreateUserData,
+  type CreateUserData,
   IUserRepository,
-  UpdateUserData,
+  type UpdateUserData,
 } from '../../../domain/repositories/user.repository.js';
+import { account as accountTable, user as userTable } from '../auth-schema.js';
+import type { DrizzleService } from '../drizzle.service.js';
 
 function mapToUser(row: typeof userTable.$inferSelect): User {
   return new User(
@@ -26,33 +26,22 @@ function mapToUser(row: typeof userTable.$inferSelect): User {
 export class DrizzleUserRepository extends IUserRepository {
   private readonly db: DrizzleService['authDb'];
 
-  constructor(private readonly drizzleService: DrizzleService) {
+  constructor(readonly drizzleService: DrizzleService) {
     super();
     this.db = drizzleService.authDb;
   }
 
   async findById(id: string): Promise<User | null> {
-    const rows = await this.db
-      .select()
-      .from(userTable)
-      .where(eq(userTable.id, id))
-      .limit(1);
+    const rows = await this.db.select().from(userTable).where(eq(userTable.id, id)).limit(1);
     return rows[0] ? mapToUser(rows[0]) : null;
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const rows = await this.db
-      .select()
-      .from(userTable)
-      .where(eq(userTable.email, email))
-      .limit(1);
+    const rows = await this.db.select().from(userTable).where(eq(userTable.email, email)).limit(1);
     return rows[0] ? mapToUser(rows[0]) : null;
   }
 
-  async findAll(
-    page: number,
-    limit: number,
-  ): Promise<{ data: User[]; total: number }> {
+  async findAll(page: number, limit: number): Promise<{ data: User[]; total: number }> {
     const offset = (page - 1) * limit;
 
     const [rows, [countRow]] = await Promise.all([

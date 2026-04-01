@@ -1,6 +1,6 @@
-import { Product } from '../../../domain/entities/product.entity.js';
+import type { Product } from '../../../domain/entities/product.entity.js';
 import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import { IProductRepository } from '../../../domain/repositories/product.repository.js';
+import type { IProductRepository } from '../../../domain/repositories/product.repository.js';
 
 export class ToggleAvailabilityUseCase {
   constructor(private readonly productRepo: IProductRepository) {}

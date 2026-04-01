@@ -1,6 +1,6 @@
-import { User } from '../../../domain/entities/user.entity.js';
+import type { User } from '../../../domain/entities/user.entity.js';
 import { ConflictError } from '../../../domain/errors/domain.error.js';
-import {
+import type {
   CreateUserData,
   IUserRepository,
 } from '../../../domain/repositories/user.repository.js';

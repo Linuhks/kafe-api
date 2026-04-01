@@ -1,8 +1,8 @@
 import 'dotenv/config';
-import { NestFactory, Reflector } from '@nestjs/core';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { ValidationError } from 'class-validator';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import type { ValidationError } from 'class-validator';
 import { AppModule } from './app.module.js';
 import { HttpExceptionFilter } from './presentation/filters/http-exception.filter.js';
 import { TransformInterceptor } from './presentation/interceptors/transform.interceptor.js';
@@ -11,7 +11,7 @@ async function bootstrap() {
   // bodyParser: false — obrigatório para o better-auth processar o body raw
   const app = await NestFactory.create(AppModule, { bodyParser: false });
 
-  const reflector = app.get(Reflector);
+  const _reflector = app.get(Reflector);
 
   app.setGlobalPrefix('api/v1');
 

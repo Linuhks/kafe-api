@@ -1,25 +1,15 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
+import type { CreateCategoryUseCase } from '../../application/use-cases/menu/create-category.use-case.js';
+import type { DeleteCategoryUseCase } from '../../application/use-cases/menu/delete-category.use-case.js';
+import type { GetCategoryUseCase } from '../../application/use-cases/menu/get-category.use-case.js';
+import type { ListCategoriesUseCase } from '../../application/use-cases/menu/list-categories.use-case.js';
+import type { UpdateCategoryUseCase } from '../../application/use-cases/menu/update-category.use-case.js';
 import { Roles } from '../decorators/roles.decorator.js';
-import { CreateCategoryUseCase } from '../../application/use-cases/menu/create-category.use-case.js';
-import { DeleteCategoryUseCase } from '../../application/use-cases/menu/delete-category.use-case.js';
-import { GetCategoryUseCase } from '../../application/use-cases/menu/get-category.use-case.js';
-import { ListCategoriesUseCase } from '../../application/use-cases/menu/list-categories.use-case.js';
-import { UpdateCategoryUseCase } from '../../application/use-cases/menu/update-category.use-case.js';
-import { PaginationDto } from '../dtos/shared/pagination.dto.js';
-import { CreateCategoryDto } from '../dtos/menu/create-category.dto.js';
-import { UpdateCategoryDto } from '../dtos/menu/update-category.dto.js';
+import type { CreateCategoryDto } from '../dtos/menu/create-category.dto.js';
+import type { UpdateCategoryDto } from '../dtos/menu/update-category.dto.js';
+import type { PaginationDto } from '../dtos/shared/pagination.dto.js';
 
 @ApiTags('categories')
 @Controller('categories')

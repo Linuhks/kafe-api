@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { eq, count, ilike } from 'drizzle-orm';
-import { DrizzleService } from '../drizzle.service.js';
-import { categories } from '../schema.js';
+import { count, eq, ilike } from 'drizzle-orm';
 import { Category } from '../../../domain/entities/category.entity.js';
 import {
-  CreateCategoryData,
+  type CreateCategoryData,
   ICategoryRepository,
-  UpdateCategoryData,
+  type UpdateCategoryData,
 } from '../../../domain/repositories/category.repository.js';
+import type { DrizzleService } from '../drizzle.service.js';
+import { categories } from '../schema.js';
 
 function mapToCategory(row: typeof categories.$inferSelect): Category {
   return new Category(
@@ -31,11 +31,7 @@ export class DrizzleCategoryRepository extends ICategoryRepository {
   }
 
   async findById(id: string): Promise<Category | null> {
-    const rows = await this.db
-      .select()
-      .from(categories)
-      .where(eq(categories.id, id))
-      .limit(1);
+    const rows = await this.db.select().from(categories).where(eq(categories.id, id)).limit(1);
     return rows[0] ? mapToCategory(rows[0]) : null;
   }
 
@@ -48,10 +44,7 @@ export class DrizzleCategoryRepository extends ICategoryRepository {
     return rows[0] ? mapToCategory(rows[0]) : null;
   }
 
-  async findAll(
-    page: number,
-    limit: number,
-  ): Promise<{ data: Category[]; total: number }> {
+  async findAll(page: number, limit: number): Promise<{ data: Category[]; total: number }> {
     const offset = (page - 1) * limit;
 
     const [rows, [countRow]] = await Promise.all([

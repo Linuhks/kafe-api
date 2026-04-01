@@ -1,8 +1,8 @@
 import { InventoryMovement } from '../../domain/entities/inventory-movement.entity.js';
 import {
+  type CreateMovementData,
+  type FindMovementsFilters,
   IInventoryMovementRepository,
-  CreateMovementData,
-  FindMovementsFilters,
 } from '../../domain/repositories/inventory-movement.repository.js';
 
 export class InMemoryInventoryMovementRepository extends IInventoryMovementRepository {
@@ -23,7 +23,10 @@ export class InMemoryInventoryMovementRepository extends IInventoryMovementRepos
     return movement;
   }
 
-  async findAll(page: number, limit: number): Promise<{ data: InventoryMovement[]; total: number }> {
+  async findAll(
+    page: number,
+    limit: number,
+  ): Promise<{ data: InventoryMovement[]; total: number }> {
     const start = (page - 1) * limit;
     return { data: this.items.slice(start, start + limit), total: this.items.length };
   }
@@ -38,7 +41,9 @@ export class InMemoryInventoryMovementRepository extends IInventoryMovementRepos
     return { data: filtered.slice(start, start + limit), total: filtered.length };
   }
 
-  async findMovements(filters: FindMovementsFilters): Promise<{ data: InventoryMovement[]; total: number }> {
+  async findMovements(
+    filters: FindMovementsFilters,
+  ): Promise<{ data: InventoryMovement[]; total: number }> {
     const { ingredientId, orderId, from, to, page, limit } = filters;
     let filtered = this.items;
     if (ingredientId) filtered = filtered.filter((m) => m.ingredientId === ingredientId);

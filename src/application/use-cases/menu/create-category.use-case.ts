@@ -1,6 +1,6 @@
-import { Category } from '../../../domain/entities/category.entity.js';
+import type { Category } from '../../../domain/entities/category.entity.js';
 import { ConflictError } from '../../../domain/errors/domain.error.js';
-import {
+import type {
   CreateCategoryData,
   ICategoryRepository,
 } from '../../../domain/repositories/category.repository.js';

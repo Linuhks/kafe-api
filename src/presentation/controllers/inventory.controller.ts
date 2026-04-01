@@ -1,27 +1,18 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import type { CreateIngredientUseCase } from '../../application/use-cases/inventory/create-ingredient.use-case.js';
+import type { GetIngredientUseCase } from '../../application/use-cases/inventory/get-ingredient.use-case.js';
+import type { GetStockAlertsUseCase } from '../../application/use-cases/inventory/get-stock-alerts.use-case.js';
+import type { ListIngredientsUseCase } from '../../application/use-cases/inventory/list-ingredients.use-case.js';
+import type { ListMovementsUseCase } from '../../application/use-cases/inventory/list-movements.use-case.js';
+import type { RestockIngredientUseCase } from '../../application/use-cases/inventory/restock-ingredient.use-case.js';
+import type { UpdateIngredientUseCase } from '../../application/use-cases/inventory/update-ingredient.use-case.js';
 import { Roles } from '../decorators/roles.decorator.js';
-import { CreateIngredientUseCase } from '../../application/use-cases/inventory/create-ingredient.use-case.js';
-import { GetIngredientUseCase } from '../../application/use-cases/inventory/get-ingredient.use-case.js';
-import { UpdateIngredientUseCase } from '../../application/use-cases/inventory/update-ingredient.use-case.js';
-import { ListIngredientsUseCase } from '../../application/use-cases/inventory/list-ingredients.use-case.js';
-import { RestockIngredientUseCase } from '../../application/use-cases/inventory/restock-ingredient.use-case.js';
-import { ListMovementsUseCase } from '../../application/use-cases/inventory/list-movements.use-case.js';
-import { GetStockAlertsUseCase } from '../../application/use-cases/inventory/get-stock-alerts.use-case.js';
-import { CreateIngredientDto } from '../dtos/inventory/create-ingredient.dto.js';
-import { UpdateIngredientDto } from '../dtos/inventory/update-ingredient.dto.js';
-import { RestockIngredientDto } from '../dtos/inventory/restock-ingredient.dto.js';
-import { ListMovementsFiltersDto } from '../dtos/inventory/list-movements-filters.dto.js';
-import { PaginationDto } from '../dtos/shared/pagination.dto.js';
+import type { CreateIngredientDto } from '../dtos/inventory/create-ingredient.dto.js';
+import type { ListMovementsFiltersDto } from '../dtos/inventory/list-movements-filters.dto.js';
+import type { RestockIngredientDto } from '../dtos/inventory/restock-ingredient.dto.js';
+import type { UpdateIngredientDto } from '../dtos/inventory/update-ingredient.dto.js';
+import type { PaginationDto } from '../dtos/shared/pagination.dto.js';
 
 @ApiTags('inventory')
 @ApiBearerAuth()

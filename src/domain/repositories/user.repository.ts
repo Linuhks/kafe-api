@@ -1,4 +1,4 @@
-import { User } from '../entities/user.entity.js';
+import type { User } from '../entities/user.entity.js';
 
 export interface CreateUserData {
   name: string;
@@ -16,10 +16,7 @@ export interface UpdateUserData {
 export abstract class IUserRepository {
   abstract findById(id: string): Promise<User | null>;
   abstract findByEmail(email: string): Promise<User | null>;
-  abstract findAll(
-    page: number,
-    limit: number,
-  ): Promise<{ data: User[]; total: number }>;
+  abstract findAll(page: number, limit: number): Promise<{ data: User[]; total: number }>;
   abstract create(data: CreateUserData): Promise<User>;
   abstract update(id: string, data: UpdateUserData): Promise<User>;
   abstract delete(id: string): Promise<void>;

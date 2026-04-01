@@ -1,7 +1,7 @@
-import { Order, OrderStatus } from '../../../domain/entities/order.entity.js';
+import type { Order, OrderStatus } from '../../../domain/entities/order.entity.js';
 import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import { IOrderRepository } from '../../../domain/repositories/order.repository.js';
-import { DeductForOrderUseCase } from '../inventory/deduct-for-order.use-case.js';
+import type { IOrderRepository } from '../../../domain/repositories/order.repository.js';
+import type { DeductForOrderUseCase } from '../inventory/deduct-for-order.use-case.js';
 
 export class UpdateOrderStatusUseCase {
   constructor(

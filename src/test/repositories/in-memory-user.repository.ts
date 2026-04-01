@@ -1,8 +1,8 @@
 import { User } from '../../domain/entities/user.entity.js';
 import {
-  CreateUserData,
+  type CreateUserData,
   IUserRepository,
-  UpdateUserData,
+  type UpdateUserData,
 } from '../../domain/repositories/user.repository.js';
 
 export class InMemoryUserRepository extends IUserRepository {
@@ -17,10 +17,7 @@ export class InMemoryUserRepository extends IUserRepository {
     return this.items.find((u) => u.email === email) ?? null;
   }
 
-  async findAll(
-    page: number,
-    limit: number,
-  ): Promise<{ data: User[]; total: number }> {
+  async findAll(page: number, limit: number): Promise<{ data: User[]; total: number }> {
     const start = (page - 1) * limit;
     return {
       data: this.items.slice(start, start + limit),

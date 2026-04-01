@@ -1,7 +1,10 @@
-import { Order } from '../../../domain/entities/order.entity.js';
+import type { Order } from '../../../domain/entities/order.entity.js';
 import { ConflictError, NotFoundError } from '../../../domain/errors/domain.error.js';
-import { IOrderRepository, CreateOrderItemData } from '../../../domain/repositories/order.repository.js';
-import { IProductRepository } from '../../../domain/repositories/product.repository.js';
+import type {
+  CreateOrderItemData,
+  IOrderRepository,
+} from '../../../domain/repositories/order.repository.js';
+import type { IProductRepository } from '../../../domain/repositories/product.repository.js';
 
 interface CreateOrderInput {
   clientId?: string;
@@ -23,7 +26,8 @@ export class CreateOrderUseCase {
     for (const item of data.items) {
       const product = await this.productRepo.findById(item.productId);
       if (!product) throw new NotFoundError(`Product ${item.productId}`);
-      if (!product.isAvailable) throw new ConflictError(`Product ${item.productId} is not available`);
+      if (!product.isAvailable)
+        throw new ConflictError(`Product ${item.productId} is not available`);
 
       const unitPriceCents = Math.round(parseFloat(product.price) * 100);
       const subtotalCents = unitPriceCents * item.quantity;

@@ -1,5 +1,5 @@
-import { User } from '../../../domain/entities/user.entity.js';
-import { IUserRepository } from '../../../domain/repositories/user.repository.js';
+import type { User } from '../../../domain/entities/user.entity.js';
+import type { IUserRepository } from '../../../domain/repositories/user.repository.js';
 
 export interface ListUsersInput {
   page: number;

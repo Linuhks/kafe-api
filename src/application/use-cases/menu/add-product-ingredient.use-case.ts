@@ -1,8 +1,8 @@
-import { ProductIngredient } from '../../../domain/entities/product-ingredient.entity.js';
+import type { ProductIngredient } from '../../../domain/entities/product-ingredient.entity.js';
 import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import { IIngredientRepository } from '../../../domain/repositories/ingredient.repository.js';
-import { IProductIngredientRepository } from '../../../domain/repositories/product-ingredient.repository.js';
-import { IProductRepository } from '../../../domain/repositories/product.repository.js';
+import type { IIngredientRepository } from '../../../domain/repositories/ingredient.repository.js';
+import type { IProductRepository } from '../../../domain/repositories/product.repository.js';
+import type { IProductIngredientRepository } from '../../../domain/repositories/product-ingredient.repository.js';
 
 interface AddProductIngredientInput {
   productId: string;

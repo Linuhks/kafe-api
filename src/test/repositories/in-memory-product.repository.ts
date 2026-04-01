@@ -1,8 +1,8 @@
 import { Product } from '../../domain/entities/product.entity.js';
 import {
-  CreateProductData,
+  type CreateProductData,
   IProductRepository,
-  UpdateProductData,
+  type UpdateProductData,
 } from '../../domain/repositories/product.repository.js';
 
 export class InMemoryProductRepository extends IProductRepository {

@@ -1,28 +1,14 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import type { CreateUserUseCase } from '../../application/use-cases/users/create-user.use-case.js';
+import type { DeleteUserUseCase } from '../../application/use-cases/users/delete-user.use-case.js';
+import type { GetUserUseCase } from '../../application/use-cases/users/get-user.use-case.js';
+import type { ListUsersUseCase } from '../../application/use-cases/users/list-users.use-case.js';
+import type { UpdateUserUseCase } from '../../application/use-cases/users/update-user.use-case.js';
 import { Roles } from '../decorators/roles.decorator.js';
-import { CreateUserUseCase } from '../../application/use-cases/users/create-user.use-case.js';
-import { DeleteUserUseCase } from '../../application/use-cases/users/delete-user.use-case.js';
-import { GetUserUseCase } from '../../application/use-cases/users/get-user.use-case.js';
-import { ListUsersUseCase } from '../../application/use-cases/users/list-users.use-case.js';
-import { UpdateUserUseCase } from '../../application/use-cases/users/update-user.use-case.js';
-import { PaginationDto } from '../dtos/shared/pagination.dto.js';
-import { CreateUserDto } from '../dtos/users/create-user.dto.js';
-import { UpdateUserDto } from '../dtos/users/update-user.dto.js';
+import type { PaginationDto } from '../dtos/shared/pagination.dto.js';
+import type { CreateUserDto } from '../dtos/users/create-user.dto.js';
+import type { UpdateUserDto } from '../dtos/users/update-user.dto.js';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -41,7 +27,15 @@ export class UsersController {
   @ApiOperation({ summary: 'Lista todos os usuários (ADMIN)' })
   async list(@Query() query: PaginationDto) {
     const result = await this.listUsers.execute(query);
-    return { data: result.data, pagination: { page: query.page, limit: query.limit, total: result.total, totalPages: Math.ceil(result.total / query.limit) } };
+    return {
+      data: result.data,
+      pagination: {
+        page: query.page,
+        limit: query.limit,
+        total: result.total,
+        totalPages: Math.ceil(result.total / query.limit),
+      },
+    };
   }
 
   @Get(':id')

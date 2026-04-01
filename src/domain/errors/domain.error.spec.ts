@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
-  DomainError,
-  NotFoundError,
   ConflictError,
-  InvalidOrderTransitionError,
+  DomainError,
   InsufficientStockError,
+  InvalidOrderTransitionError,
+  NotFoundError,
 } from './domain.error.js';
 
 describe('DomainError', () => {

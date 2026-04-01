@@ -1,6 +1,6 @@
-import { Category } from '../../../domain/entities/category.entity.js';
+import type { Category } from '../../../domain/entities/category.entity.js';
 import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import {
+import type {
   ICategoryRepository,
   UpdateCategoryData,
 } from '../../../domain/repositories/category.repository.js';

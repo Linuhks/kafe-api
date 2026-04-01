@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { and, eq } from 'drizzle-orm';
-import { DrizzleService } from '../drizzle.service.js';
-import { productIngredients } from '../schema.js';
 import { ProductIngredient } from '../../../domain/entities/product-ingredient.entity.js';
 import {
+  type CreateProductIngredientData,
   IProductIngredientRepository,
-  CreateProductIngredientData,
 } from '../../../domain/repositories/product-ingredient.repository.js';
+import type { DrizzleService } from '../drizzle.service.js';
+import { productIngredients } from '../schema.js';
 
 function mapToProductIngredient(row: typeof productIngredients.$inferSelect): ProductIngredient {
   return new ProductIngredient(row.id, row.productId, row.ingredientId, row.quantity);

@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { DeleteProductUseCase } from './delete-product.use-case.js';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { InMemoryProductRepository } from '../../../test/repositories/in-memory-product.repository.js';
+import { DeleteProductUseCase } from './delete-product.use-case.js';
 
 describe('DeleteProductUseCase', () => {
   let productRepo: InMemoryProductRepository;

@@ -1,6 +1,6 @@
-import {
-  IOrderRepository,
+import type {
   DateRange,
+  IOrderRepository,
   OrderSummaryData,
 } from '../../../domain/repositories/order.repository.js';
 

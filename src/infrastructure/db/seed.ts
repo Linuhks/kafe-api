@@ -1,10 +1,10 @@
 import 'dotenv/config';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { eq } from 'drizzle-orm';
-import { Pool } from 'pg';
 import { hashPassword } from 'better-auth/crypto';
-import { user, account } from './auth-schema.js';
-import { categories, products, ingredients } from './schema.js';
+import { eq } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { Pool } from 'pg';
+import { account, user } from './auth-schema.js';
+import { categories, ingredients, products } from './schema.js';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const db = drizzle(pool);
@@ -35,26 +35,27 @@ const INGREDIENTS = [
   { name: 'Manteiga', unit: 'g', currentStock: '500', minimumStock: '100' },
 ];
 
-const PRODUCTS_BY_CATEGORY: Record<string, { name: string; description: string; price: string }[]> = {
-  Cafés: [
-    { name: 'Espresso', description: 'Café curto intenso extraído sob pressão', price: '6.00' },
-    { name: 'Cappuccino', description: 'Espresso com leite vaporizado e espuma', price: '12.00' },
-    { name: 'Latte', description: 'Espresso com bastante leite vaporizado', price: '14.00' },
-    { name: 'Mocha', description: 'Espresso com chocolate e leite vaporizado', price: '16.00' },
-  ],
-  'Bebidas Frias': [
-    { name: 'Iced Coffee', description: 'Café gelado com gelo', price: '12.00' },
-    { name: 'Frappuccino', description: 'Café batido com gelo e chantilly', price: '18.00' },
-  ],
-  Doces: [
-    { name: 'Brownie', description: 'Brownie de chocolate com nozes', price: '10.00' },
-    { name: 'Cheesecake', description: 'Cheesecake de frutas vermelhas', price: '14.00' },
-  ],
-  Salgados: [
-    { name: 'Croissant', description: 'Croissant de manteiga folhado', price: '9.00' },
-    { name: 'Pão de Queijo', description: 'Pão de queijo mineiro artesanal', price: '6.00' },
-  ],
-};
+const PRODUCTS_BY_CATEGORY: Record<string, { name: string; description: string; price: string }[]> =
+  {
+    Cafés: [
+      { name: 'Espresso', description: 'Café curto intenso extraído sob pressão', price: '6.00' },
+      { name: 'Cappuccino', description: 'Espresso com leite vaporizado e espuma', price: '12.00' },
+      { name: 'Latte', description: 'Espresso com bastante leite vaporizado', price: '14.00' },
+      { name: 'Mocha', description: 'Espresso com chocolate e leite vaporizado', price: '16.00' },
+    ],
+    'Bebidas Frias': [
+      { name: 'Iced Coffee', description: 'Café gelado com gelo', price: '12.00' },
+      { name: 'Frappuccino', description: 'Café batido com gelo e chantilly', price: '18.00' },
+    ],
+    Doces: [
+      { name: 'Brownie', description: 'Brownie de chocolate com nozes', price: '10.00' },
+      { name: 'Cheesecake', description: 'Cheesecake de frutas vermelhas', price: '14.00' },
+    ],
+    Salgados: [
+      { name: 'Croissant', description: 'Croissant de manteiga folhado', price: '9.00' },
+      { name: 'Pão de Queijo', description: 'Pão de queijo mineiro artesanal', price: '6.00' },
+    ],
+  };
 
 // ─── Seed ─────────────────────────────────────────────────────────────────────
 
@@ -64,7 +65,11 @@ async function seed() {
   // Usuários
   console.log('👤 Criando usuários...');
   for (const u of USERS) {
-    const existing = await db.select({ id: user.id }).from(user).where(eq(user.email, u.email)).limit(1);
+    const existing = await db
+      .select({ id: user.id })
+      .from(user)
+      .where(eq(user.email, u.email))
+      .limit(1);
 
     if (existing.length > 0) {
       console.log(`   ⚠️  ${u.email} já existe, pulando...`);
@@ -138,7 +143,10 @@ async function seed() {
   for (const cat of insertedCategories) {
     const prods = PRODUCTS_BY_CATEGORY[cat.name] ?? [];
     for (const prod of prods) {
-      await db.insert(products).values({ ...prod, categoryId: cat.id }).onConflictDoNothing();
+      await db
+        .insert(products)
+        .values({ ...prod, categoryId: cat.id })
+        .onConflictDoNothing();
       console.log(`   ✅ [${cat.name}] ${prod.name} — R$ ${prod.price}`);
     }
   }

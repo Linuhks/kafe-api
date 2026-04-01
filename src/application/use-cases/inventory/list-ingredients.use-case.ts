@@ -1,5 +1,5 @@
-import { Ingredient } from '../../../domain/entities/ingredient.entity.js';
-import { IIngredientRepository } from '../../../domain/repositories/ingredient.repository.js';
+import type { Ingredient } from '../../../domain/entities/ingredient.entity.js';
+import type { IIngredientRepository } from '../../../domain/repositories/ingredient.repository.js';
 
 export interface ListIngredientsResult {
   data: Ingredient[];

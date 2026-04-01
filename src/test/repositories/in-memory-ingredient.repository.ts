@@ -1,9 +1,9 @@
 import { Ingredient } from '../../domain/entities/ingredient.entity.js';
 import {
+  type CreateIngredientData,
   IIngredientRepository,
-  CreateIngredientData,
-  UpdateIngredientData,
-  ProductIngredientRow,
+  type ProductIngredientRow,
+  type UpdateIngredientData,
 } from '../../domain/repositories/ingredient.repository.js';
 
 export class InMemoryIngredientRepository extends IIngredientRepository {

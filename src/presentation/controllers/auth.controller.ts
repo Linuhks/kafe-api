@@ -1,8 +1,8 @@
 import { Body, Controller, HttpCode, Post, UnauthorizedException } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AllowAnonymous, AuthService } from '@thallesp/nestjs-better-auth';
-import { auth } from '../../infrastructure/auth/better-auth.js';
-import { LoginDto } from '../dtos/auth/login.dto.js';
+import { AllowAnonymous, type AuthService } from '@thallesp/nestjs-better-auth';
+import type { auth } from '../../infrastructure/auth/better-auth.js';
+import type { LoginDto } from '../dtos/auth/login.dto.js';
 
 @ApiTags('auth')
 @AllowAnonymous()

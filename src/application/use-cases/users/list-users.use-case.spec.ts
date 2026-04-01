@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { ListUsersUseCase } from './list-users.use-case.js';
-import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user.repository.js';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { User } from '../../../domain/entities/user.entity.js';
+import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user.repository.js';
+import { ListUsersUseCase } from './list-users.use-case.js';
 
 const makeUser = (id: string, name: string) =>
   new User(id, name, `${name.toLowerCase()}@example.com`, 'CLIENT', true, new Date(), new Date());

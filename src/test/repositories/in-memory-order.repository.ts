@@ -1,13 +1,13 @@
-import { Order, OrderStatus } from '../../domain/entities/order.entity.js';
+import { Order, type OrderStatus } from '../../domain/entities/order.entity.js';
 import { OrderItem } from '../../domain/entities/order-item.entity.js';
 import {
+  type CreateOrderData,
+  type DateRange,
   IOrderRepository,
-  CreateOrderData,
-  ListOrdersFilter,
-  DateRange,
-  OrderSummaryData,
-  TopProductData,
-  PeakHourData,
+  type ListOrdersFilter,
+  type OrderSummaryData,
+  type PeakHourData,
+  type TopProductData,
 } from '../../domain/repositories/order.repository.js';
 
 export class InMemoryOrderRepository extends IOrderRepository {
@@ -127,10 +127,17 @@ export class InMemoryOrderRepository extends IOrderRepository {
     if (dateRange.from) filtered = filtered.filter((o) => o.createdAt >= new Date(dateRange.from!));
     if (dateRange.to) filtered = filtered.filter((o) => o.createdAt <= new Date(dateRange.to!));
 
-    const map = new Map<string, { productName: string; quantitySold: number; revenueCents: number }>();
+    const map = new Map<
+      string,
+      { productName: string; quantitySold: number; revenueCents: number }
+    >();
     for (const order of filtered) {
       for (const item of order.items) {
-        const entry = map.get(item.productId) ?? { productName: item.productName, quantitySold: 0, revenueCents: 0 };
+        const entry = map.get(item.productId) ?? {
+          productName: item.productName,
+          quantitySold: 0,
+          revenueCents: 0,
+        };
         entry.quantitySold += item.quantity;
         entry.revenueCents += Math.round(parseFloat(item.subtotal) * 100);
         map.set(item.productId, entry);

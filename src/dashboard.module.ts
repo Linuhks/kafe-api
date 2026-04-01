@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { IOrderRepository } from './domain/repositories/order.repository.js';
+import { GetPeakHoursUseCase } from './application/use-cases/dashboard/get-peak-hours.use-case.js';
 import { GetSummaryUseCase } from './application/use-cases/dashboard/get-summary.use-case.js';
 import { GetTopProductsUseCase } from './application/use-cases/dashboard/get-top-products.use-case.js';
-import { GetPeakHoursUseCase } from './application/use-cases/dashboard/get-peak-hours.use-case.js';
+import { IOrderRepository } from './domain/repositories/order.repository.js';
 import { DrizzleOrderRepository } from './infrastructure/db/repositories/drizzle-order.repository.js';
 import { DashboardController } from './presentation/controllers/dashboard.controller.js';
 

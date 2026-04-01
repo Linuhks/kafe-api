@@ -1,30 +1,20 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
+import type { AddProductIngredientUseCase } from '../../application/use-cases/menu/add-product-ingredient.use-case.js';
+import type { CreateProductUseCase } from '../../application/use-cases/menu/create-product.use-case.js';
+import type { DeleteProductUseCase } from '../../application/use-cases/menu/delete-product.use-case.js';
+import type { GetProductUseCase } from '../../application/use-cases/menu/get-product.use-case.js';
+import type { ListProductIngredientsUseCase } from '../../application/use-cases/menu/list-product-ingredients.use-case.js';
+import type { ListProductsUseCase } from '../../application/use-cases/menu/list-products.use-case.js';
+import type { RemoveProductIngredientUseCase } from '../../application/use-cases/menu/remove-product-ingredient.use-case.js';
+import type { ToggleAvailabilityUseCase } from '../../application/use-cases/menu/toggle-availability.use-case.js';
+import type { UpdateProductUseCase } from '../../application/use-cases/menu/update-product.use-case.js';
 import { Roles } from '../decorators/roles.decorator.js';
-import { CreateProductUseCase } from '../../application/use-cases/menu/create-product.use-case.js';
-import { DeleteProductUseCase } from '../../application/use-cases/menu/delete-product.use-case.js';
-import { GetProductUseCase } from '../../application/use-cases/menu/get-product.use-case.js';
-import { ListProductsUseCase } from '../../application/use-cases/menu/list-products.use-case.js';
-import { UpdateProductUseCase } from '../../application/use-cases/menu/update-product.use-case.js';
-import { ToggleAvailabilityUseCase } from '../../application/use-cases/menu/toggle-availability.use-case.js';
-import { AddProductIngredientUseCase } from '../../application/use-cases/menu/add-product-ingredient.use-case.js';
-import { RemoveProductIngredientUseCase } from '../../application/use-cases/menu/remove-product-ingredient.use-case.js';
-import { ListProductIngredientsUseCase } from '../../application/use-cases/menu/list-product-ingredients.use-case.js';
+import type { AddProductIngredientDto } from '../dtos/menu/add-product-ingredient.dto.js';
+import type { CreateProductDto } from '../dtos/menu/create-product.dto.js';
+import type { UpdateProductDto } from '../dtos/menu/update-product.dto.js';
 import { PaginationDto } from '../dtos/shared/pagination.dto.js';
-import { CreateProductDto } from '../dtos/menu/create-product.dto.js';
-import { UpdateProductDto } from '../dtos/menu/update-product.dto.js';
-import { AddProductIngredientDto } from '../dtos/menu/add-product-ingredient.dto.js';
 
 class ListProductsQuery extends PaginationDto {
   categoryId?: string;

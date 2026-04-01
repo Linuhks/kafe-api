@@ -11,17 +11,17 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
+import type { CreateOrderUseCase } from '../../application/use-cases/orders/create-order.use-case.js';
+import type { GetBaristaQueueUseCase } from '../../application/use-cases/orders/get-barista-queue.use-case.js';
+import type { GetMyOrdersUseCase } from '../../application/use-cases/orders/get-my-orders.use-case.js';
+import type { GetOrderUseCase } from '../../application/use-cases/orders/get-order.use-case.js';
+import type { ListOrdersUseCase } from '../../application/use-cases/orders/list-orders.use-case.js';
+import type { UpdateOrderStatusUseCase } from '../../application/use-cases/orders/update-order-status.use-case.js';
+import type { OrderStatus } from '../../domain/entities/order.entity.js';
 import { Roles } from '../decorators/roles.decorator.js';
-import { CreateOrderUseCase } from '../../application/use-cases/orders/create-order.use-case.js';
-import { GetBaristaQueueUseCase } from '../../application/use-cases/orders/get-barista-queue.use-case.js';
-import { GetMyOrdersUseCase } from '../../application/use-cases/orders/get-my-orders.use-case.js';
-import { GetOrderUseCase } from '../../application/use-cases/orders/get-order.use-case.js';
-import { ListOrdersUseCase } from '../../application/use-cases/orders/list-orders.use-case.js';
-import { UpdateOrderStatusUseCase } from '../../application/use-cases/orders/update-order-status.use-case.js';
+import type { CreateOrderDto } from '../dtos/orders/create-order.dto.js';
+import type { UpdateOrderStatusDto } from '../dtos/orders/update-order-status.dto.js';
 import { PaginationDto } from '../dtos/shared/pagination.dto.js';
-import { CreateOrderDto } from '../dtos/orders/create-order.dto.js';
-import { UpdateOrderStatusDto } from '../dtos/orders/update-order-status.dto.js';
-import { OrderStatus } from '../../domain/entities/order.entity.js';
 
 class ListOrdersQuery extends PaginationDto {
   status?: OrderStatus;

@@ -1,7 +1,7 @@
-import { Order } from '../../../domain/entities/order.entity.js';
+import type { Order } from '../../../domain/entities/order.entity.js';
 import { InsufficientStockError } from '../../../domain/errors/domain.error.js';
-import { IIngredientRepository } from '../../../domain/repositories/ingredient.repository.js';
-import { IInventoryMovementRepository } from '../../../domain/repositories/inventory-movement.repository.js';
+import type { IIngredientRepository } from '../../../domain/repositories/ingredient.repository.js';
+import type { IInventoryMovementRepository } from '../../../domain/repositories/inventory-movement.repository.js';
 
 export class DeductForOrderUseCase {
   constructor(
@@ -16,7 +16,10 @@ export class DeductForOrderUseCase {
       const recipe = await this.ingredientRepo.findRecipeByProductId(item.productId);
       for (const recipeItem of recipe) {
         const qty = Math.round(parseFloat(recipeItem.quantity) * item.quantity * 1000);
-        neededMillis.set(recipeItem.ingredientId, (neededMillis.get(recipeItem.ingredientId) ?? 0) + qty);
+        neededMillis.set(
+          recipeItem.ingredientId,
+          (neededMillis.get(recipeItem.ingredientId) ?? 0) + qty,
+        );
       }
     }
 

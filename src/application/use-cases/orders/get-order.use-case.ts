@@ -1,6 +1,6 @@
-import { Order } from '../../../domain/entities/order.entity.js';
+import type { Order } from '../../../domain/entities/order.entity.js';
 import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import { IOrderRepository } from '../../../domain/repositories/order.repository.js';
+import type { IOrderRepository } from '../../../domain/repositories/order.repository.js';
 
 export class GetOrderUseCase {
   constructor(private readonly orderRepo: IOrderRepository) {}

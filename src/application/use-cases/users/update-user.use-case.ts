@@ -1,6 +1,6 @@
-import { User } from '../../../domain/entities/user.entity.js';
+import type { User } from '../../../domain/entities/user.entity.js';
 import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import {
+import type {
   IUserRepository,
   UpdateUserData,
 } from '../../../domain/repositories/user.repository.js';

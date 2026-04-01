@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { and, eq, desc, count, gte, lte, SQL } from 'drizzle-orm';
-import { DrizzleService } from '../drizzle.service.js';
-import { inventoryMovements } from '../schema.js';
-import { InventoryMovement, MovementType } from '../../../domain/entities/inventory-movement.entity.js';
+import { and, count, desc, eq, gte, lte, type SQL } from 'drizzle-orm';
 import {
+  InventoryMovement,
+  type MovementType,
+} from '../../../domain/entities/inventory-movement.entity.js';
+import {
+  type CreateMovementData,
+  type FindMovementsFilters,
   IInventoryMovementRepository,
-  CreateMovementData,
-  FindMovementsFilters,
 } from '../../../domain/repositories/inventory-movement.repository.js';
+import type { DrizzleService } from '../drizzle.service.js';
+import { inventoryMovements } from '../schema.js';
 
 function mapToMovement(row: typeof inventoryMovements.$inferSelect): InventoryMovement {
   return new InventoryMovement(
@@ -45,7 +48,10 @@ export class DrizzleInventoryMovementRepository extends IInventoryMovementReposi
     return mapToMovement(row);
   }
 
-  async findAll(page: number, limit: number): Promise<{ data: InventoryMovement[]; total: number }> {
+  async findAll(
+    page: number,
+    limit: number,
+  ): Promise<{ data: InventoryMovement[]; total: number }> {
     const offset = (page - 1) * limit;
     const [rows, [countRow]] = await Promise.all([
       this.db
@@ -79,7 +85,9 @@ export class DrizzleInventoryMovementRepository extends IInventoryMovementReposi
     return { data: rows.map(mapToMovement), total: Number(countRow.total) };
   }
 
-  async findMovements(filters: FindMovementsFilters): Promise<{ data: InventoryMovement[]; total: number }> {
+  async findMovements(
+    filters: FindMovementsFilters,
+  ): Promise<{ data: InventoryMovement[]; total: number }> {
     const { ingredientId, orderId, from, to, page, limit } = filters;
     const offset = (page - 1) * limit;
 

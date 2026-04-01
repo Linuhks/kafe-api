@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { IUserRepository } from './domain/repositories/user.repository.js';
 import { CreateUserUseCase } from './application/use-cases/users/create-user.use-case.js';
-import { ListUsersUseCase } from './application/use-cases/users/list-users.use-case.js';
-import { GetUserUseCase } from './application/use-cases/users/get-user.use-case.js';
-import { UpdateUserUseCase } from './application/use-cases/users/update-user.use-case.js';
 import { DeleteUserUseCase } from './application/use-cases/users/delete-user.use-case.js';
+import { GetUserUseCase } from './application/use-cases/users/get-user.use-case.js';
+import { ListUsersUseCase } from './application/use-cases/users/list-users.use-case.js';
+import { UpdateUserUseCase } from './application/use-cases/users/update-user.use-case.js';
+import { IUserRepository } from './domain/repositories/user.repository.js';
 import { DrizzleUserRepository } from './infrastructure/db/repositories/drizzle-user.repository.js';
 import { UsersController } from './presentation/controllers/users.controller.js';
 

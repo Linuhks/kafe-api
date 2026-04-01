@@ -1,4 +1,4 @@
-import { Category } from '../entities/category.entity.js';
+import type { Category } from '../entities/category.entity.js';
 
 export interface CreateCategoryData {
   name: string;
@@ -16,10 +16,7 @@ export interface UpdateCategoryData {
 export abstract class ICategoryRepository {
   abstract findById(id: string): Promise<Category | null>;
   abstract findByName(name: string): Promise<Category | null>;
-  abstract findAll(
-    page: number,
-    limit: number,
-  ): Promise<{ data: Category[]; total: number }>;
+  abstract findAll(page: number, limit: number): Promise<{ data: Category[]; total: number }>;
   abstract create(data: CreateCategoryData): Promise<Category>;
   abstract update(id: string, data: UpdateCategoryData): Promise<Category>;
   abstract delete(id: string): Promise<void>;

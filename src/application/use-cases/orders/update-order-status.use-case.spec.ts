@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { UpdateOrderStatusUseCase } from './update-order-status.use-case.js';
-import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository.js';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository.js';
 import { InMemoryInventoryMovementRepository } from '../../../test/repositories/in-memory-inventory-movement.repository.js';
+import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository.js';
 import { DeductForOrderUseCase } from '../inventory/deduct-for-order.use-case.js';
+import { UpdateOrderStatusUseCase } from './update-order-status.use-case.js';
 
 describe('UpdateOrderStatusUseCase', () => {
   let orderRepo: InMemoryOrderRepository;
@@ -64,7 +64,7 @@ describe('UpdateOrderStatusUseCase', () => {
     await sut.execute(order.id, 'IN_PREPARATION');
 
     const updated = await ingredientRepo.findById(ingredient.id);
-    expect(updated!.currentStock).toBe('80.000');
+    expect(updated?.currentStock).toBe('80.000');
     expect(movementRepo.items).toHaveLength(1);
     expect(movementRepo.items[0].type).toBe('DEDUCTION');
   });

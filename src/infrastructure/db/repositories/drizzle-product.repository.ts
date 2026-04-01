@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { eq, count, and } from 'drizzle-orm';
-import { DrizzleService } from '../drizzle.service.js';
-import { products } from '../schema.js';
+import { count, eq } from 'drizzle-orm';
 import { Product } from '../../../domain/entities/product.entity.js';
 import {
-  CreateProductData,
+  type CreateProductData,
   IProductRepository,
-  UpdateProductData,
+  type UpdateProductData,
 } from '../../../domain/repositories/product.repository.js';
+import type { DrizzleService } from '../drizzle.service.js';
+import { products } from '../schema.js';
 
 function mapToProduct(row: typeof products.$inferSelect): Product {
   return new Product(
@@ -34,11 +34,7 @@ export class DrizzleProductRepository extends IProductRepository {
   }
 
   async findById(id: string): Promise<Product | null> {
-    const rows = await this.db
-      .select()
-      .from(products)
-      .where(eq(products.id, id))
-      .limit(1);
+    const rows = await this.db.select().from(products).where(eq(products.id, id)).limit(1);
     return rows[0] ? mapToProduct(rows[0]) : null;
   }
 
@@ -51,16 +47,8 @@ export class DrizzleProductRepository extends IProductRepository {
     const where = categoryId ? eq(products.categoryId, categoryId) : undefined;
 
     const [rows, [countRow]] = await Promise.all([
-      this.db
-        .select()
-        .from(products)
-        .where(where)
-        .limit(limit)
-        .offset(offset),
-      this.db
-        .select({ total: count() })
-        .from(products)
-        .where(where),
+      this.db.select().from(products).where(where).limit(limit).offset(offset),
+      this.db.select({ total: count() }).from(products).where(where),
     ]);
 
     return {

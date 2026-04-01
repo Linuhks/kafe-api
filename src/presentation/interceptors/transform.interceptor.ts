@@ -1,10 +1,10 @@
 import {
-  CallHandler,
-  ExecutionContext,
+  type CallHandler,
+  type ExecutionContext,
   Injectable,
-  NestInterceptor,
+  type NestInterceptor,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export interface PaginationMeta {
@@ -35,11 +35,6 @@ export class TransformInterceptor implements NestInterceptor {
   }
 
   private isPaginated(value: unknown): value is PaginatedResult<unknown> {
-    return (
-      typeof value === 'object' &&
-      value !== null &&
-      'data' in value &&
-      'pagination' in value
-    );
+    return typeof value === 'object' && value !== null && 'data' in value && 'pagination' in value;
   }
 }

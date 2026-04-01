@@ -1,8 +1,8 @@
 import { Category } from '../../domain/entities/category.entity.js';
 import {
-  CreateCategoryData,
+  type CreateCategoryData,
   ICategoryRepository,
-  UpdateCategoryData,
+  type UpdateCategoryData,
 } from '../../domain/repositories/category.repository.js';
 
 export class InMemoryCategoryRepository extends ICategoryRepository {
@@ -17,10 +17,7 @@ export class InMemoryCategoryRepository extends ICategoryRepository {
     return this.items.find((c) => c.name === name) ?? null;
   }
 
-  async findAll(
-    page: number,
-    limit: number,
-  ): Promise<{ data: Category[]; total: number }> {
+  async findAll(page: number, limit: number): Promise<{ data: Category[]; total: number }> {
     const start = (page - 1) * limit;
     return {
       data: this.items.slice(start, start + limit),

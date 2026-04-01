@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { eq, count, sql } from 'drizzle-orm';
-import { DrizzleService } from '../drizzle.service.js';
-import { ingredients, productIngredients } from '../schema.js';
+import { count, eq, sql } from 'drizzle-orm';
 import { Ingredient } from '../../../domain/entities/ingredient.entity.js';
 import {
+  type CreateIngredientData,
   IIngredientRepository,
-  CreateIngredientData,
-  UpdateIngredientData,
-  ProductIngredientRow,
+  type ProductIngredientRow,
+  type UpdateIngredientData,
 } from '../../../domain/repositories/ingredient.repository.js';
+import type { DrizzleService } from '../drizzle.service.js';
+import { ingredients, productIngredients } from '../schema.js';
 
 function mapToIngredient(row: typeof ingredients.$inferSelect): Ingredient {
   return new Ingredient(
@@ -33,11 +33,7 @@ export class DrizzleIngredientRepository extends IIngredientRepository {
   }
 
   async findById(id: string): Promise<Ingredient | null> {
-    const rows = await this.db
-      .select()
-      .from(ingredients)
-      .where(eq(ingredients.id, id))
-      .limit(1);
+    const rows = await this.db.select().from(ingredients).where(eq(ingredients.id, id)).limit(1);
     return rows[0] ? mapToIngredient(rows[0]) : null;
   }
 

@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { CreateCategoryUseCase } from './create-category.use-case.js';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { InMemoryCategoryRepository } from '../../../test/repositories/in-memory-category.repository.js';
+import { CreateCategoryUseCase } from './create-category.use-case.js';
 
 describe('CreateCategoryUseCase', () => {
   let categoryRepo: InMemoryCategoryRepository;

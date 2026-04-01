@@ -1,4 +1,4 @@
-import { InventoryMovement, MovementType } from '../entities/inventory-movement.entity.js';
+import type { InventoryMovement, MovementType } from '../entities/inventory-movement.entity.js';
 
 export interface CreateMovementData {
   ingredientId: string;
@@ -19,7 +19,16 @@ export interface FindMovementsFilters {
 
 export abstract class IInventoryMovementRepository {
   abstract create(data: CreateMovementData): Promise<InventoryMovement>;
-  abstract findAll(page: number, limit: number): Promise<{ data: InventoryMovement[]; total: number }>;
-  abstract findByIngredientId(ingredientId: string, page: number, limit: number): Promise<{ data: InventoryMovement[]; total: number }>;
-  abstract findMovements(filters: FindMovementsFilters): Promise<{ data: InventoryMovement[]; total: number }>;
+  abstract findAll(
+    page: number,
+    limit: number,
+  ): Promise<{ data: InventoryMovement[]; total: number }>;
+  abstract findByIngredientId(
+    ingredientId: string,
+    page: number,
+    limit: number,
+  ): Promise<{ data: InventoryMovement[]; total: number }>;
+  abstract findMovements(
+    filters: FindMovementsFilters,
+  ): Promise<{ data: InventoryMovement[]; total: number }>;
 }

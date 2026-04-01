@@ -1,4 +1,4 @@
-import { ProductIngredient } from '../entities/product-ingredient.entity.js';
+import type { ProductIngredient } from '../entities/product-ingredient.entity.js';
 
 export interface CreateProductIngredientData {
   productId: string;

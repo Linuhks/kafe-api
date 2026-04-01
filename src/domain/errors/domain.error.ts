@@ -23,20 +23,12 @@ export class ConflictError extends DomainError {
 
 export class InvalidOrderTransitionError extends DomainError {
   constructor(from: string, to: string) {
-    super(
-      `Invalid order status transition from ${from} to ${to}`,
-      'INVALID_ORDER_TRANSITION',
-      400,
-    );
+    super(`Invalid order status transition from ${from} to ${to}`, 'INVALID_ORDER_TRANSITION', 400);
   }
 }
 
 export class InsufficientStockError extends DomainError {
   constructor(ingredient: string) {
-    super(
-      `Insufficient stock for ingredient: ${ingredient}`,
-      'INSUFFICIENT_STOCK',
-      400,
-    );
+    super(`Insufficient stock for ingredient: ${ingredient}`, 'INSUFFICIENT_STOCK', 400);
   }
 }

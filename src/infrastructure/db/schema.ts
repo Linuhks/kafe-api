@@ -1,13 +1,13 @@
 import {
-  pgTable,
-  pgEnum,
-  uuid,
-  varchar,
-  text,
   boolean,
   integer,
   numeric,
+  pgEnum,
+  pgTable,
+  text,
   timestamp,
+  uuid,
+  varchar,
 } from 'drizzle-orm/pg-core';
 
 // ─── Enums ───────────────────────────────────────────────────────────────────
@@ -22,11 +22,7 @@ export const orderStatusEnum = pgEnum('order_status', [
   'CANCELLED',
 ]);
 
-export const movementTypeEnum = pgEnum('movement_type', [
-  'DEDUCTION',
-  'RESTOCK',
-  'ADJUSTMENT',
-]);
+export const movementTypeEnum = pgEnum('movement_type', ['DEDUCTION', 'RESTOCK', 'ADJUSTMENT']);
 
 // ─── Categories ───────────────────────────────────────────────────────────────
 
@@ -61,12 +57,8 @@ export const ingredients = pgTable('ingredients', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
   unit: varchar('unit', { length: 50 }).notNull(),
-  currentStock: numeric('current_stock', { precision: 10, scale: 3 })
-    .notNull()
-    .default('0'),
-  minimumStock: numeric('minimum_stock', { precision: 10, scale: 3 })
-    .notNull()
-    .default('0'),
+  currentStock: numeric('current_stock', { precision: 10, scale: 3 }).notNull().default('0'),
+  minimumStock: numeric('minimum_stock', { precision: 10, scale: 3 }).notNull().default('0'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
