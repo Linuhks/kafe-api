@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { NestFactory, Reflector } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import { ValidationError } from 'class-validator';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module.js';
 import { HttpExceptionFilter } from './presentation/filters/http-exception.filter.js';
@@ -23,6 +24,15 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
       forbidNonWhitelisted: true,
+      exceptionFactory: (errors: ValidationError[]) => {
+        const details = errors.flatMap((error) =>
+          Object.values(error.constraints ?? {}).map((message) => ({
+            field: error.property,
+            message,
+          })),
+        );
+        return new BadRequestException({ message: 'Validation failed', details });
+      },
     }),
   );
 

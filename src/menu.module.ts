@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ICategoryRepository } from './domain/repositories/category.repository.js';
 import { IProductRepository } from './domain/repositories/product.repository.js';
+import { IIngredientRepository } from './domain/repositories/ingredient.repository.js';
+import { IProductIngredientRepository } from './domain/repositories/product-ingredient.repository.js';
 import { CreateCategoryUseCase } from './application/use-cases/menu/create-category.use-case.js';
 import { ListCategoriesUseCase } from './application/use-cases/menu/list-categories.use-case.js';
 import { GetCategoryUseCase } from './application/use-cases/menu/get-category.use-case.js';
@@ -12,8 +14,13 @@ import { GetProductUseCase } from './application/use-cases/menu/get-product.use-
 import { UpdateProductUseCase } from './application/use-cases/menu/update-product.use-case.js';
 import { DeleteProductUseCase } from './application/use-cases/menu/delete-product.use-case.js';
 import { ToggleAvailabilityUseCase } from './application/use-cases/menu/toggle-availability.use-case.js';
+import { AddProductIngredientUseCase } from './application/use-cases/menu/add-product-ingredient.use-case.js';
+import { RemoveProductIngredientUseCase } from './application/use-cases/menu/remove-product-ingredient.use-case.js';
+import { ListProductIngredientsUseCase } from './application/use-cases/menu/list-product-ingredients.use-case.js';
 import { DrizzleCategoryRepository } from './infrastructure/db/repositories/drizzle-category.repository.js';
 import { DrizzleProductRepository } from './infrastructure/db/repositories/drizzle-product.repository.js';
+import { DrizzleIngredientRepository } from './infrastructure/db/repositories/drizzle-ingredient.repository.js';
+import { DrizzleProductIngredientRepository } from './infrastructure/db/repositories/drizzle-product-ingredient.repository.js';
 import { CategoriesController } from './presentation/controllers/categories.controller.js';
 import { ProductsController } from './presentation/controllers/products.controller.js';
 
@@ -22,6 +29,8 @@ import { ProductsController } from './presentation/controllers/products.controll
   providers: [
     { provide: ICategoryRepository, useClass: DrizzleCategoryRepository },
     { provide: IProductRepository, useClass: DrizzleProductRepository },
+    { provide: IIngredientRepository, useClass: DrizzleIngredientRepository },
+    { provide: IProductIngredientRepository, useClass: DrizzleProductIngredientRepository },
     {
       provide: CreateCategoryUseCase,
       useFactory: (repo: ICategoryRepository) => new CreateCategoryUseCase(repo),
@@ -82,6 +91,31 @@ import { ProductsController } from './presentation/controllers/products.controll
       provide: ToggleAvailabilityUseCase,
       useFactory: (repo: IProductRepository) => new ToggleAvailabilityUseCase(repo),
       inject: [IProductRepository],
+    },
+    {
+      provide: AddProductIngredientUseCase,
+      useFactory: (
+        productRepo: IProductRepository,
+        ingredientRepo: IIngredientRepository,
+        productIngredientRepo: IProductIngredientRepository,
+      ) => new AddProductIngredientUseCase(productRepo, ingredientRepo, productIngredientRepo),
+      inject: [IProductRepository, IIngredientRepository, IProductIngredientRepository],
+    },
+    {
+      provide: RemoveProductIngredientUseCase,
+      useFactory: (
+        productRepo: IProductRepository,
+        productIngredientRepo: IProductIngredientRepository,
+      ) => new RemoveProductIngredientUseCase(productRepo, productIngredientRepo),
+      inject: [IProductRepository, IProductIngredientRepository],
+    },
+    {
+      provide: ListProductIngredientsUseCase,
+      useFactory: (
+        productRepo: IProductRepository,
+        productIngredientRepo: IProductIngredientRepository,
+      ) => new ListProductIngredientsUseCase(productRepo, productIngredientRepo),
+      inject: [IProductRepository, IProductIngredientRepository],
     },
   ],
   exports: [ICategoryRepository, IProductRepository],

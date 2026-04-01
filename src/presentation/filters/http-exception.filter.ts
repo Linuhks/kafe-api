@@ -37,13 +37,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
         message = exceptionResponse;
       } else if (typeof exceptionResponse === 'object') {
         const body = exceptionResponse as Record<string, unknown>;
-        message = (body.message as string) ?? message;
 
-        // Validation errors do NestJS (array de mensagens)
-        if (Array.isArray(body.message)) {
+        if (Array.isArray(body.details)) {
+          // Structured validation errors from exceptionFactory: { field, message }[]
+          message = typeof body.message === 'string' ? body.message : 'Validation failed';
+          details = body.details as ErrorDetail[];
+          code = 'VALIDATION_ERROR';
+        } else if (Array.isArray(body.message)) {
+          // Fallback: NestJS default string[] format
           message = 'Validation failed';
           details = (body.message as string[]).map((m) => ({ message: m }));
           code = 'VALIDATION_ERROR';
+        } else {
+          message = (body.message as string) ?? message;
         }
       }
 

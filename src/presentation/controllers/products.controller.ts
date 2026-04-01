@@ -18,9 +18,13 @@ import { GetProductUseCase } from '../../application/use-cases/menu/get-product.
 import { ListProductsUseCase } from '../../application/use-cases/menu/list-products.use-case.js';
 import { UpdateProductUseCase } from '../../application/use-cases/menu/update-product.use-case.js';
 import { ToggleAvailabilityUseCase } from '../../application/use-cases/menu/toggle-availability.use-case.js';
+import { AddProductIngredientUseCase } from '../../application/use-cases/menu/add-product-ingredient.use-case.js';
+import { RemoveProductIngredientUseCase } from '../../application/use-cases/menu/remove-product-ingredient.use-case.js';
+import { ListProductIngredientsUseCase } from '../../application/use-cases/menu/list-product-ingredients.use-case.js';
 import { PaginationDto } from '../dtos/shared/pagination.dto.js';
 import { CreateProductDto } from '../dtos/menu/create-product.dto.js';
 import { UpdateProductDto } from '../dtos/menu/update-product.dto.js';
+import { AddProductIngredientDto } from '../dtos/menu/add-product-ingredient.dto.js';
 
 class ListProductsQuery extends PaginationDto {
   categoryId?: string;
@@ -36,6 +40,9 @@ export class ProductsController {
     private readonly updateProduct: UpdateProductUseCase,
     private readonly deleteProduct: DeleteProductUseCase,
     private readonly toggleAvailability: ToggleAvailabilityUseCase,
+    private readonly addProductIngredient: AddProductIngredientUseCase,
+    private readonly removeProductIngredient: RemoveProductIngredientUseCase,
+    private readonly listProductIngredients: ListProductIngredientsUseCase,
   ) {}
 
   @Get()
@@ -94,5 +101,31 @@ export class ProductsController {
   @ApiOperation({ summary: 'Alterna disponibilidade do produto (ADMIN)' })
   async toggleAvail(@Param('id') id: string) {
     return this.toggleAvailability.execute(id);
+  }
+
+  @Post(':id/ingredients')
+  @HttpCode(201)
+  @ApiBearerAuth()
+  @Roles(['ADMIN'])
+  @ApiOperation({ summary: 'Adiciona ingrediente à receita do produto (ADMIN)' })
+  async addIngredient(@Param('id') id: string, @Body() dto: AddProductIngredientDto) {
+    return this.addProductIngredient.execute({ productId: id, ...dto });
+  }
+
+  @Delete(':id/ingredients/:ingredientId')
+  @HttpCode(204)
+  @ApiBearerAuth()
+  @Roles(['ADMIN'])
+  @ApiOperation({ summary: 'Remove ingrediente da receita do produto (ADMIN)' })
+  async removeIngredient(@Param('id') id: string, @Param('ingredientId') ingredientId: string) {
+    await this.removeProductIngredient.execute(id, ingredientId);
+  }
+
+  @Get(':id/ingredients')
+  @ApiBearerAuth()
+  @Roles(['ADMIN'])
+  @ApiOperation({ summary: 'Lista ingredientes da receita do produto (ADMIN)' })
+  async listIngredients(@Param('id') id: string) {
+    return this.listProductIngredients.execute(id);
   }
 }
