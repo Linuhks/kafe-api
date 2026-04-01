@@ -50,7 +50,18 @@ describe('ListOrdersUseCase', () => {
     const now = Date.now();
     orderRepo.items = orderRepo.items.map((o, idx) => {
       const createdAt = new Date(now + idx * 1000);
-      return new Order(o.id, o.clientId, o.clientName, o.baristaId, o.status, o.notes, o.totalAmount, o.items, createdAt, createdAt);
+      return new Order(
+        o.id,
+        o.clientId,
+        o.clientName,
+        o.baristaId,
+        o.status,
+        o.notes,
+        o.totalAmount,
+        o.items,
+        createdAt,
+        createdAt,
+      );
     });
 
     const result = await sut.execute({ page: 1, limit: 10 });

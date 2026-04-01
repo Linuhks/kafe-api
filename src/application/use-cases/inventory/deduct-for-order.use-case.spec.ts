@@ -1,14 +1,25 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { InsufficientStockError } from '../../../domain/errors/domain.error.js';
+import { Ingredient } from '../../../domain/entities/ingredient.entity.js';
 import { Order } from '../../../domain/entities/order.entity.js';
 import { OrderItem } from '../../../domain/entities/order-item.entity.js';
-import { Ingredient } from '../../../domain/entities/ingredient.entity.js';
+import { InsufficientStockError } from '../../../domain/errors/domain.error.js';
 import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository.js';
 import { InMemoryInventoryMovementRepository } from '../../../test/repositories/in-memory-inventory-movement.repository.js';
 import { DeductForOrderUseCase } from './deduct-for-order.use-case.js';
 
 function makeOrder(items: OrderItem[]): Order {
-  return new Order('order-1', null, 'Cliente', null, 'RECEIVED', null, '10.00', items, new Date(), new Date());
+  return new Order(
+    'order-1',
+    null,
+    'Cliente',
+    null,
+    'RECEIVED',
+    null,
+    '10.00',
+    items,
+    new Date(),
+    new Date(),
+  );
 }
 
 function makeOrderItem(productId: string, quantity: number): OrderItem {

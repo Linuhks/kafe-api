@@ -32,8 +32,18 @@ describe('ListMovementsUseCase', () => {
   });
 
   it('should filter by orderId', async () => {
-    await movementRepo.create({ ingredientId: 'ing-1', orderId: 'ord-1', type: 'DEDUCTION', quantity: '50' });
-    await movementRepo.create({ ingredientId: 'ing-1', orderId: 'ord-2', type: 'DEDUCTION', quantity: '30' });
+    await movementRepo.create({
+      ingredientId: 'ing-1',
+      orderId: 'ord-1',
+      type: 'DEDUCTION',
+      quantity: '50',
+    });
+    await movementRepo.create({
+      ingredientId: 'ing-1',
+      orderId: 'ord-2',
+      type: 'DEDUCTION',
+      quantity: '30',
+    });
 
     const result = await sut.execute({ orderId: 'ord-1', page: 1, limit: 10 });
 
@@ -45,12 +55,20 @@ describe('ListMovementsUseCase', () => {
     const past = new Date('2024-01-01');
     const future = new Date('2026-01-01');
 
-    const mov1 = await movementRepo.create({ ingredientId: 'ing-1', type: 'RESTOCK', quantity: '100' });
+    const mov1 = await movementRepo.create({
+      ingredientId: 'ing-1',
+      type: 'RESTOCK',
+      quantity: '100',
+    });
     // Override createdAt for testing purposes
     (mov1 as any).createdAt = past;
     movementRepo.items[0] = { ...mov1, createdAt: past } as any;
 
-    const mov2 = await movementRepo.create({ ingredientId: 'ing-2', type: 'RESTOCK', quantity: '200' });
+    const mov2 = await movementRepo.create({
+      ingredientId: 'ing-2',
+      type: 'RESTOCK',
+      quantity: '200',
+    });
     (mov2 as any).createdAt = future;
     movementRepo.items[1] = { ...mov2, createdAt: future } as any;
 

@@ -16,7 +16,11 @@ describe('RestockIngredientUseCase', () => {
   });
 
   it('should increment currentStock by quantity', async () => {
-    const ingredient = await ingredientRepo.create({ name: 'Café', unit: 'g', currentStock: '500' });
+    const ingredient = await ingredientRepo.create({
+      name: 'Café',
+      unit: 'g',
+      currentStock: '500',
+    });
 
     const result = await sut.execute(ingredient.id, '250');
 

@@ -12,15 +12,18 @@ function makeItem(
   unitPrice: string,
 ): OrderItem {
   const subtotal = (qty * parseFloat(unitPrice)).toFixed(2);
-  return new OrderItem(`item-${orderId}-${productId}`, orderId, productId, productName, unitPrice, qty, subtotal);
+  return new OrderItem(
+    `item-${orderId}-${productId}`,
+    orderId,
+    productId,
+    productName,
+    unitPrice,
+    qty,
+    subtotal,
+  );
 }
 
-function makeOrder(
-  id: string,
-  status: OrderStatus,
-  items: OrderItem[],
-  createdAt: Date,
-): Order {
+function makeOrder(id: string, status: OrderStatus, items: OrderItem[], createdAt: Date): Order {
   const total = items.reduce((sum, i) => sum + parseFloat(i.subtotal), 0).toFixed(2);
   return new Order(id, null, 'Cliente', null, status, null, total, items, createdAt, createdAt);
 }

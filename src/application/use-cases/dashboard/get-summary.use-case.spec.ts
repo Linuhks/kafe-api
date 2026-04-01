@@ -3,12 +3,7 @@ import { Order, type OrderStatus } from '../../../domain/entities/order.entity.j
 import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository.js';
 import { GetSummaryUseCase } from './get-summary.use-case.js';
 
-function makeOrder(
-  id: string,
-  status: OrderStatus,
-  totalAmount: string,
-  createdAt: Date,
-): Order {
+function makeOrder(id: string, status: OrderStatus, totalAmount: string, createdAt: Date): Order {
   return new Order(id, null, 'Cliente', null, status, null, totalAmount, [], createdAt, createdAt);
 }
 

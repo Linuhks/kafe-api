@@ -19,7 +19,10 @@ describe('UpdateIngredientUseCase', () => {
       minimumStock: '100',
     });
 
-    const result = await sut.execute(ingredient.id, { name: 'Açúcar Refinado', minimumStock: '200' });
+    const result = await sut.execute(ingredient.id, {
+      name: 'Açúcar Refinado',
+      minimumStock: '200',
+    });
 
     expect(result.name).toBe('Açúcar Refinado');
     expect(result.minimumStock).toBe('200');
