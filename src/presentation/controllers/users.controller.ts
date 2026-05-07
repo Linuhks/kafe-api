@@ -6,12 +6,12 @@ import { GetUserUseCase } from '../../application/use-cases/users/get-user.use-c
 import { ListUsersUseCase } from '../../application/use-cases/users/list-users.use-case';
 import { UpdateUserUseCase } from '../../application/use-cases/users/update-user.use-case';
 import { User } from '../../domain/entities/user.entity';
+import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { UserResponseDto } from '../dtos/responses/user.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
 import { CreateUserDto } from '../dtos/users/create-user.dto';
 import { UpdateUserDto } from '../dtos/users/update-user.dto';
-import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 
 @ApiTags('users')
 @ApiBearerAuth()

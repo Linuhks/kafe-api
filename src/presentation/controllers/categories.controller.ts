@@ -7,12 +7,12 @@ import { GetCategoryUseCase } from '../../application/use-cases/menu/get-categor
 import { ListCategoriesUseCase } from '../../application/use-cases/menu/list-categories.use-case';
 import { UpdateCategoryUseCase } from '../../application/use-cases/menu/update-category.use-case';
 import { Category } from '../../domain/entities/category.entity';
+import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { CreateCategoryDto } from '../dtos/menu/create-category.dto';
 import { UpdateCategoryDto } from '../dtos/menu/update-category.dto';
 import { CategoryResponseDto } from '../dtos/responses/category.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
-import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 
 @ApiTags('categories')
 @Controller('categories')

@@ -9,6 +9,7 @@ import { RestockIngredientUseCase } from '../../application/use-cases/inventory/
 import { UpdateIngredientUseCase } from '../../application/use-cases/inventory/update-ingredient.use-case';
 import { Ingredient } from '../../domain/entities/ingredient.entity';
 import { InventoryMovement } from '../../domain/entities/inventory-movement.entity';
+import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { CreateIngredientDto } from '../dtos/inventory/create-ingredient.dto';
 import { ListMovementsFiltersDto } from '../dtos/inventory/list-movements-filters.dto';
@@ -17,7 +18,6 @@ import { UpdateIngredientDto } from '../dtos/inventory/update-ingredient.dto';
 import { IngredientResponseDto } from '../dtos/responses/ingredient.response.dto';
 import { InventoryMovementResponseDto } from '../dtos/responses/inventory-movement.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
-import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 
 @ApiTags('inventory')
 @ApiBearerAuth()

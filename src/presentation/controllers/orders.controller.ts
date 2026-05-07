@@ -9,13 +9,13 @@ import { ListOrdersUseCase } from '../../application/use-cases/orders/list-order
 import { UpdateOrderStatusUseCase } from '../../application/use-cases/orders/update-order-status.use-case';
 import { Order, OrderStatus } from '../../domain/entities/order.entity';
 import { Auth } from '../../infrastructure/auth/better-auth';
+import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { CreateOrderDto } from '../dtos/orders/create-order.dto';
 import { UpdateOrderStatusDto } from '../dtos/orders/update-order-status.dto';
 import { OrderResponseDto } from '../dtos/responses/order.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
-import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 
 class ListOrdersQuery extends PaginationDto {
   status?: OrderStatus;

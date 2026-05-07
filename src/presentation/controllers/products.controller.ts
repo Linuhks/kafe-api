@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
-import { IsOptional, IsUUID } from 'class-validator';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
+import { IsOptional, IsUUID } from 'class-validator';
 import { AddProductIngredientUseCase } from '../../application/use-cases/menu/add-product-ingredient.use-case';
 import { CreateProductUseCase } from '../../application/use-cases/menu/create-product.use-case';
 import { DeleteProductUseCase } from '../../application/use-cases/menu/delete-product.use-case';
@@ -13,6 +13,7 @@ import { ToggleAvailabilityUseCase } from '../../application/use-cases/menu/togg
 import { UpdateProductUseCase } from '../../application/use-cases/menu/update-product.use-case';
 import { Product } from '../../domain/entities/product.entity';
 import { ProductIngredient } from '../../domain/entities/product-ingredient.entity';
+import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { AddProductIngredientDto } from '../dtos/menu/add-product-ingredient.dto';
 import { CreateProductDto } from '../dtos/menu/create-product.dto';
@@ -20,7 +21,6 @@ import { UpdateProductDto } from '../dtos/menu/update-product.dto';
 import { ProductResponseDto } from '../dtos/responses/product.response.dto';
 import { ProductIngredientResponseDto } from '../dtos/responses/product-ingredient.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
-import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 
 class ListProductsQuery extends PaginationDto {
   @IsOptional()
