@@ -1,8 +1,8 @@
-import type {
+import {
   DateRange,
   IOrderRepository,
   TopProductData,
-} from '../../../domain/repositories/order.repository.js';
+} from '../../../domain/repositories/order.repository';
 
 export class GetTopProductsUseCase {
   constructor(private readonly orderRepo: IOrderRepository) {}

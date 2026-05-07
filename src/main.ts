@@ -2,10 +2,10 @@ import 'dotenv/config';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import type { ValidationError } from 'class-validator';
-import { AppModule } from './app.module.js';
-import { HttpExceptionFilter } from './presentation/filters/http-exception.filter.js';
-import { TransformInterceptor } from './presentation/interceptors/transform.interceptor.js';
+import { ValidationError } from 'class-validator';
+import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './presentation/filters/http-exception.filter';
+import { TransformInterceptor } from './presentation/interceptors/transform.interceptor';
 
 async function bootstrap() {
   // bodyParser: false — obrigatório para o better-auth processar o body raw

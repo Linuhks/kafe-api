@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ConflictError } from '../../../domain/errors/domain.error.js';
-import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository.js';
-import { CreateIngredientUseCase } from './create-ingredient.use-case.js';
+import { ConflictError } from '../../../domain/errors/domain.error';
+import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository';
+import { CreateIngredientUseCase } from './create-ingredient.use-case';
 
 describe('CreateIngredientUseCase', () => {
   let ingredientRepo: InMemoryIngredientRepository;

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { InMemoryInventoryMovementRepository } from '../../../test/repositories/in-memory-inventory-movement.repository.js';
-import { ListMovementsUseCase } from './list-movements.use-case.js';
+import { InMemoryInventoryMovementRepository } from '../../../test/repositories/in-memory-inventory-movement.repository';
+import { ListMovementsUseCase } from './list-movements.use-case';
 
 describe('ListMovementsUseCase', () => {
   let movementRepo: InMemoryInventoryMovementRepository;

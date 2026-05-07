@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ConflictError } from '../../../domain/errors/domain.error.js';
-import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user.repository.js';
-import { CreateUserUseCase } from './create-user.use-case.js';
+import { ConflictError } from '../../../domain/errors/domain.error';
+import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user.repository';
+import { CreateUserUseCase } from './create-user.use-case';
 
 describe('CreateUserUseCase', () => {
   let userRepo: InMemoryUserRepository;

@@ -1,4 +1,4 @@
-import type { Order, OrderStatus } from '../entities/order.entity.js';
+import { Order, OrderStatus } from '../entities/order.entity';
 
 export interface CreateOrderItemData {
   productId: string;

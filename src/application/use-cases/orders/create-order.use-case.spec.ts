@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository.js';
-import { InMemoryProductRepository } from '../../../test/repositories/in-memory-product.repository.js';
-import { CreateOrderUseCase } from './create-order.use-case.js';
+import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository';
+import { InMemoryProductRepository } from '../../../test/repositories/in-memory-product.repository';
+import { CreateOrderUseCase } from './create-order.use-case';
 
 describe('CreateOrderUseCase', () => {
   let orderRepo: InMemoryOrderRepository;

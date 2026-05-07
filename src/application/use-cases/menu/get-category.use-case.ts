@@ -1,6 +1,6 @@
-import type { Category } from '../../../domain/entities/category.entity.js';
-import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import type { ICategoryRepository } from '../../../domain/repositories/category.repository.js';
+import { Category } from '../../../domain/entities/category.entity';
+import { NotFoundError } from '../../../domain/errors/domain.error';
+import { ICategoryRepository } from '../../../domain/repositories/category.repository';
 
 export class GetCategoryUseCase {
   constructor(private readonly categoryRepo: ICategoryRepository) {}

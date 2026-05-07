@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { Order } from '../../../domain/entities/order.entity.js';
-import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository.js';
-import { GetPeakHoursUseCase } from './get-peak-hours.use-case.js';
+import { Order } from '../../../domain/entities/order.entity';
+import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository';
+import { GetPeakHoursUseCase } from './get-peak-hours.use-case';
 
 function makeOrder(id: string, createdAt: Date): Order {
   return new Order(id, null, 'Cliente', null, 'DELIVERED', null, '10.00', [], createdAt, createdAt);

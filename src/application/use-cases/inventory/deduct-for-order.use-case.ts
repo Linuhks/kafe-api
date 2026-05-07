@@ -1,7 +1,7 @@
-import type { Order } from '../../../domain/entities/order.entity.js';
-import { InsufficientStockError } from '../../../domain/errors/domain.error.js';
-import type { IIngredientRepository } from '../../../domain/repositories/ingredient.repository.js';
-import type { IInventoryMovementRepository } from '../../../domain/repositories/inventory-movement.repository.js';
+import { Order } from '../../../domain/entities/order.entity';
+import { InsufficientStockError } from '../../../domain/errors/domain.error';
+import { IIngredientRepository } from '../../../domain/repositories/ingredient.repository';
+import { IInventoryMovementRepository } from '../../../domain/repositories/inventory-movement.repository';
 
 export class DeductForOrderUseCase {
   constructor(

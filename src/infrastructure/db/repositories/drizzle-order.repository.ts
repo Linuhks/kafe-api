@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { and, asc, count, desc, eq, gte, inArray, lte, ne, type SQL, sql } from 'drizzle-orm';
-import { Order, type OrderStatus } from '../../../domain/entities/order.entity.js';
-import { OrderItem } from '../../../domain/entities/order-item.entity.js';
+import { Order, type OrderStatus } from '../../../domain/entities/order.entity';
+import { OrderItem } from '../../../domain/entities/order-item.entity';
 import {
   type CreateOrderData,
   type DateRange,
@@ -10,9 +10,9 @@ import {
   type OrderSummaryData,
   type PeakHourData,
   type TopProductData,
-} from '../../../domain/repositories/order.repository.js';
-import type { DrizzleService } from '../drizzle.service.js';
-import { orderItems, orders } from '../schema.js';
+} from '../../../domain/repositories/order.repository';
+import { DrizzleService } from '../drizzle.service';
+import { orderItems, orders } from '../schema';
 
 function mapToOrderItem(row: typeof orderItems.$inferSelect): OrderItem {
   return new OrderItem(

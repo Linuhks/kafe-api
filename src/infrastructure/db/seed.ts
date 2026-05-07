@@ -3,8 +3,8 @@ import { hashPassword } from 'better-auth/crypto';
 import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import { account, user } from './auth-schema.js';
-import { categories, ingredients, products } from './schema.js';
+import { account, user } from './auth-schema';
+import { categories, ingredients, products } from './schema';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const db = drizzle(pool);

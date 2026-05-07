@@ -1,5 +1,5 @@
-import type { Category } from '../../../domain/entities/category.entity.js';
-import type { ICategoryRepository } from '../../../domain/repositories/category.repository.js';
+import { Category } from '../../../domain/entities/category.entity';
+import { ICategoryRepository } from '../../../domain/repositories/category.repository';
 
 export interface ListCategoriesInput {
   page: number;

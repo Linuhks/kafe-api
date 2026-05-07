@@ -1,9 +1,9 @@
-import { Product } from '../../domain/entities/product.entity.js';
+import { Product } from '../../domain/entities/product.entity';
 import {
   type CreateProductData,
   IProductRepository,
   type UpdateProductData,
-} from '../../domain/repositories/product.repository.js';
+} from '../../domain/repositories/product.repository';
 
 export class InMemoryProductRepository extends IProductRepository {
   items: Product[] = [];

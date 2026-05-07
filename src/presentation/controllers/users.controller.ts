@@ -1,14 +1,16 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { CreateUserUseCase } from '../../application/use-cases/users/create-user.use-case.js';
-import type { DeleteUserUseCase } from '../../application/use-cases/users/delete-user.use-case.js';
-import type { GetUserUseCase } from '../../application/use-cases/users/get-user.use-case.js';
-import type { ListUsersUseCase } from '../../application/use-cases/users/list-users.use-case.js';
-import type { UpdateUserUseCase } from '../../application/use-cases/users/update-user.use-case.js';
-import { Roles } from '../decorators/roles.decorator.js';
-import type { PaginationDto } from '../dtos/shared/pagination.dto.js';
-import type { CreateUserDto } from '../dtos/users/create-user.dto.js';
-import type { UpdateUserDto } from '../dtos/users/update-user.dto.js';
+import { ApiExtraModels, ApiOperation, ApiResponse, ApiTags, ApiBearerAuth, getSchemaPath } from '@nestjs/swagger';
+import { CreateUserUseCase } from '../../application/use-cases/users/create-user.use-case';
+import { DeleteUserUseCase } from '../../application/use-cases/users/delete-user.use-case';
+import { GetUserUseCase } from '../../application/use-cases/users/get-user.use-case';
+import { ListUsersUseCase } from '../../application/use-cases/users/list-users.use-case';
+import { UpdateUserUseCase } from '../../application/use-cases/users/update-user.use-case';
+import { User } from '../../domain/entities/user.entity';
+import { Roles } from '../decorators/roles.decorator';
+import { PaginationDto } from '../dtos/shared/pagination.dto';
+import { CreateUserDto } from '../dtos/users/create-user.dto';
+import { UpdateUserDto } from '../dtos/users/update-user.dto';
+import { UserResponseDto } from '../dtos/responses/user.response.dto';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -25,7 +27,29 @@ export class UsersController {
 
   @Get()
   @ApiOperation({ summary: 'Lista todos os usuários (ADMIN)' })
-  async list(@Query() query: PaginationDto) {
+  @ApiExtraModels(UserResponseDto)
+  @ApiResponse({
+    status: 200,
+    schema: {
+      properties: {
+        data: { type: 'array', items: { $ref: getSchemaPath(UserResponseDto) } },
+        pagination: {
+          type: 'object',
+          properties: {
+            page: { type: 'number' },
+            limit: { type: 'number' },
+            total: { type: 'number' },
+            totalPages: { type: 'number' },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  @ApiResponse({ status: 403, description: 'Sem permissão' })
+  async list(
+    @Query() query: PaginationDto,
+  ): Promise<{ data: User[]; pagination: { page: number; limit: number; total: number; totalPages: number } }> {
     const result = await this.listUsers.execute(query);
     return {
       data: result.data,
@@ -40,27 +64,43 @@ export class UsersController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Busca usuário por ID (ADMIN)' })
-  async getOne(@Param('id') id: string) {
+  @ApiResponse({ status: 200, type: UserResponseDto })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  @ApiResponse({ status: 403, description: 'Sem permissão' })
+  @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
+  async getOne(@Param('id') id: string): Promise<User> {
     return this.getUser.execute(id);
   }
 
   @Post()
   @HttpCode(201)
   @ApiOperation({ summary: 'Cria novo usuário (ADMIN)' })
-  async create(@Body() dto: CreateUserDto) {
+  @ApiResponse({ status: 201, type: UserResponseDto })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  @ApiResponse({ status: 403, description: 'Sem permissão' })
+  @ApiResponse({ status: 409, description: 'E-mail já cadastrado' })
+  async create(@Body() dto: CreateUserDto): Promise<User> {
     return this.createUser.execute(dto);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Atualiza usuário (ADMIN)' })
-  async update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+  @ApiResponse({ status: 200, type: UserResponseDto })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  @ApiResponse({ status: 403, description: 'Sem permissão' })
+  @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
+  async update(@Param('id') id: string, @Body() dto: UpdateUserDto): Promise<User> {
     return this.updateUser.execute(id, dto);
   }
 
   @Delete(':id')
   @HttpCode(204)
   @ApiOperation({ summary: 'Remove usuário (ADMIN)' })
-  async remove(@Param('id') id: string) {
+  @ApiResponse({ status: 204, description: 'Usuário removido com sucesso' })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  @ApiResponse({ status: 403, description: 'Sem permissão' })
+  @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
+  async remove(@Param('id') id: string): Promise<void> {
     await this.deleteUser.execute(id);
   }
 }

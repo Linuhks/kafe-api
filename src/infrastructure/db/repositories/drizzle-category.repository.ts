@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { count, eq, ilike } from 'drizzle-orm';
-import { Category } from '../../../domain/entities/category.entity.js';
+import { Category } from '../../../domain/entities/category.entity';
 import {
   type CreateCategoryData,
   ICategoryRepository,
   type UpdateCategoryData,
-} from '../../../domain/repositories/category.repository.js';
-import type { DrizzleService } from '../drizzle.service.js';
-import { categories } from '../schema.js';
+} from '../../../domain/repositories/category.repository';
+import { DrizzleService } from '../drizzle.service';
+import { categories } from '../schema';
 
 function mapToCategory(row: typeof categories.$inferSelect): Category {
   return new Category(

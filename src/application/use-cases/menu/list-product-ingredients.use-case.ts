@@ -1,7 +1,7 @@
-import type { ProductIngredient } from '../../../domain/entities/product-ingredient.entity.js';
-import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import type { IProductRepository } from '../../../domain/repositories/product.repository.js';
-import type { IProductIngredientRepository } from '../../../domain/repositories/product-ingredient.repository.js';
+import { ProductIngredient } from '../../../domain/entities/product-ingredient.entity';
+import { NotFoundError } from '../../../domain/errors/domain.error';
+import { IProductRepository } from '../../../domain/repositories/product.repository';
+import { IProductIngredientRepository } from '../../../domain/repositories/product-ingredient.repository';
 
 export class ListProductIngredientsUseCase {
   constructor(

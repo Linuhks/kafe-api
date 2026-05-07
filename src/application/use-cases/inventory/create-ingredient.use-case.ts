@@ -1,6 +1,6 @@
-import type { Ingredient } from '../../../domain/entities/ingredient.entity.js';
-import { ConflictError } from '../../../domain/errors/domain.error.js';
-import type { IIngredientRepository } from '../../../domain/repositories/ingredient.repository.js';
+import { Ingredient } from '../../../domain/entities/ingredient.entity';
+import { ConflictError } from '../../../domain/errors/domain.error';
+import { IIngredientRepository } from '../../../domain/repositories/ingredient.repository';
 
 export interface CreateIngredientDto {
   name: string;

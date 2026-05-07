@@ -1,9 +1,9 @@
-import { Category } from '../../domain/entities/category.entity.js';
+import { Category } from '../../domain/entities/category.entity';
 import {
   type CreateCategoryData,
   ICategoryRepository,
   type UpdateCategoryData,
-} from '../../domain/repositories/category.repository.js';
+} from '../../domain/repositories/category.repository';
 
 export class InMemoryCategoryRepository extends ICategoryRepository {
   items: Category[] = [];

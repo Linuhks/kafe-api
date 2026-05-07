@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { Ingredient } from '../../../domain/entities/ingredient.entity.js';
-import { Order } from '../../../domain/entities/order.entity.js';
-import { OrderItem } from '../../../domain/entities/order-item.entity.js';
-import { InsufficientStockError } from '../../../domain/errors/domain.error.js';
-import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository.js';
-import { InMemoryInventoryMovementRepository } from '../../../test/repositories/in-memory-inventory-movement.repository.js';
-import { DeductForOrderUseCase } from './deduct-for-order.use-case.js';
+import { Ingredient } from '../../../domain/entities/ingredient.entity';
+import { Order } from '../../../domain/entities/order.entity';
+import { OrderItem } from '../../../domain/entities/order-item.entity';
+import { InsufficientStockError } from '../../../domain/errors/domain.error';
+import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository';
+import { InMemoryInventoryMovementRepository } from '../../../test/repositories/in-memory-inventory-movement.repository';
+import { DeductForOrderUseCase } from './deduct-for-order.use-case';
 
 function makeOrder(items: OrderItem[]): Order {
   return new Order(

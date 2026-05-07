@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { InMemoryProductRepository } from '../../../test/repositories/in-memory-product.repository.js';
-import { ToggleAvailabilityUseCase } from './toggle-availability.use-case.js';
+import { InMemoryProductRepository } from '../../../test/repositories/in-memory-product.repository';
+import { ToggleAvailabilityUseCase } from './toggle-availability.use-case';
 
 describe('ToggleAvailabilityUseCase', () => {
   let productRepo: InMemoryProductRepository;

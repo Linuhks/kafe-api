@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { User } from '../../../domain/entities/user.entity.js';
-import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user.repository.js';
-import { DeleteUserUseCase } from './delete-user.use-case.js';
+import { User } from '../../../domain/entities/user.entity';
+import { NotFoundError } from '../../../domain/errors/domain.error';
+import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user.repository';
+import { DeleteUserUseCase } from './delete-user.use-case';
 
 describe('DeleteUserUseCase', () => {
   let userRepo: InMemoryUserRepository;

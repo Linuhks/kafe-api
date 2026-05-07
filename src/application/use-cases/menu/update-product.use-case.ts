@@ -1,10 +1,10 @@
-import type { Product } from '../../../domain/entities/product.entity.js';
-import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import type { ICategoryRepository } from '../../../domain/repositories/category.repository.js';
-import type {
+import { Product } from '../../../domain/entities/product.entity';
+import { NotFoundError } from '../../../domain/errors/domain.error';
+import { ICategoryRepository } from '../../../domain/repositories/category.repository';
+import {
   IProductRepository,
   UpdateProductData,
-} from '../../../domain/repositories/product.repository.js';
+} from '../../../domain/repositories/product.repository';
 
 export class UpdateProductUseCase {
   constructor(

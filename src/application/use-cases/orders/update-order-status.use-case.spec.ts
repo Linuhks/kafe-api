@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository.js';
-import { InMemoryInventoryMovementRepository } from '../../../test/repositories/in-memory-inventory-movement.repository.js';
-import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository.js';
-import { DeductForOrderUseCase } from '../inventory/deduct-for-order.use-case.js';
-import { UpdateOrderStatusUseCase } from './update-order-status.use-case.js';
+import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository';
+import { InMemoryInventoryMovementRepository } from '../../../test/repositories/in-memory-inventory-movement.repository';
+import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository';
+import { DeductForOrderUseCase } from '../inventory/deduct-for-order.use-case';
+import { UpdateOrderStatusUseCase } from './update-order-status.use-case';
 
 describe('UpdateOrderStatusUseCase', () => {
   let orderRepo: InMemoryOrderRepository;

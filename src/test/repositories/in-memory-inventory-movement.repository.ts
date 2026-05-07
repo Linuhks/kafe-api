@@ -1,9 +1,9 @@
-import { InventoryMovement } from '../../domain/entities/inventory-movement.entity.js';
+import { InventoryMovement } from '../../domain/entities/inventory-movement.entity';
 import {
   type CreateMovementData,
   type FindMovementsFilters,
   IInventoryMovementRepository,
-} from '../../domain/repositories/inventory-movement.repository.js';
+} from '../../domain/repositories/inventory-movement.repository';
 
 export class InMemoryInventoryMovementRepository extends IInventoryMovementRepository {
   items: InventoryMovement[] = [];

@@ -1,8 +1,8 @@
-import type { Order } from '../../../domain/entities/order.entity.js';
-import type {
+import { Order } from '../../../domain/entities/order.entity';
+import {
   IOrderRepository,
   ListOrdersFilter,
-} from '../../../domain/repositories/order.repository.js';
+} from '../../../domain/repositories/order.repository';
 
 export class ListOrdersUseCase {
   constructor(private readonly orderRepo: IOrderRepository) {}

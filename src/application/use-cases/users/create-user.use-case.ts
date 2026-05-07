@@ -1,9 +1,9 @@
-import type { User } from '../../../domain/entities/user.entity.js';
-import { ConflictError } from '../../../domain/errors/domain.error.js';
-import type {
+import { User } from '../../../domain/entities/user.entity';
+import { ConflictError } from '../../../domain/errors/domain.error';
+import {
   CreateUserData,
   IUserRepository,
-} from '../../../domain/repositories/user.repository.js';
+} from '../../../domain/repositories/user.repository';
 
 export class CreateUserUseCase {
   constructor(private readonly userRepo: IUserRepository) {}

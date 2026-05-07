@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository.js';
-import { ListIngredientsUseCase } from './list-ingredients.use-case.js';
+import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository';
+import { ListIngredientsUseCase } from './list-ingredients.use-case';
 
 describe('ListIngredientsUseCase', () => {
   let ingredientRepo: InMemoryIngredientRepository;

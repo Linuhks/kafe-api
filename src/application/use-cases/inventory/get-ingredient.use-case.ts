@@ -1,6 +1,6 @@
-import type { Ingredient } from '../../../domain/entities/ingredient.entity.js';
-import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import type { IIngredientRepository } from '../../../domain/repositories/ingredient.repository.js';
+import { Ingredient } from '../../../domain/entities/ingredient.entity';
+import { NotFoundError } from '../../../domain/errors/domain.error';
+import { IIngredientRepository } from '../../../domain/repositories/ingredient.repository';
 
 export class GetIngredientUseCase {
   constructor(private readonly ingredientRepo: IIngredientRepository) {}

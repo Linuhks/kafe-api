@@ -1,4 +1,4 @@
-import type { User } from '../entities/user.entity.js';
+import { User } from '../entities/user.entity';
 
 export interface CreateUserData {
   name: string;

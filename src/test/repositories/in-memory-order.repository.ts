@@ -1,5 +1,5 @@
-import { Order, type OrderStatus } from '../../domain/entities/order.entity.js';
-import { OrderItem } from '../../domain/entities/order-item.entity.js';
+import { Order, type OrderStatus } from '../../domain/entities/order.entity';
+import { OrderItem } from '../../domain/entities/order-item.entity';
 import {
   type CreateOrderData,
   type DateRange,
@@ -8,7 +8,7 @@ import {
   type OrderSummaryData,
   type PeakHourData,
   type TopProductData,
-} from '../../domain/repositories/order.repository.js';
+} from '../../domain/repositories/order.repository';
 
 export class InMemoryOrderRepository extends IOrderRepository {
   items: Order[] = [];

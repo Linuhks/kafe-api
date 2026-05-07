@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { Ingredient } from '../../../domain/entities/ingredient.entity.js';
-import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository.js';
-import { GetStockAlertsUseCase } from './get-stock-alerts.use-case.js';
+import { Ingredient } from '../../../domain/entities/ingredient.entity';
+import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository';
+import { GetStockAlertsUseCase } from './get-stock-alerts.use-case';
 
 describe('GetStockAlertsUseCase', () => {
   let ingredientRepo: InMemoryIngredientRepository;

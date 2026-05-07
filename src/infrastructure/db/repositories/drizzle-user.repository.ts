@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { hashPassword } from 'better-auth/crypto';
 import { count, eq } from 'drizzle-orm';
-import { User } from '../../../domain/entities/user.entity.js';
+import { User } from '../../../domain/entities/user.entity';
 import {
   type CreateUserData,
   IUserRepository,
   type UpdateUserData,
-} from '../../../domain/repositories/user.repository.js';
-import { account as accountTable, user as userTable } from '../auth-schema.js';
-import type { DrizzleService } from '../drizzle.service.js';
+} from '../../../domain/repositories/user.repository';
+import { account as accountTable, user as userTable } from '../auth-schema';
+import { DrizzleService } from '../drizzle.service';
 
 function mapToUser(row: typeof userTable.$inferSelect): User {
   return new User(

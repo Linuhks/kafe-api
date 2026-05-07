@@ -1,10 +1,10 @@
-import type { Order } from '../../../domain/entities/order.entity.js';
-import { ConflictError, NotFoundError } from '../../../domain/errors/domain.error.js';
-import type {
+import { Order } from '../../../domain/entities/order.entity';
+import { ConflictError, NotFoundError } from '../../../domain/errors/domain.error';
+import {
   CreateOrderItemData,
   IOrderRepository,
-} from '../../../domain/repositories/order.repository.js';
-import type { IProductRepository } from '../../../domain/repositories/product.repository.js';
+} from '../../../domain/repositories/order.repository';
+import { IProductRepository } from '../../../domain/repositories/product.repository';
 
 interface CreateOrderInput {
   clientId?: string;

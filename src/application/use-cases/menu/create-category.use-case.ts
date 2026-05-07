@@ -1,9 +1,9 @@
-import type { Category } from '../../../domain/entities/category.entity.js';
-import { ConflictError } from '../../../domain/errors/domain.error.js';
-import type {
+import { Category } from '../../../domain/entities/category.entity';
+import { ConflictError } from '../../../domain/errors/domain.error';
+import {
   CreateCategoryData,
   ICategoryRepository,
-} from '../../../domain/repositories/category.repository.js';
+} from '../../../domain/repositories/category.repository';
 
 export class CreateCategoryUseCase {
   constructor(private readonly categoryRepo: ICategoryRepository) {}

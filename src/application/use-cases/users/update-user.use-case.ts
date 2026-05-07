@@ -1,9 +1,9 @@
-import type { User } from '../../../domain/entities/user.entity.js';
-import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import type {
+import { User } from '../../../domain/entities/user.entity';
+import { NotFoundError } from '../../../domain/errors/domain.error';
+import {
   IUserRepository,
   UpdateUserData,
-} from '../../../domain/repositories/user.repository.js';
+} from '../../../domain/repositories/user.repository';
 
 export class UpdateUserUseCase {
   constructor(private readonly userRepo: IUserRepository) {}

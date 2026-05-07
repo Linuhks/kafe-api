@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { count, eq } from 'drizzle-orm';
-import { Product } from '../../../domain/entities/product.entity.js';
+import { Product } from '../../../domain/entities/product.entity';
 import {
   type CreateProductData,
   IProductRepository,
   type UpdateProductData,
-} from '../../../domain/repositories/product.repository.js';
-import type { DrizzleService } from '../drizzle.service.js';
-import { products } from '../schema.js';
+} from '../../../domain/repositories/product.repository';
+import { DrizzleService } from '../drizzle.service';
+import { products } from '../schema';
 
 function mapToProduct(row: typeof products.$inferSelect): Product {
   return new Product(

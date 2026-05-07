@@ -1,15 +1,17 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiExtraModels, ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
-import type { CreateCategoryUseCase } from '../../application/use-cases/menu/create-category.use-case.js';
-import type { DeleteCategoryUseCase } from '../../application/use-cases/menu/delete-category.use-case.js';
-import type { GetCategoryUseCase } from '../../application/use-cases/menu/get-category.use-case.js';
-import type { ListCategoriesUseCase } from '../../application/use-cases/menu/list-categories.use-case.js';
-import type { UpdateCategoryUseCase } from '../../application/use-cases/menu/update-category.use-case.js';
-import { Roles } from '../decorators/roles.decorator.js';
-import type { CreateCategoryDto } from '../dtos/menu/create-category.dto.js';
-import type { UpdateCategoryDto } from '../dtos/menu/update-category.dto.js';
-import type { PaginationDto } from '../dtos/shared/pagination.dto.js';
+import { CreateCategoryUseCase } from '../../application/use-cases/menu/create-category.use-case';
+import { DeleteCategoryUseCase } from '../../application/use-cases/menu/delete-category.use-case';
+import { GetCategoryUseCase } from '../../application/use-cases/menu/get-category.use-case';
+import { ListCategoriesUseCase } from '../../application/use-cases/menu/list-categories.use-case';
+import { UpdateCategoryUseCase } from '../../application/use-cases/menu/update-category.use-case';
+import { Category } from '../../domain/entities/category.entity';
+import { Roles } from '../decorators/roles.decorator';
+import { CategoryResponseDto } from '../dtos/responses/category.response.dto';
+import { CreateCategoryDto } from '../dtos/menu/create-category.dto';
+import { UpdateCategoryDto } from '../dtos/menu/update-category.dto';
+import { PaginationDto } from '../dtos/shared/pagination.dto';
 
 @ApiTags('categories')
 @Controller('categories')
@@ -25,7 +27,27 @@ export class CategoriesController {
   @Get()
   @AllowAnonymous()
   @ApiOperation({ summary: 'Lista categorias (público)' })
-  async list(@Query() query: PaginationDto) {
+  @ApiExtraModels(CategoryResponseDto)
+  @ApiResponse({
+    status: 200,
+    schema: {
+      properties: {
+        data: { type: 'array', items: { $ref: getSchemaPath(CategoryResponseDto) } },
+        pagination: {
+          type: 'object',
+          properties: {
+            page: { type: 'number' },
+            limit: { type: 'number' },
+            total: { type: 'number' },
+            totalPages: { type: 'number' },
+          },
+        },
+      },
+    },
+  })
+  async list(
+    @Query() query: PaginationDto,
+  ): Promise<{ data: Category[]; pagination: { page: number; limit: number; total: number; totalPages: number } }> {
     const result = await this.listCategories.execute(query);
     return {
       data: result.data,
@@ -41,7 +63,9 @@ export class CategoriesController {
   @Get(':id')
   @AllowAnonymous()
   @ApiOperation({ summary: 'Busca categoria por ID (público)' })
-  async getOne(@Param('id') id: string) {
+  @ApiResponse({ status: 200, type: CategoryResponseDto })
+  @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
+  async getOne(@Param('id') id: string): Promise<Category> {
     return this.getCategory.execute(id);
   }
 
@@ -50,7 +74,10 @@ export class CategoriesController {
   @ApiBearerAuth()
   @Roles(['ADMIN'])
   @ApiOperation({ summary: 'Cria categoria (ADMIN)' })
-  async create(@Body() dto: CreateCategoryDto) {
+  @ApiResponse({ status: 201, type: CategoryResponseDto })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  @ApiResponse({ status: 403, description: 'Sem permissão' })
+  async create(@Body() dto: CreateCategoryDto): Promise<Category> {
     return this.createCategory.execute(dto);
   }
 
@@ -58,7 +85,11 @@ export class CategoriesController {
   @ApiBearerAuth()
   @Roles(['ADMIN'])
   @ApiOperation({ summary: 'Atualiza categoria (ADMIN)' })
-  async update(@Param('id') id: string, @Body() dto: UpdateCategoryDto) {
+  @ApiResponse({ status: 200, type: CategoryResponseDto })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  @ApiResponse({ status: 403, description: 'Sem permissão' })
+  @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
+  async update(@Param('id') id: string, @Body() dto: UpdateCategoryDto): Promise<Category> {
     return this.updateCategory.execute(id, dto);
   }
 
@@ -67,7 +98,11 @@ export class CategoriesController {
   @ApiBearerAuth()
   @Roles(['ADMIN'])
   @ApiOperation({ summary: 'Remove categoria (ADMIN)' })
-  async remove(@Param('id') id: string) {
+  @ApiResponse({ status: 204, description: 'Categoria removida com sucesso' })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  @ApiResponse({ status: 403, description: 'Sem permissão' })
+  @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
+  async remove(@Param('id') id: string): Promise<void> {
     await this.deleteCategory.execute(id);
   }
 }

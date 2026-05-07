@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { count, eq, sql } from 'drizzle-orm';
-import { Ingredient } from '../../../domain/entities/ingredient.entity.js';
+import { Ingredient } from '../../../domain/entities/ingredient.entity';
 import {
   type CreateIngredientData,
   IIngredientRepository,
   type ProductIngredientRow,
   type UpdateIngredientData,
-} from '../../../domain/repositories/ingredient.repository.js';
-import type { DrizzleService } from '../drizzle.service.js';
-import { ingredients, productIngredients } from '../schema.js';
+} from '../../../domain/repositories/ingredient.repository';
+import { DrizzleService } from '../drizzle.service';
+import { ingredients, productIngredients } from '../schema';
 
 function mapToIngredient(row: typeof ingredients.$inferSelect): Ingredient {
   return new Ingredient(

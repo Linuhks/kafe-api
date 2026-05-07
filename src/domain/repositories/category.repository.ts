@@ -1,4 +1,4 @@
-import type { Category } from '../entities/category.entity.js';
+import { Category } from '../entities/category.entity';
 
 export interface CreateCategoryData {
   name: string;

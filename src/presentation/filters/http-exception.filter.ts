@@ -5,8 +5,8 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import type { Request, Response } from 'express';
-import { DomainError } from '../../domain/errors/domain.error.js';
+import { Request, Response } from 'express';
+import { DomainError } from '../../domain/errors/domain.error';
 
 interface ErrorDetail {
   field?: string;

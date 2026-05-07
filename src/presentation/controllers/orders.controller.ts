@@ -9,19 +9,20 @@ import {
   Query,
   Request,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiExtraModels, ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
-import type { CreateOrderUseCase } from '../../application/use-cases/orders/create-order.use-case.js';
-import type { GetBaristaQueueUseCase } from '../../application/use-cases/orders/get-barista-queue.use-case.js';
-import type { GetMyOrdersUseCase } from '../../application/use-cases/orders/get-my-orders.use-case.js';
-import type { GetOrderUseCase } from '../../application/use-cases/orders/get-order.use-case.js';
-import type { ListOrdersUseCase } from '../../application/use-cases/orders/list-orders.use-case.js';
-import type { UpdateOrderStatusUseCase } from '../../application/use-cases/orders/update-order-status.use-case.js';
-import type { OrderStatus } from '../../domain/entities/order.entity.js';
-import { Roles } from '../decorators/roles.decorator.js';
-import type { CreateOrderDto } from '../dtos/orders/create-order.dto.js';
-import type { UpdateOrderStatusDto } from '../dtos/orders/update-order-status.dto.js';
-import { PaginationDto } from '../dtos/shared/pagination.dto.js';
+import { CreateOrderUseCase } from '../../application/use-cases/orders/create-order.use-case';
+import { GetBaristaQueueUseCase } from '../../application/use-cases/orders/get-barista-queue.use-case';
+import { GetMyOrdersUseCase } from '../../application/use-cases/orders/get-my-orders.use-case';
+import { GetOrderUseCase } from '../../application/use-cases/orders/get-order.use-case';
+import { ListOrdersUseCase } from '../../application/use-cases/orders/list-orders.use-case';
+import { UpdateOrderStatusUseCase } from '../../application/use-cases/orders/update-order-status.use-case';
+import { Order, OrderStatus } from '../../domain/entities/order.entity';
+import { Roles } from '../decorators/roles.decorator';
+import { OrderResponseDto } from '../dtos/responses/order.response.dto';
+import { CreateOrderDto } from '../dtos/orders/create-order.dto';
+import { UpdateOrderStatusDto } from '../dtos/orders/update-order-status.dto';
+import { PaginationDto } from '../dtos/shared/pagination.dto';
 
 class ListOrdersQuery extends PaginationDto {
   status?: OrderStatus;
@@ -45,7 +46,9 @@ export class OrdersController {
   @HttpCode(201)
   @AllowAnonymous()
   @ApiOperation({ summary: 'Cria pedido (qualquer usuário)' })
-  async create(@Body() dto: CreateOrderDto, @Request() req: any) {
+  @ApiResponse({ status: 201, type: OrderResponseDto })
+  @ApiResponse({ status: 400, description: 'Dados inválidos ou estoque insuficiente' })
+  async create(@Body() dto: CreateOrderDto, @Request() req: any): Promise<Order> {
     const user = req.user as { id: string; name: string } | undefined;
     return this.createOrder.execute({
       clientId: user?.id,
@@ -59,7 +62,29 @@ export class OrdersController {
   @ApiBearerAuth()
   @Roles(['ADMIN'])
   @ApiOperation({ summary: 'Lista pedidos com filtros (ADMIN)' })
-  async list(@Query() query: ListOrdersQuery) {
+  @ApiExtraModels(OrderResponseDto)
+  @ApiResponse({
+    status: 200,
+    schema: {
+      properties: {
+        data: { type: 'array', items: { $ref: getSchemaPath(OrderResponseDto) } },
+        pagination: {
+          type: 'object',
+          properties: {
+            page: { type: 'number' },
+            limit: { type: 'number' },
+            total: { type: 'number' },
+            totalPages: { type: 'number' },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  @ApiResponse({ status: 403, description: 'Sem permissão' })
+  async list(
+    @Query() query: ListOrdersQuery,
+  ): Promise<{ data: Order[]; pagination: { page: number; limit: number; total: number; totalPages: number } }> {
     const result = await this.listOrders.execute({
       status: query.status,
       from: query.from,
@@ -82,14 +107,39 @@ export class OrdersController {
   @ApiBearerAuth()
   @Roles(['BARISTA', 'ADMIN'])
   @ApiOperation({ summary: 'Fila de pedidos do barista (BARISTA, ADMIN)' })
-  async queue() {
+  @ApiResponse({ status: 200, type: [OrderResponseDto] })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  @ApiResponse({ status: 403, description: 'Sem permissão' })
+  async queue(): Promise<Order[]> {
     return this.getBaristaQueue.execute();
   }
 
   @Get('me')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Histórico de pedidos do cliente autenticado' })
-  async myOrders(@Query() query: PaginationDto, @Request() req: any) {
+  @ApiExtraModels(OrderResponseDto)
+  @ApiResponse({
+    status: 200,
+    schema: {
+      properties: {
+        data: { type: 'array', items: { $ref: getSchemaPath(OrderResponseDto) } },
+        pagination: {
+          type: 'object',
+          properties: {
+            page: { type: 'number' },
+            limit: { type: 'number' },
+            total: { type: 'number' },
+            totalPages: { type: 'number' },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  async myOrders(
+    @Query() query: PaginationDto,
+    @Request() req: any,
+  ): Promise<{ data: Order[]; pagination: { page: number; limit: number; total: number; totalPages: number } }> {
     const user = req.user as { id: string };
     const result = await this.getMyOrders.execute(user.id, query.page, query.limit);
     return {
@@ -107,7 +157,11 @@ export class OrdersController {
   @ApiBearerAuth()
   @Roles(['ADMIN', 'BARISTA'])
   @ApiOperation({ summary: 'Detalhe do pedido (ADMIN, BARISTA)' })
-  async getOne(@Param('id') id: string) {
+  @ApiResponse({ status: 200, type: OrderResponseDto })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  @ApiResponse({ status: 403, description: 'Sem permissão' })
+  @ApiResponse({ status: 404, description: 'Pedido não encontrado' })
+  async getOne(@Param('id') id: string): Promise<Order> {
     return this.getOrder.execute(id);
   }
 
@@ -115,11 +169,16 @@ export class OrdersController {
   @ApiBearerAuth()
   @Roles(['BARISTA', 'ADMIN'])
   @ApiOperation({ summary: 'Atualiza status do pedido (BARISTA, ADMIN)' })
+  @ApiResponse({ status: 200, type: OrderResponseDto })
+  @ApiResponse({ status: 400, description: 'Transição de status inválida' })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  @ApiResponse({ status: 403, description: 'Sem permissão' })
+  @ApiResponse({ status: 404, description: 'Pedido não encontrado' })
   async updateStatus(
     @Param('id') id: string,
     @Body() dto: UpdateOrderStatusDto,
     @Request() req: any,
-  ) {
+  ): Promise<Order> {
     const user = req.user as { id: string } | undefined;
     return this.updateOrderStatus.execute(id, dto.status, user?.id);
   }

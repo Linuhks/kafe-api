@@ -1,4 +1,4 @@
-import type { InventoryMovement, MovementType } from '../entities/inventory-movement.entity.js';
+import { InventoryMovement, MovementType } from '../entities/inventory-movement.entity';
 
 export interface CreateMovementData {
   ingredientId: string;

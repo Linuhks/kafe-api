@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
-import { AuthModule } from './auth.module.js';
-import { DashboardModule } from './dashboard.module.js';
-import { BetterAuthModule } from './infrastructure/auth/better-auth.module.js';
-import { DrizzleModule } from './infrastructure/db/drizzle.module.js';
-import { InventoryModule } from './inventory.module.js';
-import { MenuModule } from './menu.module.js';
-import { OrdersModule } from './orders.module.js';
-import { UsersModule } from './users.module.js';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from './auth.module';
+import { DashboardModule } from './dashboard.module';
+import { BetterAuthModule } from './infrastructure/auth/better-auth.module';
+import { DrizzleModule } from './infrastructure/db/drizzle.module';
+import { InventoryModule } from './inventory.module';
+import { MenuModule } from './menu.module';
+import { OrdersModule } from './orders.module';
+import { UsersModule } from './users.module';
 
 @Module({
   imports: [

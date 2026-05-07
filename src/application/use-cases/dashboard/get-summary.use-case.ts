@@ -1,8 +1,8 @@
-import type {
+import {
   DateRange,
   IOrderRepository,
   OrderSummaryData,
-} from '../../../domain/repositories/order.repository.js';
+} from '../../../domain/repositories/order.repository';
 
 export class GetSummaryUseCase {
   constructor(private readonly orderRepo: IOrderRepository) {}

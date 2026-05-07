@@ -1,6 +1,6 @@
-import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import type { IProductRepository } from '../../../domain/repositories/product.repository.js';
-import type { IProductIngredientRepository } from '../../../domain/repositories/product-ingredient.repository.js';
+import { NotFoundError } from '../../../domain/errors/domain.error';
+import { IProductRepository } from '../../../domain/repositories/product.repository';
+import { IProductIngredientRepository } from '../../../domain/repositories/product-ingredient.repository';
 
 export class RemoveProductIngredientUseCase {
   constructor(

@@ -1,5 +1,5 @@
-import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import type { IProductRepository } from '../../../domain/repositories/product.repository.js';
+import { NotFoundError } from '../../../domain/errors/domain.error';
+import { IProductRepository } from '../../../domain/repositories/product.repository';
 
 export class DeleteProductUseCase {
   constructor(private readonly productRepo: IProductRepository) {}

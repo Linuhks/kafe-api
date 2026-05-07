@@ -3,14 +3,14 @@ import { and, count, desc, eq, gte, lte, type SQL } from 'drizzle-orm';
 import {
   InventoryMovement,
   type MovementType,
-} from '../../../domain/entities/inventory-movement.entity.js';
+} from '../../../domain/entities/inventory-movement.entity';
 import {
   type CreateMovementData,
   type FindMovementsFilters,
   IInventoryMovementRepository,
-} from '../../../domain/repositories/inventory-movement.repository.js';
-import type { DrizzleService } from '../drizzle.service.js';
-import { inventoryMovements } from '../schema.js';
+} from '../../../domain/repositories/inventory-movement.repository';
+import { DrizzleService } from '../drizzle.service';
+import { inventoryMovements } from '../schema';
 
 function mapToMovement(row: typeof inventoryMovements.$inferSelect): InventoryMovement {
   return new InventoryMovement(

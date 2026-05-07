@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository.js';
-import { GetBaristaQueueUseCase } from './get-barista-queue.use-case.js';
+import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository';
+import { GetBaristaQueueUseCase } from './get-barista-queue.use-case';
 
 describe('GetBaristaQueueUseCase', () => {
   let orderRepo: InMemoryOrderRepository;

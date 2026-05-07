@@ -1,5 +1,5 @@
-import type { Product } from '../../../domain/entities/product.entity.js';
-import type { IProductRepository } from '../../../domain/repositories/product.repository.js';
+import { Product } from '../../../domain/entities/product.entity';
+import { IProductRepository } from '../../../domain/repositories/product.repository';
 
 export interface ListProductsInput {
   page: number;

@@ -1,5 +1,5 @@
-import { InvalidOrderTransitionError } from '../errors/domain.error.js';
-import type { OrderItem } from './order-item.entity.js';
+import { InvalidOrderTransitionError } from '../errors/domain.error';
+import { OrderItem } from './order-item.entity';
 
 export type OrderStatus = 'RECEIVED' | 'IN_PREPARATION' | 'READY' | 'DELIVERED' | 'CANCELLED';
 

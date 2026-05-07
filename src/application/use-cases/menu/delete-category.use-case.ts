@@ -1,5 +1,5 @@
-import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import type { ICategoryRepository } from '../../../domain/repositories/category.repository.js';
+import { NotFoundError } from '../../../domain/errors/domain.error';
+import { ICategoryRepository } from '../../../domain/repositories/category.repository';
 
 export class DeleteCategoryUseCase {
   constructor(private readonly categoryRepo: ICategoryRepository) {}

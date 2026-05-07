@@ -1,9 +1,9 @@
 import { Injectable, type OnModuleDestroy } from '@nestjs/common';
-import type { ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import * as authSchema from './auth-schema.js';
-import * as schema from './schema.js';
+import * as authSchema from './auth-schema';
+import * as schema from './schema';
 
 export type DrizzleDB = NodePgDatabase<typeof schema>;
 export type AuthDrizzleDB = NodePgDatabase<typeof authSchema>;

@@ -1,8 +1,8 @@
-import type { InventoryMovement } from '../../../domain/entities/inventory-movement.entity.js';
-import type {
+import { InventoryMovement } from '../../../domain/entities/inventory-movement.entity';
+import {
   FindMovementsFilters,
   IInventoryMovementRepository,
-} from '../../../domain/repositories/inventory-movement.repository.js';
+} from '../../../domain/repositories/inventory-movement.repository';
 
 export interface ListMovementsDto {
   ingredientId?: string;

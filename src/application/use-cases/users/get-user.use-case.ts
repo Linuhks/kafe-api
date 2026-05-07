@@ -1,6 +1,6 @@
-import type { User } from '../../../domain/entities/user.entity.js';
-import { NotFoundError } from '../../../domain/errors/domain.error.js';
-import type { IUserRepository } from '../../../domain/repositories/user.repository.js';
+import { User } from '../../../domain/entities/user.entity';
+import { NotFoundError } from '../../../domain/errors/domain.error';
+import { IUserRepository } from '../../../domain/repositories/user.repository';
 
 export class GetUserUseCase {
   constructor(private readonly userRepo: IUserRepository) {}

@@ -1,4 +1,4 @@
-import type { Ingredient } from '../entities/ingredient.entity.js';
+import { Ingredient } from '../entities/ingredient.entity';
 
 export interface CreateIngredientData {
   name: string;

@@ -1,4 +1,4 @@
-import type { ArgumentsHost } from '@nestjs/common';
+import { ArgumentsHost } from '@nestjs/common';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
@@ -6,8 +6,8 @@ import {
   InsufficientStockError,
   InvalidOrderTransitionError,
   NotFoundError,
-} from '../../domain/errors/domain.error.js';
-import { HttpExceptionFilter } from './http-exception.filter.js';
+} from '../../domain/errors/domain.error';
+import { HttpExceptionFilter } from './http-exception.filter';
 
 function buildHost() {
   const jsonMock = vi.fn();

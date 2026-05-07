@@ -5,7 +5,7 @@ import {
   InsufficientStockError,
   InvalidOrderTransitionError,
   NotFoundError,
-} from './domain.error.js';
+} from './domain.error';
 
 describe('DomainError', () => {
   it('should set message, code, and statusCode', () => {
