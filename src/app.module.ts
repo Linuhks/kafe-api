@@ -20,6 +20,6 @@ import { UsersModule } from './users.module';
     OrdersModule,
     InventoryModule,
     DashboardModule,
-  ]
+  ],
 })
-export class AppModule { }
+export class AppModule {}

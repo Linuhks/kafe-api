@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Param,
-  Patch,
-  Post,
-  Query,
-  Request,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiExtraModels,
@@ -17,7 +7,7 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
+import { AllowAnonymous, UserSession } from '@thallesp/nestjs-better-auth';
 import { CreateOrderUseCase } from '../../application/use-cases/orders/create-order.use-case';
 import { GetBaristaQueueUseCase } from '../../application/use-cases/orders/get-barista-queue.use-case';
 import { GetMyOrdersUseCase } from '../../application/use-cases/orders/get-my-orders.use-case';
@@ -25,6 +15,8 @@ import { GetOrderUseCase } from '../../application/use-cases/orders/get-order.us
 import { ListOrdersUseCase } from '../../application/use-cases/orders/list-orders.use-case';
 import { UpdateOrderStatusUseCase } from '../../application/use-cases/orders/update-order-status.use-case';
 import { Order, OrderStatus } from '../../domain/entities/order.entity';
+import { Auth } from '../../infrastructure/auth/better-auth';
+import { CurrentUser } from '../decorators/current-user.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { CreateOrderDto } from '../dtos/orders/create-order.dto';
 import { UpdateOrderStatusDto } from '../dtos/orders/update-order-status.dto';
@@ -55,11 +47,13 @@ export class OrdersController {
   @ApiOperation({ summary: 'Cria pedido (qualquer usuário)' })
   @ApiResponse({ status: 201, type: OrderResponseDto })
   @ApiResponse({ status: 400, description: 'Dados inválidos ou estoque insuficiente' })
-  async create(@Body() dto: CreateOrderDto, @Request() req: any): Promise<Order> {
-    const user = req.user as { id: string; name: string } | undefined;
+  async create(
+    @Body() dto: CreateOrderDto,
+    @CurrentUser() user: UserSession<Auth> | undefined,
+  ): Promise<Order> {
     return this.createOrder.execute({
-      clientId: user?.id,
-      clientName: user?.name ?? dto.clientName,
+      clientId: user?.user.id,
+      clientName: user?.user.name ?? dto.clientName,
       notes: dto.notes,
       items: dto.items,
     });
@@ -146,13 +140,12 @@ export class OrdersController {
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   async myOrders(
     @Query() query: PaginationDto,
-    @Request() req: any,
+    @CurrentUser() user: UserSession<Auth>,
   ): Promise<{
     data: Order[];
     pagination: { page: number; limit: number; total: number; totalPages: number };
   }> {
-    const user = req.user as { id: string };
-    const result = await this.getMyOrders.execute(user.id, query.page, query.limit);
+    const result = await this.getMyOrders.execute(user.user.id, query.page, query.limit);
     return {
       data: result.data,
       pagination: {
@@ -188,9 +181,8 @@ export class OrdersController {
   async updateStatus(
     @Param('id') id: string,
     @Body() dto: UpdateOrderStatusDto,
-    @Request() req: any,
+    @CurrentUser() user: UserSession<Auth> | undefined,
   ): Promise<Order> {
-    const user = req.user as { id: string } | undefined;
-    return this.updateOrderStatus.execute(id, dto.status, user?.id);
+    return this.updateOrderStatus.execute(id, dto.status, user?.user.id);
   }
 }

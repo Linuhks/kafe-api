@@ -10,7 +10,7 @@ import { LoginResponseDto } from '../dtos/responses/auth.response.dto';
 @AllowAnonymous()
 @Controller('auth')
 export class AuthController {
-  constructor(@Inject(AuthService) private readonly authService: AuthService<typeof auth>) { }
+  constructor(@Inject(AuthService) private readonly authService: AuthService<typeof auth>) {}
 
   @Post('login')
   @HttpCode(200)
