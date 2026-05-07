@@ -1,5 +1,13 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiExtraModels, ApiOperation, ApiQuery, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExtraModels,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import { AddProductIngredientUseCase } from '../../application/use-cases/menu/add-product-ingredient.use-case';
 import { CreateProductUseCase } from '../../application/use-cases/menu/create-product.use-case';
@@ -13,11 +21,11 @@ import { UpdateProductUseCase } from '../../application/use-cases/menu/update-pr
 import { Product } from '../../domain/entities/product.entity';
 import { ProductIngredient } from '../../domain/entities/product-ingredient.entity';
 import { Roles } from '../decorators/roles.decorator';
-import { ProductResponseDto } from '../dtos/responses/product.response.dto';
-import { ProductIngredientResponseDto } from '../dtos/responses/product-ingredient.response.dto';
 import { AddProductIngredientDto } from '../dtos/menu/add-product-ingredient.dto';
 import { CreateProductDto } from '../dtos/menu/create-product.dto';
 import { UpdateProductDto } from '../dtos/menu/update-product.dto';
+import { ProductResponseDto } from '../dtos/responses/product.response.dto';
+import { ProductIngredientResponseDto } from '../dtos/responses/product-ingredient.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
 
 class ListProductsQuery extends PaginationDto {
@@ -61,9 +69,10 @@ export class ProductsController {
       },
     },
   })
-  async list(
-    @Query() query: ListProductsQuery,
-  ): Promise<{ data: Product[]; pagination: { page: number; limit: number; total: number; totalPages: number } }> {
+  async list(@Query() query: ListProductsQuery): Promise<{
+    data: Product[];
+    pagination: { page: number; limit: number; total: number; totalPages: number };
+  }> {
     const result = await this.listProducts.execute(query);
     return {
       data: result.data,
@@ -143,7 +152,10 @@ export class ProductsController {
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Produto ou ingrediente não encontrado' })
-  async addIngredient(@Param('id') id: string, @Body() dto: AddProductIngredientDto): Promise<ProductIngredient> {
+  async addIngredient(
+    @Param('id') id: string,
+    @Body() dto: AddProductIngredientDto,
+  ): Promise<ProductIngredient> {
     return this.addProductIngredient.execute({ productId: id, ...dto });
   }
 
@@ -156,7 +168,10 @@ export class ProductsController {
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Relação produto-ingrediente não encontrada' })
-  async removeIngredient(@Param('id') id: string, @Param('ingredientId') ingredientId: string): Promise<void> {
+  async removeIngredient(
+    @Param('id') id: string,
+    @Param('ingredientId') ingredientId: string,
+  ): Promise<void> {
     await this.removeProductIngredient.execute(id, ingredientId);
   }
 

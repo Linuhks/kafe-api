@@ -1,9 +1,6 @@
 import { User } from '../../../domain/entities/user.entity';
 import { NotFoundError } from '../../../domain/errors/domain.error';
-import {
-  IUserRepository,
-  UpdateUserData,
-} from '../../../domain/repositories/user.repository';
+import { IUserRepository, UpdateUserData } from '../../../domain/repositories/user.repository';
 
 export class UpdateUserUseCase {
   constructor(private readonly userRepo: IUserRepository) {}

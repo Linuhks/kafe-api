@@ -1,5 +1,12 @@
 import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiExtraModels, ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { CreateIngredientUseCase } from '../../application/use-cases/inventory/create-ingredient.use-case';
 import { GetIngredientUseCase } from '../../application/use-cases/inventory/get-ingredient.use-case';
 import { GetStockAlertsUseCase } from '../../application/use-cases/inventory/get-stock-alerts.use-case';
@@ -10,12 +17,12 @@ import { UpdateIngredientUseCase } from '../../application/use-cases/inventory/u
 import { Ingredient } from '../../domain/entities/ingredient.entity';
 import { InventoryMovement } from '../../domain/entities/inventory-movement.entity';
 import { Roles } from '../decorators/roles.decorator';
-import { IngredientResponseDto } from '../dtos/responses/ingredient.response.dto';
-import { InventoryMovementResponseDto } from '../dtos/responses/inventory-movement.response.dto';
 import { CreateIngredientDto } from '../dtos/inventory/create-ingredient.dto';
 import { ListMovementsFiltersDto } from '../dtos/inventory/list-movements-filters.dto';
 import { RestockIngredientDto } from '../dtos/inventory/restock-ingredient.dto';
 import { UpdateIngredientDto } from '../dtos/inventory/update-ingredient.dto';
+import { IngredientResponseDto } from '../dtos/responses/ingredient.response.dto';
+import { InventoryMovementResponseDto } from '../dtos/responses/inventory-movement.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
 
 @ApiTags('inventory')
@@ -55,9 +62,10 @@ export class InventoryController {
   })
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
-  async movements(
-    @Query() query: ListMovementsFiltersDto,
-  ): Promise<{ data: InventoryMovement[]; pagination: { page: number; limit: number; total: number; totalPages: number } }> {
+  async movements(@Query() query: ListMovementsFiltersDto): Promise<{
+    data: InventoryMovement[];
+    pagination: { page: number; limit: number; total: number; totalPages: number };
+  }> {
     const result = await this.listMovements.execute({
       ingredientId: query.ingredientId,
       orderId: query.orderId,
@@ -110,9 +118,10 @@ export class InventoryController {
   })
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
-  async list(
-    @Query() query: PaginationDto,
-  ): Promise<{ data: Ingredient[]; pagination: { page: number; limit: number; total: number; totalPages: number } }> {
+  async list(@Query() query: PaginationDto): Promise<{
+    data: Ingredient[];
+    pagination: { page: number; limit: number; total: number; totalPages: number };
+  }> {
     const result = await this.listIngredients.execute(query.page, query.limit);
     return {
       data: result.data,

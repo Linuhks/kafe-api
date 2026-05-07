@@ -3,12 +3,16 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { GetPeakHoursUseCase } from '../../application/use-cases/dashboard/get-peak-hours.use-case';
 import { GetSummaryUseCase } from '../../application/use-cases/dashboard/get-summary.use-case';
 import { GetTopProductsUseCase } from '../../application/use-cases/dashboard/get-top-products.use-case';
-import { OrderSummaryData, PeakHourData, TopProductData } from '../../domain/repositories/order.repository';
+import {
+  OrderSummaryData,
+  PeakHourData,
+  TopProductData,
+} from '../../domain/repositories/order.repository';
 import { Roles } from '../decorators/roles.decorator';
+import { TopProductsQueryDto } from '../dtos/dashboard/top-products-query.dto';
 import { OrderSummaryResponseDto } from '../dtos/responses/order-summary.response.dto';
 import { PeakHourResponseDto } from '../dtos/responses/peak-hour.response.dto';
 import { TopProductResponseDto } from '../dtos/responses/top-product.response.dto';
-import { TopProductsQueryDto } from '../dtos/dashboard/top-products-query.dto';
 import { DateRangeDto } from '../dtos/shared/date-range.dto';
 
 @ApiTags('dashboard')

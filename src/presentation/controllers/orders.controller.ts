@@ -9,7 +9,14 @@ import {
   Query,
   Request,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiExtraModels, ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import { CreateOrderUseCase } from '../../application/use-cases/orders/create-order.use-case';
 import { GetBaristaQueueUseCase } from '../../application/use-cases/orders/get-barista-queue.use-case';
@@ -19,9 +26,9 @@ import { ListOrdersUseCase } from '../../application/use-cases/orders/list-order
 import { UpdateOrderStatusUseCase } from '../../application/use-cases/orders/update-order-status.use-case';
 import { Order, OrderStatus } from '../../domain/entities/order.entity';
 import { Roles } from '../decorators/roles.decorator';
-import { OrderResponseDto } from '../dtos/responses/order.response.dto';
 import { CreateOrderDto } from '../dtos/orders/create-order.dto';
 import { UpdateOrderStatusDto } from '../dtos/orders/update-order-status.dto';
+import { OrderResponseDto } from '../dtos/responses/order.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
 
 class ListOrdersQuery extends PaginationDto {
@@ -82,9 +89,10 @@ export class OrdersController {
   })
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
-  async list(
-    @Query() query: ListOrdersQuery,
-  ): Promise<{ data: Order[]; pagination: { page: number; limit: number; total: number; totalPages: number } }> {
+  async list(@Query() query: ListOrdersQuery): Promise<{
+    data: Order[];
+    pagination: { page: number; limit: number; total: number; totalPages: number };
+  }> {
     const result = await this.listOrders.execute({
       status: query.status,
       from: query.from,
@@ -139,7 +147,10 @@ export class OrdersController {
   async myOrders(
     @Query() query: PaginationDto,
     @Request() req: any,
-  ): Promise<{ data: Order[]; pagination: { page: number; limit: number; total: number; totalPages: number } }> {
+  ): Promise<{
+    data: Order[];
+    pagination: { page: number; limit: number; total: number; totalPages: number };
+  }> {
     const user = req.user as { id: string };
     const result = await this.getMyOrders.execute(user.id, query.page, query.limit);
     return {

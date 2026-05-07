@@ -6,4 +6,4 @@ import { AuthController } from './presentation/controllers/auth.controller';
   imports: [BetterAuthModule],
   controllers: [AuthController],
 })
-export class AuthModule { }
+export class AuthModule {}

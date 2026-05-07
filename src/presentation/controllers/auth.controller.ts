@@ -2,9 +2,9 @@ import { Body, Controller, HttpCode, Inject, Post, UnauthorizedException } from 
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AllowAnonymous, AuthService } from '@thallesp/nestjs-better-auth';
 import { auth } from '../../infrastructure/auth/better-auth';
+import { ApiDataResponse } from '../decorators/api-data-response.decorator';
 import { LoginDto } from '../dtos/auth/login.dto';
 import { LoginResponseDto } from '../dtos/responses/auth.response.dto';
-import { ApiDataResponse } from '../decorators/api-data-response.decorator';
 
 @ApiTags('auth')
 @AllowAnonymous()

@@ -1,5 +1,12 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiResponse, ApiTags, ApiBearerAuth, getSchemaPath } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { CreateUserUseCase } from '../../application/use-cases/users/create-user.use-case';
 import { DeleteUserUseCase } from '../../application/use-cases/users/delete-user.use-case';
 import { GetUserUseCase } from '../../application/use-cases/users/get-user.use-case';
@@ -7,10 +14,10 @@ import { ListUsersUseCase } from '../../application/use-cases/users/list-users.u
 import { UpdateUserUseCase } from '../../application/use-cases/users/update-user.use-case';
 import { User } from '../../domain/entities/user.entity';
 import { Roles } from '../decorators/roles.decorator';
+import { UserResponseDto } from '../dtos/responses/user.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
 import { CreateUserDto } from '../dtos/users/create-user.dto';
 import { UpdateUserDto } from '../dtos/users/update-user.dto';
-import { UserResponseDto } from '../dtos/responses/user.response.dto';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -47,9 +54,10 @@ export class UsersController {
   })
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
-  async list(
-    @Query() query: PaginationDto,
-  ): Promise<{ data: User[]; pagination: { page: number; limit: number; total: number; totalPages: number } }> {
+  async list(@Query() query: PaginationDto): Promise<{
+    data: User[];
+    pagination: { page: number; limit: number; total: number; totalPages: number };
+  }> {
     const result = await this.listUsers.execute(query);
     return {
       data: result.data,

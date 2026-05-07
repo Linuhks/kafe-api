@@ -1,5 +1,12 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiExtraModels, ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import { CreateCategoryUseCase } from '../../application/use-cases/menu/create-category.use-case';
 import { DeleteCategoryUseCase } from '../../application/use-cases/menu/delete-category.use-case';
@@ -8,9 +15,9 @@ import { ListCategoriesUseCase } from '../../application/use-cases/menu/list-cat
 import { UpdateCategoryUseCase } from '../../application/use-cases/menu/update-category.use-case';
 import { Category } from '../../domain/entities/category.entity';
 import { Roles } from '../decorators/roles.decorator';
-import { CategoryResponseDto } from '../dtos/responses/category.response.dto';
 import { CreateCategoryDto } from '../dtos/menu/create-category.dto';
 import { UpdateCategoryDto } from '../dtos/menu/update-category.dto';
+import { CategoryResponseDto } from '../dtos/responses/category.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
 
 @ApiTags('categories')
@@ -45,9 +52,10 @@ export class CategoriesController {
       },
     },
   })
-  async list(
-    @Query() query: PaginationDto,
-  ): Promise<{ data: Category[]; pagination: { page: number; limit: number; total: number; totalPages: number } }> {
+  async list(@Query() query: PaginationDto): Promise<{
+    data: Category[];
+    pagination: { page: number; limit: number; total: number; totalPages: number };
+  }> {
     const result = await this.listCategories.execute(query);
     return {
       data: result.data,
