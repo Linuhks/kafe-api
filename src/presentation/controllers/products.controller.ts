@@ -1,13 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiExtraModels,
-  ApiOperation,
-  ApiQuery,
-  ApiResponse,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
+import { IsOptional, IsUUID } from 'class-validator';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import { AddProductIngredientUseCase } from '../../application/use-cases/menu/add-product-ingredient.use-case';
 import { CreateProductUseCase } from '../../application/use-cases/menu/create-product.use-case';
@@ -27,8 +20,11 @@ import { UpdateProductDto } from '../dtos/menu/update-product.dto';
 import { ProductResponseDto } from '../dtos/responses/product.response.dto';
 import { ProductIngredientResponseDto } from '../dtos/responses/product-ingredient.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
+import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 
 class ListProductsQuery extends PaginationDto {
+  @IsOptional()
+  @IsUUID('all')
   categoryId?: string;
 }
 
@@ -51,24 +47,7 @@ export class ProductsController {
   @AllowAnonymous()
   @ApiOperation({ summary: 'Lista produtos (público)' })
   @ApiQuery({ name: 'categoryId', required: false })
-  @ApiExtraModels(ProductResponseDto)
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        data: { type: 'array', items: { $ref: getSchemaPath(ProductResponseDto) } },
-        pagination: {
-          type: 'object',
-          properties: {
-            page: { type: 'number' },
-            limit: { type: 'number' },
-            total: { type: 'number' },
-            totalPages: { type: 'number' },
-          },
-        },
-      },
-    },
-  })
+  @ApiPaginatedResponse(ProductResponseDto)
   async list(@Query() query: ListProductsQuery): Promise<{
     data: Product[];
     pagination: { page: number; limit: number; total: number; totalPages: number };

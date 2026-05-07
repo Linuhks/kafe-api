@@ -1,12 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiExtraModels,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserUseCase } from '../../application/use-cases/users/create-user.use-case';
 import { DeleteUserUseCase } from '../../application/use-cases/users/delete-user.use-case';
 import { GetUserUseCase } from '../../application/use-cases/users/get-user.use-case';
@@ -18,6 +11,7 @@ import { UserResponseDto } from '../dtos/responses/user.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
 import { CreateUserDto } from '../dtos/users/create-user.dto';
 import { UpdateUserDto } from '../dtos/users/update-user.dto';
+import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -34,24 +28,7 @@ export class UsersController {
 
   @Get()
   @ApiOperation({ summary: 'Lista todos os usuários (ADMIN)' })
-  @ApiExtraModels(UserResponseDto)
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        data: { type: 'array', items: { $ref: getSchemaPath(UserResponseDto) } },
-        pagination: {
-          type: 'object',
-          properties: {
-            page: { type: 'number' },
-            limit: { type: 'number' },
-            total: { type: 'number' },
-            totalPages: { type: 'number' },
-          },
-        },
-      },
-    },
-  })
+  @ApiPaginatedResponse(UserResponseDto)
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   async list(@Query() query: PaginationDto): Promise<{

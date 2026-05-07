@@ -1,12 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiExtraModels,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import { CreateCategoryUseCase } from '../../application/use-cases/menu/create-category.use-case';
 import { DeleteCategoryUseCase } from '../../application/use-cases/menu/delete-category.use-case';
@@ -19,6 +12,7 @@ import { CreateCategoryDto } from '../dtos/menu/create-category.dto';
 import { UpdateCategoryDto } from '../dtos/menu/update-category.dto';
 import { CategoryResponseDto } from '../dtos/responses/category.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
+import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 
 @ApiTags('categories')
 @Controller('categories')
@@ -34,24 +28,7 @@ export class CategoriesController {
   @Get()
   @AllowAnonymous()
   @ApiOperation({ summary: 'Lista categorias (público)' })
-  @ApiExtraModels(CategoryResponseDto)
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        data: { type: 'array', items: { $ref: getSchemaPath(CategoryResponseDto) } },
-        pagination: {
-          type: 'object',
-          properties: {
-            page: { type: 'number' },
-            limit: { type: 'number' },
-            total: { type: 'number' },
-            totalPages: { type: 'number' },
-          },
-        },
-      },
-    },
-  })
+  @ApiPaginatedResponse(CategoryResponseDto)
   async list(@Query() query: PaginationDto): Promise<{
     data: Category[];
     pagination: { page: number; limit: number; total: number; totalPages: number };

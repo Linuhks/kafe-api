@@ -1,12 +1,5 @@
 import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiExtraModels,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AllowAnonymous, UserSession } from '@thallesp/nestjs-better-auth';
 import { CreateOrderUseCase } from '../../application/use-cases/orders/create-order.use-case';
 import { GetBaristaQueueUseCase } from '../../application/use-cases/orders/get-barista-queue.use-case';
@@ -22,6 +15,7 @@ import { CreateOrderDto } from '../dtos/orders/create-order.dto';
 import { UpdateOrderStatusDto } from '../dtos/orders/update-order-status.dto';
 import { OrderResponseDto } from '../dtos/responses/order.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
+import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 
 class ListOrdersQuery extends PaginationDto {
   status?: OrderStatus;
@@ -63,24 +57,7 @@ export class OrdersController {
   @ApiBearerAuth()
   @Roles(['ADMIN'])
   @ApiOperation({ summary: 'Lista pedidos com filtros (ADMIN)' })
-  @ApiExtraModels(OrderResponseDto)
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        data: { type: 'array', items: { $ref: getSchemaPath(OrderResponseDto) } },
-        pagination: {
-          type: 'object',
-          properties: {
-            page: { type: 'number' },
-            limit: { type: 'number' },
-            total: { type: 'number' },
-            totalPages: { type: 'number' },
-          },
-        },
-      },
-    },
-  })
+  @ApiPaginatedResponse(OrderResponseDto)
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   async list(@Query() query: ListOrdersQuery): Promise<{
@@ -119,24 +96,7 @@ export class OrdersController {
   @Get('me')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Histórico de pedidos do cliente autenticado' })
-  @ApiExtraModels(OrderResponseDto)
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        data: { type: 'array', items: { $ref: getSchemaPath(OrderResponseDto) } },
-        pagination: {
-          type: 'object',
-          properties: {
-            page: { type: 'number' },
-            limit: { type: 'number' },
-            total: { type: 'number' },
-            totalPages: { type: 'number' },
-          },
-        },
-      },
-    },
-  })
+  @ApiPaginatedResponse(OrderResponseDto)
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   async myOrders(
     @Query() query: PaginationDto,

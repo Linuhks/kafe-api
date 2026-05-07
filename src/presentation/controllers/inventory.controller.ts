@@ -1,12 +1,5 @@
 import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiExtraModels,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateIngredientUseCase } from '../../application/use-cases/inventory/create-ingredient.use-case';
 import { GetIngredientUseCase } from '../../application/use-cases/inventory/get-ingredient.use-case';
 import { GetStockAlertsUseCase } from '../../application/use-cases/inventory/get-stock-alerts.use-case';
@@ -24,6 +17,7 @@ import { UpdateIngredientDto } from '../dtos/inventory/update-ingredient.dto';
 import { IngredientResponseDto } from '../dtos/responses/ingredient.response.dto';
 import { InventoryMovementResponseDto } from '../dtos/responses/inventory-movement.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
+import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 
 @ApiTags('inventory')
 @ApiBearerAuth()
@@ -42,24 +36,7 @@ export class InventoryController {
   @Get('movements')
   @Roles(['ADMIN'])
   @ApiOperation({ summary: 'Lista movimentações de estoque (ADMIN)' })
-  @ApiExtraModels(InventoryMovementResponseDto)
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        data: { type: 'array', items: { $ref: getSchemaPath(InventoryMovementResponseDto) } },
-        pagination: {
-          type: 'object',
-          properties: {
-            page: { type: 'number' },
-            limit: { type: 'number' },
-            total: { type: 'number' },
-            totalPages: { type: 'number' },
-          },
-        },
-      },
-    },
-  })
+  @ApiPaginatedResponse(InventoryMovementResponseDto)
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   async movements(@Query() query: ListMovementsFiltersDto): Promise<{
@@ -98,24 +75,7 @@ export class InventoryController {
   @Get()
   @Roles(['ADMIN', 'BARISTA'])
   @ApiOperation({ summary: 'Lista ingredientes com paginação (ADMIN, BARISTA)' })
-  @ApiExtraModels(IngredientResponseDto)
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        data: { type: 'array', items: { $ref: getSchemaPath(IngredientResponseDto) } },
-        pagination: {
-          type: 'object',
-          properties: {
-            page: { type: 'number' },
-            limit: { type: 'number' },
-            total: { type: 'number' },
-            totalPages: { type: 'number' },
-          },
-        },
-      },
-    },
-  })
+  @ApiPaginatedResponse(IngredientResponseDto)
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   async list(@Query() query: PaginationDto): Promise<{
