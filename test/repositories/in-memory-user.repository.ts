@@ -1,9 +1,9 @@
-import { User } from '../../domain/entities/user.entity';
+import { User } from '../../src/domain/entities/user.entity';
 import {
   type CreateUserData,
   IUserRepository,
   type UpdateUserData,
-} from '../../domain/repositories/user.repository';
+} from '../../src/domain/repositories/user.repository';
 
 export class InMemoryUserRepository extends IUserRepository {
   items: User[] = [];

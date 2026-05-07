@@ -1,6 +1,6 @@
+import { InMemoryOrderRepository } from '@test/repositories/in-memory-order.repository';
+import { InMemoryProductRepository } from '@test/repositories/in-memory-product.repository';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository';
-import { InMemoryProductRepository } from '../../../test/repositories/in-memory-product.repository';
 import { CreateOrderUseCase } from './create-order.use-case';
 
 describe('CreateOrderUseCase', () => {

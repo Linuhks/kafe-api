@@ -1,10 +1,10 @@
-import { Ingredient } from '../../domain/entities/ingredient.entity';
+import { Ingredient } from '../../src/domain/entities/ingredient.entity';
 import {
   type CreateIngredientData,
   IIngredientRepository,
   type ProductIngredientRow,
   type UpdateIngredientData,
-} from '../../domain/repositories/ingredient.repository';
+} from '../../src/domain/repositories/ingredient.repository';
 
 export class InMemoryIngredientRepository extends IIngredientRepository {
   items: Ingredient[] = [];

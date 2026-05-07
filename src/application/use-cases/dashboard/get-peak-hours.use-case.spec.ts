@@ -1,6 +1,6 @@
+import { InMemoryOrderRepository } from '@test/repositories/in-memory-order.repository';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Order } from '../../../domain/entities/order.entity';
-import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository';
 import { GetPeakHoursUseCase } from './get-peak-hours.use-case';
 
 function makeOrder(id: string, createdAt: Date): Order {

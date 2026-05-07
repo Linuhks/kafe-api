@@ -1,6 +1,6 @@
+import { InMemoryUserRepository } from '@test/repositories/in-memory-user.repository';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { User } from '../../../domain/entities/user.entity';
-import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user.repository';
 import { ListUsersUseCase } from './list-users.use-case';
 
 const makeUser = (id: string, name: string) =>

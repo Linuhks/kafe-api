@@ -1,7 +1,7 @@
+import { InMemoryOrderRepository } from '@test/repositories/in-memory-order.repository';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Order, type OrderStatus } from '../../../domain/entities/order.entity';
 import { OrderItem } from '../../../domain/entities/order-item.entity';
-import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository';
 import { GetTopProductsUseCase } from './get-top-products.use-case';
 
 function makeItem(

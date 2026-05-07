@@ -1,6 +1,6 @@
+import { InMemoryCategoryRepository } from '@test/repositories/in-memory-category.repository';
+import { InMemoryProductRepository } from '@test/repositories/in-memory-product.repository';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { InMemoryCategoryRepository } from '../../../test/repositories/in-memory-category.repository';
-import { InMemoryProductRepository } from '../../../test/repositories/in-memory-product.repository';
 import { CreateProductUseCase } from './create-product.use-case';
 
 describe('CreateProductUseCase', () => {

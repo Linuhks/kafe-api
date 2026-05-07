@@ -1,5 +1,5 @@
+import { InMemoryOrderRepository } from '@test/repositories/in-memory-order.repository';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository';
 import { GetMyOrdersUseCase } from './get-my-orders.use-case';
 
 describe('GetMyOrdersUseCase', () => {

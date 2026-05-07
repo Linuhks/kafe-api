@@ -1,6 +1,6 @@
+import { InMemoryOrderRepository } from '@test/repositories/in-memory-order.repository';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Order, type OrderStatus } from '../../../domain/entities/order.entity';
-import { InMemoryOrderRepository } from '../../../test/repositories/in-memory-order.repository';
 import { GetSummaryUseCase } from './get-summary.use-case';
 
 function makeOrder(id: string, status: OrderStatus, totalAmount: string, createdAt: Date): Order {

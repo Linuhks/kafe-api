@@ -1,7 +1,7 @@
+import { InMemoryUserRepository } from '@test/repositories/in-memory-user.repository';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { User } from '../../../domain/entities/user.entity';
 import { NotFoundError } from '../../../domain/errors/domain.error';
-import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user.repository';
 import { UpdateUserUseCase } from './update-user.use-case';
 
 describe('UpdateUserUseCase', () => {

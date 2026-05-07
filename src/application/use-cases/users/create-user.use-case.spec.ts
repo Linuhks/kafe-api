@@ -1,6 +1,6 @@
+import { InMemoryUserRepository } from '@test/repositories/in-memory-user.repository';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ConflictError } from '../../../domain/errors/domain.error';
-import { InMemoryUserRepository } from '../../../test/repositories/in-memory-user.repository';
 import { CreateUserUseCase } from './create-user.use-case';
 
 describe('CreateUserUseCase', () => {

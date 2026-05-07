@@ -1,5 +1,5 @@
+import { InMemoryProductRepository } from '@test/repositories/in-memory-product.repository';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { InMemoryProductRepository } from '../../../test/repositories/in-memory-product.repository';
 import { DeleteProductUseCase } from './delete-product.use-case';
 
 describe('DeleteProductUseCase', () => {

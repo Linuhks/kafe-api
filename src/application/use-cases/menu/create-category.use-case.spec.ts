@@ -1,5 +1,5 @@
+import { InMemoryCategoryRepository } from '@test/repositories/in-memory-category.repository';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { InMemoryCategoryRepository } from '../../../test/repositories/in-memory-category.repository';
 import { CreateCategoryUseCase } from './create-category.use-case';
 
 describe('CreateCategoryUseCase', () => {

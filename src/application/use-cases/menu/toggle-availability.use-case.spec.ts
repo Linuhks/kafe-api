@@ -1,5 +1,5 @@
+import { InMemoryProductRepository } from '@test/repositories/in-memory-product.repository';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { InMemoryProductRepository } from '../../../test/repositories/in-memory-product.repository';
 import { ToggleAvailabilityUseCase } from './toggle-availability.use-case';
 
 describe('ToggleAvailabilityUseCase', () => {

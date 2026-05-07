@@ -1,7 +1,7 @@
+import { InMemoryIngredientRepository } from '@test/repositories/in-memory-ingredient.repository';
+import { InMemoryInventoryMovementRepository } from '@test/repositories/in-memory-inventory-movement.repository';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { NotFoundError } from '../../../domain/errors/domain.error';
-import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository';
-import { InMemoryInventoryMovementRepository } from '../../../test/repositories/in-memory-inventory-movement.repository';
 import { RestockIngredientUseCase } from './restock-ingredient.use-case';
 
 describe('RestockIngredientUseCase', () => {

@@ -1,6 +1,6 @@
+import { InMemoryIngredientRepository } from '@test/repositories/in-memory-ingredient.repository';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { NotFoundError } from '../../../domain/errors/domain.error';
-import { InMemoryIngredientRepository } from '../../../test/repositories/in-memory-ingredient.repository';
 import { UpdateIngredientUseCase } from './update-ingredient.use-case';
 
 describe('UpdateIngredientUseCase', () => {
