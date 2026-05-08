@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.git/
+coverage/
+.husky/
+openspec/
+**/*.spec.ts
+.env
+.env.*
+!.env.example
