@@ -54,4 +54,4 @@
 ## 8. Verification
 
 - [x] 8.1 Run `pnpm run build` and confirm zero TypeScript errors
-- [ ] 8.2 Start the server and open `/api/v1/docs`; verify each endpoint's documented response schema matches the actual JSON returned by the API
+- [x] 8.2 Start the server and open `/api/v1/docs`; verify each endpoint's documented response schema matches the actual JSON returned by the API
