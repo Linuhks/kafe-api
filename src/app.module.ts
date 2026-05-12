@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthModule } from './auth.module';
 import { DashboardModule } from './dashboard.module';
 import { BetterAuthModule } from './infrastructure/auth/better-auth.module';
@@ -12,6 +14,7 @@ import { UsersModule } from './users.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ThrottlerModule.forRoot([{ ttl: 60_000, limit: 10 }]),
     DrizzleModule,
     BetterAuthModule,
     AuthModule,
@@ -21,5 +24,6 @@ import { UsersModule } from './users.module';
     InventoryModule,
     DashboardModule,
   ],
+  providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}

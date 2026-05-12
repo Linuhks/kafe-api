@@ -11,15 +11,15 @@ export class CreateIngredientDto {
   @IsString()
   unit: string;
 
-  @ApiPropertyOptional({ example: '10.000', description: 'Estoque atual em decimal string' })
+  @ApiPropertyOptional({ example: '10.000', description: 'Estoque atual em decimal string (max 999999)' })
   @IsOptional()
   @IsString()
-  @Matches(/^\d+(\.\d+)?$/, { message: 'currentStock must be a valid decimal (e.g. "10.000")' })
+  @Matches(/^\d{1,6}(\.\d+)?$/, { message: 'currentStock must be a valid decimal up to 999999 (e.g. "10.000")' })
   currentStock?: string;
 
-  @ApiPropertyOptional({ example: '2.000', description: 'Estoque mínimo em decimal string' })
+  @ApiPropertyOptional({ example: '2.000', description: 'Estoque mínimo em decimal string (max 999999)' })
   @IsOptional()
   @IsString()
-  @Matches(/^\d+(\.\d+)?$/, { message: 'minimumStock must be a valid decimal (e.g. "2.000")' })
+  @Matches(/^\d{1,6}(\.\d+)?$/, { message: 'minimumStock must be a valid decimal up to 999999 (e.g. "2.000")' })
   minimumStock?: string;
 }

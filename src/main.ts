@@ -3,20 +3,28 @@ import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationError } from 'class-validator';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './presentation/filters/http-exception.filter';
-import { TransformInterceptor } from './presentation/interceptors/transform.interceptor';
+import { AuditInterceptor } from './presentation/interceptors/audit.interceptor';
 
 async function bootstrap() {
+  const corsOrigin = process.env.CORS_ORIGIN;
+  if (!corsOrigin) {
+    throw new Error('CORS_ORIGIN environment variable is required but not set.');
+  }
+
   // bodyParser: false — obrigatório para o better-auth processar o body raw
   const app = await NestFactory.create(AppModule, { bodyParser: false });
 
   const _reflector = app.get(Reflector);
 
+  app.use(helmet());
+
   app.setGlobalPrefix('api/v1');
 
   app.enableCors({
-    origin: process.env.CORS_ORIGIN ?? 'http://localhost:3001',
+    origin: corsOrigin,
   });
 
   app.useGlobalPipes(
@@ -37,7 +45,7 @@ async function bootstrap() {
   );
 
   app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalInterceptors(new AuditInterceptor());
 
   // Swagger
   const swaggerConfig = new DocumentBuilder()

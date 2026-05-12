@@ -15,7 +15,7 @@ export const auth = betterAuth({
 
   emailAndPassword: {
     enabled: true,
-    minPasswordLength: 8,
+    minPasswordLength: 12,
     autoSignIn: false,
   },
 
@@ -23,6 +23,12 @@ export const auth = betterAuth({
     bearer(), // suporte a Bearer token — ideal para API REST
     admin(), // setRole, ban/unban, listUsers, impersonation
   ],
+
+  advanced: {
+    cookies: {
+      session_token: { attributes: { sameSite: 'strict', httpOnly: true } },
+    },
+  },
 
   user: {
     additionalFields: {
