@@ -28,7 +28,8 @@ export class AuditInterceptor implements NestInterceptor {
     const action = `${req.method} ${req.url}`;
     const urlSegments = req.url.split('/');
     const v1Index = urlSegments.indexOf('v1');
-    const entityType = v1Index !== -1 ? (urlSegments[v1Index + 1] ?? 'unknown') : (urlSegments[3] ?? 'unknown');
+    const entityType =
+      v1Index !== -1 ? (urlSegments[v1Index + 1] ?? 'unknown') : (urlSegments[3] ?? 'unknown');
     const timestamp = new Date().toISOString();
 
     return next.handle().pipe(

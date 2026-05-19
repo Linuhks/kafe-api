@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, Inject, Post, UnauthorizedException } from '@nestjs/common';
-import { Throttle } from '@nestjs/throttler';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { AllowAnonymous, AuthService } from '@thallesp/nestjs-better-auth';
 import { auth } from '../../infrastructure/auth/better-auth';
 import { LoginDto } from '../dtos/auth/login.dto';

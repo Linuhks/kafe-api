@@ -18,7 +18,9 @@ export class CreateProductDto {
 
   @ApiProperty({ example: '5.50', description: 'Preço em formato decimal string (max 99999.99)' })
   @IsString()
-  @Matches(/^\d{1,5}(\.\d{1,2})?$/, { message: 'price must be a valid decimal up to 99999.99 (e.g. "5.50")' })
+  @Matches(/^\d{1,5}(\.\d{1,2})?$/, {
+    message: 'price must be a valid decimal up to 99999.99 (e.g. "5.50")',
+  })
   price: string;
 
   @ApiPropertyOptional({ example: 'https://cdn.kafe.com/espresso.jpg' })
