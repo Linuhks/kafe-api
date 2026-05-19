@@ -83,9 +83,16 @@ Exemplo concreto — `POST /api/v1/orders`:
 
 1. `OrdersController.create()` recebe o body, valida com `CreateOrderDto`
 2. Chama `CreateOrderUseCase.execute(dto)`
-3. O use case busca produtos via `IProductRepository`, valida estoque e persiste via `IOrderRepository`
-4. Após criação, `DeductForOrderUseCase` é chamado para deduzir ingredientes do estoque
-5. O controller retorna o pedido criado com status 201
+3. O use case busca produtos via `IProductRepository`, calcula o total e persiste via `IOrderRepository`
+4. O controller retorna o pedido criado com status 201
+
+Exemplo — `PATCH /api/v1/orders/:id/status` para `IN_PREPARATION`:
+
+1. `OrdersController.updateStatus()` valida o body com `UpdateOrderStatusDto`
+2. Chama `UpdateOrderStatusUseCase.execute(id, 'IN_PREPARATION', baristaId)`
+3. O use case valida a transição de estado, então chama `DeductForOrderUseCase`
+4. `DeductForOrderUseCase` verifica e deduz os ingredientes do estoque; lança `InsufficientStockError` se faltar estoque
+5. O controller retorna o pedido atualizado com status 200
 
 ---
 

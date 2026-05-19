@@ -44,9 +44,18 @@ Tentar uma transição inválida lança `InvalidOrderTransitionError`.
 
 - Um pedido precisa ter ao menos um item (`OrderItem`)
 - Cada item referencia um `Product` e uma quantidade
-- Ao criar um pedido, o sistema **automaticamente deduz** os ingredientes necessários do estoque com base na receita de cada produto
-- Se qualquer ingrediente estiver com estoque insuficiente, a criação falha com `InsufficientStockError` e nenhuma dedução é realizada
 - O `totalAmount` é calculado com base nos preços dos produtos × quantidades
+- A criação do pedido **não deduz estoque** — apenas valida que os produtos existem e estão disponíveis
+
+### Dedução de estoque
+
+A dedução dos ingredientes ocorre quando o barista avança o pedido para `IN_PREPARATION`:
+
+- O sistema calcula a quantidade necessária de cada ingrediente com base na receita de cada produto do pedido
+- Se qualquer ingrediente estiver com estoque insuficiente, a transição falha com `InsufficientStockError` e nenhuma dedução é realizada
+- Caso o estoque seja suficiente, todos os ingredientes são deduzidos e um registro `DEDUCTION` é criado em `inventory_movements`
+
+> **Observação:** o estoque não é reservado no momento da criação do pedido. Dois pedidos simultâneos para o mesmo produto podem ambos ser aceitos mesmo que haja ingredientes suficientes para apenas um.
 
 ### Fila do barista
 

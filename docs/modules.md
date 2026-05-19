@@ -72,10 +72,10 @@ Gerencia o ciclo de vida dos pedidos, desde a criação até a entrega.
 
 | Use Case | Descrição |
 |---|---|
-| `CreateOrderUseCase` | Cria um pedido e dispara a dedução de estoque |
+| `CreateOrderUseCase` | Cria um pedido; valida produtos e calcula o total |
 | `GetOrderUseCase` | Busca um pedido por ID |
 | `ListOrdersUseCase` | Lista pedidos (ADMIN: todos; CLIENT: os próprios) |
-| `UpdateOrderStatusUseCase` | Avança o status de um pedido (valida transição) |
+| `UpdateOrderStatusUseCase` | Avança o status de um pedido (valida transição); ao passar para `IN_PREPARATION`, chama `DeductForOrderUseCase` para deduzir ingredientes do estoque |
 | `GetBaristaQueueUseCase` | Retorna fila de pedidos pendentes para o barista |
 | `GetMyOrdersUseCase` | Retorna pedidos do cliente autenticado |
 
