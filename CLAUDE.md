@@ -2,6 +2,22 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Development Workflow
+
+**Before starting any feature, refactoring, or bug fix**, read [`docs/workflow-dev.md`](docs/workflow-dev.md).
+
+The mandatory gate after every subtask — run in order:
+
+```bash
+pnpm lint    # Biome linter with auto-fix
+pnpm check   # Biome full check (format + lint) with auto-fix
+pnpm test    # Vitest unit tests
+```
+
+All three must pass before committing. One commit per subtask.
+
+---
+
 ## Commands
 
 ```bash
