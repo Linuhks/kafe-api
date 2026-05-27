@@ -1,6 +1,6 @@
 # Development Workflow
 
-Every feature or bug fix is broken down into tasks with numbered subtasks. The same quality gate applies to every subtask, across every task.
+Every feature or bug fix is broken down into tasks with numbered subtasks. The same quality gate applies to every subtask **and** to every task — no exceptions.
 
 ---
 
@@ -19,9 +19,9 @@ Task 2 — Another feature
 
 ---
 
-## Per-subtask gate
+## Quality gate
 
-After completing any subtask (1.1, 1.2, 2.1, 2.2 — regardless of which task), run in order:
+The gate runs after **every subtask** and after **every task** (when all its subtasks are done):
 
 ```bash
 pnpm lint    # Biome linter with auto-fix
@@ -35,10 +35,10 @@ Once all three pass, commit:
 
 ```bash
 git add <changed files>
-git commit -m "feat(scope): description of what the subtask did"
+git commit -m "feat(scope): description of what was done"
 ```
 
-Then move on to the next subtask and repeat.
+Then move on to the next subtask or task and repeat.
 
 ---
 
@@ -63,6 +63,8 @@ git commit -m "feat(orders): add DrizzleOrderRepository"
   ↓
 Implement 1.3  →  gate  →  commit
   ↓
+── Task 1 complete: gate  →  commit ──
+  ↓
 Implement 2.1
   ↓
 pnpm lint  → pass
@@ -72,9 +74,11 @@ pnpm test  → pass
 git commit -m "feat(inventory): add RestockIngredientUseCase"
   ↓
 Implement 2.2  →  gate  →  commit
+  ↓
+── Task 2 complete: gate  →  commit ──
 ```
 
-One commit per subtask. Each commit must leave the codebase in a working state.
+One commit per subtask, one commit per completed task. Each commit must leave the codebase in a working state.
 
 ---
 

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Before starting any feature, refactoring, or bug fix**, read [`docs/workflow-dev.md`](docs/workflow-dev.md).
 
-The mandatory gate after every subtask — run in order:
+The mandatory gate after every **subtask** and every **task** — run in order:
 
 ```bash
 pnpm lint    # Biome linter with auto-fix
@@ -14,7 +14,7 @@ pnpm check   # Biome full check (format + lint) with auto-fix
 pnpm test    # Vitest unit tests
 ```
 
-All three must pass before committing. One commit per subtask.
+All three must pass before committing. One commit per subtask, one commit per completed task.
 
 ---
 
