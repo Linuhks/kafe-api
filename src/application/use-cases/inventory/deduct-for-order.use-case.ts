@@ -1,3 +1,4 @@
+import { Either, left, right } from '../../../domain/either';
 import { Order } from '../../../domain/entities/order.entity';
 import { InsufficientStockError } from '../../../domain/errors/domain.error';
 import { IIngredientRepository } from '../../../domain/repositories/ingredient.repository';
@@ -9,7 +10,7 @@ export class DeductForOrderUseCase {
     private readonly movementRepo: IInventoryMovementRepository,
   ) {}
 
-  async execute(order: Order): Promise<void> {
+  async execute(order: Order): Promise<Either<InsufficientStockError, void>> {
     const neededMillis = new Map<string, number>();
 
     for (const item of order.items) {
@@ -28,7 +29,7 @@ export class DeductForOrderUseCase {
       if (!ingredient) continue;
       const currentMillis = Math.round(parseFloat(ingredient.currentStock) * 1000);
       if (currentMillis < qtyMillis) {
-        throw new InsufficientStockError(ingredient.name);
+        return left(new InsufficientStockError(ingredient.name));
       }
     }
 
@@ -43,5 +44,7 @@ export class DeductForOrderUseCase {
         note: `Order ${order.id}`,
       });
     }
+
+    return right(undefined);
   }
 }

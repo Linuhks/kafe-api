@@ -24,12 +24,16 @@ describe('UpdateIngredientUseCase', () => {
       minimumStock: '200',
     });
 
-    expect(result.name).toBe('Açúcar Refinado');
-    expect(result.minimumStock).toBe('200');
-    expect(result.id).toBe(ingredient.id);
+    expect(result.isRight()).toBe(true);
+    expect(result.value.name).toBe('Açúcar Refinado');
+    expect(result.value.minimumStock).toBe('200');
+    expect(result.value.id).toBe(ingredient.id);
   });
 
-  it('should throw NotFoundError for unknown ID', async () => {
-    await expect(sut.execute('non-existent', { name: 'X' })).rejects.toThrow(NotFoundError);
+  it('should return Left(NotFoundError) for unknown ID', async () => {
+    const result = await sut.execute('non-existent', { name: 'X' });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotFoundError);
   });
 });

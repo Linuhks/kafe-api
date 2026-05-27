@@ -22,17 +22,22 @@ describe('UpdateOrderStatusUseCase', () => {
 
   it('should transition order from RECEIVED to IN_PREPARATION', async () => {
     const order = await orderRepo.create({ totalAmount: '5.50', items: [] });
-    const updated = await sut.execute(order.id, 'IN_PREPARATION');
-    expect(updated.status).toBe('IN_PREPARATION');
+    const result = await sut.execute(order.id, 'IN_PREPARATION');
+    expect(result.isRight()).toBe(true);
+    expect(result.value.status).toBe('IN_PREPARATION');
   });
 
-  it('should throw INVALID_ORDER_TRANSITION for invalid transition', async () => {
+  it('should return Left(InvalidOrderTransitionError) for invalid transition', async () => {
     const order = await orderRepo.create({ totalAmount: '5.50', items: [] });
-    await expect(sut.execute(order.id, 'READY')).rejects.toThrow('RECEIVED');
+    const result = await sut.execute(order.id, 'READY');
+    expect(result.isLeft()).toBe(true);
+    expect(result.value.message).toContain('RECEIVED');
   });
 
-  it('should throw NOT_FOUND if order does not exist', async () => {
-    await expect(sut.execute('non-existent', 'IN_PREPARATION')).rejects.toThrow('not found');
+  it('should return Left(NotFoundError) if order does not exist', async () => {
+    const result = await sut.execute('non-existent', 'IN_PREPARATION');
+    expect(result.isLeft()).toBe(true);
+    expect(result.value.message).toContain('not found');
   });
 
   it('should deduct stock when transitioning to IN_PREPARATION', async () => {
@@ -61,7 +66,8 @@ describe('UpdateOrderStatusUseCase', () => {
       ],
     });
 
-    await sut.execute(order.id, 'IN_PREPARATION');
+    const result = await sut.execute(order.id, 'IN_PREPARATION');
+    expect(result.isRight()).toBe(true);
 
     const updated = await ingredientRepo.findById(ingredient.id);
     expect(updated?.currentStock).toBe('80.000');
@@ -69,7 +75,7 @@ describe('UpdateOrderStatusUseCase', () => {
     expect(movementRepo.items[0].type).toBe('DEDUCTION');
   });
 
-  it('should throw INSUFFICIENT_STOCK when stock is too low', async () => {
+  it('should return Left(InsufficientStockError) when stock is too low', async () => {
     const ingredient = await ingredientRepo.create({
       name: 'Coffee',
       unit: 'g',
@@ -95,6 +101,8 @@ describe('UpdateOrderStatusUseCase', () => {
       ],
     });
 
-    await expect(sut.execute(order.id, 'IN_PREPARATION')).rejects.toThrow('Insufficient stock');
+    const result = await sut.execute(order.id, 'IN_PREPARATION');
+    expect(result.isLeft()).toBe(true);
+    expect(result.value.message).toContain('Insufficient stock');
   });
 });

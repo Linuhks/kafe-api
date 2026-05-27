@@ -54,7 +54,9 @@ export class UsersController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   async getOne(@Param('id') id: string): Promise<User> {
-    return this.getUser.execute(id);
+    const result = await this.getUser.execute(id);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Post()
@@ -65,7 +67,9 @@ export class UsersController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 409, description: 'E-mail já cadastrado' })
   async create(@Body() dto: CreateUserDto): Promise<User> {
-    return this.createUser.execute(dto);
+    const result = await this.createUser.execute(dto);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Patch(':id')
@@ -75,7 +79,9 @@ export class UsersController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   async update(@Param('id') id: string, @Body() dto: UpdateUserDto): Promise<User> {
-    return this.updateUser.execute(id, dto);
+    const result = await this.updateUser.execute(id, dto);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Delete(':id')
@@ -86,6 +92,7 @@ export class UsersController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   async remove(@Param('id') id: string): Promise<void> {
-    await this.deleteUser.execute(id);
+    const result = await this.deleteUser.execute(id);
+    if (result.isLeft()) throw result.value;
   }
 }

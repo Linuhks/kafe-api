@@ -18,12 +18,16 @@ describe('DeleteProductUseCase', () => {
       price: '5.50',
     });
 
-    await sut.execute(product.id);
+    const result = await sut.execute(product.id);
 
+    expect(result.isRight()).toBe(true);
     expect(productRepo.items).toHaveLength(0);
   });
 
-  it('should throw NOT_FOUND if product does not exist', async () => {
-    await expect(sut.execute('non-existent')).rejects.toThrow('Product not found');
+  it('should return Left(NotFoundError) if product does not exist', async () => {
+    const result = await sut.execute('non-existent');
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value.message).toBe('Product not found');
   });
 });

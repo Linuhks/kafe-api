@@ -4,24 +4,32 @@ Business logic orchestration. No framework dependencies — only domain imports.
 
 ## Pattern
 
-Each use case is a class with one constructor (receiving repo(s)) and one `execute()` method:
+Each use case is a class with one constructor (receiving repo(s)) and one `execute()` method that returns `Either<DomainError, T>`:
 
 ```typescript
 export class CreateUserUseCase {
   constructor(private readonly userRepo: IUserRepository) {}
 
-  async execute(data: CreateUserData): Promise<User> {
+  async execute(data: CreateUserData): Promise<Either<ConflictError, User>> {
     const existing = await this.userRepo.findByEmail(data.email);
-    if (existing) throw new ConflictError('Email already in use');
-    return this.userRepo.create(data);
+    if (existing) return left(new ConflictError('Email already in use'));
+    const user = await this.userRepo.create(data);
+    return right(user);
   }
 }
 ```
 
 Rules:
 - Never import `@nestjs/*` here
-- Throw domain errors (`NotFoundError`, `ConflictError`, etc.) — never `HttpException`
+- Return `left(new XxxError(...))` — never throw domain errors from use cases
 - Depend only on repository interfaces, never on concrete implementations
+- Import `Either`, `left`, `right` from `../../../domain/either`
+
+When composing use cases (e.g. `UpdateOrderStatusUseCase` → `DeductForOrderUseCase`):
+```typescript
+const deductResult = await this.deductForOrder.execute(order);
+if (deductResult.isLeft()) return left(deductResult.value);
+```
 
 ## Subfolders
 

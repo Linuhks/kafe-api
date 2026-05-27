@@ -27,17 +27,19 @@ describe('CreateOrderUseCase', () => {
       ],
     });
 
-    expect(result.totalAmount).toBe('18.00');
-    expect(result.items).toHaveLength(2);
-    expect(result.items[0].productName).toBe('Espresso');
-    expect(result.items[0].unitPrice).toBe('5.50');
-    expect(result.items[0].subtotal).toBe('11.00');
-    expect(result.status).toBe('RECEIVED');
+    expect(result.isRight()).toBe(true);
+    expect(result.value.totalAmount).toBe('18.00');
+    expect(result.value.items).toHaveLength(2);
+    expect(result.value.items[0].productName).toBe('Espresso');
+    expect(result.value.items[0].unitPrice).toBe('5.50');
+    expect(result.value.items[0].subtotal).toBe('11.00');
+    expect(result.value.status).toBe('RECEIVED');
   });
 
-  it('should throw NOT_FOUND if product does not exist', async () => {
-    await expect(
-      sut.execute({ items: [{ productId: 'non-existent', quantity: 1 }] }),
-    ).rejects.toThrow('not found');
+  it('should return Left(NotFoundError) if product does not exist', async () => {
+    const result = await sut.execute({ items: [{ productId: 'non-existent', quantity: 1 }] });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value.message).toContain('not found');
   });
 });

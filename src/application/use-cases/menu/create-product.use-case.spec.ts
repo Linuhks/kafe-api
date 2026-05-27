@@ -24,14 +24,16 @@ describe('CreateProductUseCase', () => {
       isAvailable: true,
     });
 
-    expect(result.name).toBe('Espresso');
-    expect(result.price).toBe('5.50');
+    expect(result.isRight()).toBe(true);
+    expect(result.value.name).toBe('Espresso');
+    expect(result.value.price).toBe('5.50');
     expect(productRepo.items).toHaveLength(1);
   });
 
-  it('should throw NOT_FOUND if category does not exist', async () => {
-    await expect(
-      sut.execute({ categoryId: 'non-existent', name: 'X', price: '1.00' }),
-    ).rejects.toThrow('Category not found');
+  it('should return Left(NotFoundError) if category does not exist', async () => {
+    const result = await sut.execute({ categoryId: 'non-existent', name: 'X', price: '1.00' });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value.message).toBe('Category not found');
   });
 });

@@ -70,7 +70,9 @@ export class ProductsController {
   @ApiResponse({ status: 200, type: ProductResponseDto })
   @ApiResponse({ status: 404, description: 'Produto não encontrado' })
   async getOne(@Param('id') id: string): Promise<Product> {
-    return this.getProduct.execute(id);
+    const result = await this.getProduct.execute(id);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Post()
@@ -82,7 +84,9 @@ export class ProductsController {
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   async create(@Body() dto: CreateProductDto): Promise<Product> {
-    return this.createProduct.execute(dto);
+    const result = await this.createProduct.execute(dto);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Patch(':id')
@@ -94,7 +98,9 @@ export class ProductsController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Produto não encontrado' })
   async update(@Param('id') id: string, @Body() dto: UpdateProductDto): Promise<Product> {
-    return this.updateProduct.execute(id, dto);
+    const result = await this.updateProduct.execute(id, dto);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Delete(':id')
@@ -107,7 +113,8 @@ export class ProductsController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Produto não encontrado' })
   async remove(@Param('id') id: string): Promise<void> {
-    await this.deleteProduct.execute(id);
+    const result = await this.deleteProduct.execute(id);
+    if (result.isLeft()) throw result.value;
   }
 
   @Patch(':id/availability')
@@ -119,7 +126,9 @@ export class ProductsController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Produto não encontrado' })
   async toggleAvail(@Param('id') id: string): Promise<Product> {
-    return this.toggleAvailability.execute(id);
+    const result = await this.toggleAvailability.execute(id);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Post(':id/ingredients')
@@ -135,7 +144,9 @@ export class ProductsController {
     @Param('id') id: string,
     @Body() dto: AddProductIngredientDto,
   ): Promise<ProductIngredient> {
-    return this.addProductIngredient.execute({ productId: id, ...dto });
+    const result = await this.addProductIngredient.execute({ productId: id, ...dto });
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Delete(':id/ingredients/:ingredientId')
@@ -151,7 +162,8 @@ export class ProductsController {
     @Param('id') id: string,
     @Param('ingredientId') ingredientId: string,
   ): Promise<void> {
-    await this.removeProductIngredient.execute(id, ingredientId);
+    const result = await this.removeProductIngredient.execute(id, ingredientId);
+    if (result.isLeft()) throw result.value;
   }
 
   @Get(':id/ingredients')
@@ -163,6 +175,8 @@ export class ProductsController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Produto não encontrado' })
   async listIngredients(@Param('id') id: string): Promise<ProductIngredient[]> {
-    return this.listProductIngredients.execute(id);
+    const result = await this.listProductIngredients.execute(id);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 }

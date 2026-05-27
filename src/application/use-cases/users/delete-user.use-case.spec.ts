@@ -18,12 +18,16 @@ describe('DeleteUserUseCase', () => {
       new User('u-1', 'Pedro', 'pedro@example.com', 'CLIENT', true, new Date(), new Date()),
     );
 
-    await sut.execute('u-1');
+    const result = await sut.execute('u-1');
 
+    expect(result.isRight()).toBe(true);
     expect(userRepo.items).toHaveLength(0);
   });
 
-  it('should throw NotFoundError if user does not exist', async () => {
-    await expect(sut.execute('non-existent')).rejects.toThrow(NotFoundError);
+  it('should return Left(NotFoundError) if user does not exist', async () => {
+    const result = await sut.execute('non-existent');
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotFoundError);
   });
 });

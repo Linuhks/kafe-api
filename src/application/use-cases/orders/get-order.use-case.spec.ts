@@ -17,11 +17,15 @@ describe('GetOrderUseCase', () => {
 
     const result = await sut.execute(order.id);
 
-    expect(result.id).toBe(order.id);
-    expect(result.totalAmount).toBe('5.50');
+    expect(result.isRight()).toBe(true);
+    expect(result.value.id).toBe(order.id);
+    expect(result.value.totalAmount).toBe('5.50');
   });
 
-  it('should throw NotFoundError for unknown ID', async () => {
-    await expect(sut.execute('non-existent')).rejects.toThrow(NotFoundError);
+  it('should return Left(NotFoundError) for unknown ID', async () => {
+    const result = await sut.execute('non-existent');
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotFoundError);
   });
 });

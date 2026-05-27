@@ -1,3 +1,4 @@
+import { Either, left, right } from '../either';
 import { InvalidOrderTransitionError } from '../errors/domain.error';
 import { OrderItem } from './order-item.entity';
 
@@ -29,9 +30,10 @@ export class Order {
     return Order.VALID_TRANSITIONS[this.status].includes(newStatus);
   }
 
-  validateTransition(newStatus: OrderStatus): void {
+  validateTransition(newStatus: OrderStatus): Either<InvalidOrderTransitionError, void> {
     if (!this.canTransitionTo(newStatus)) {
-      throw new InvalidOrderTransitionError(this.status, newStatus);
+      return left(new InvalidOrderTransitionError(this.status, newStatus));
     }
+    return right(undefined);
   }
 }

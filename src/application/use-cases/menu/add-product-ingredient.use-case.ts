@@ -1,3 +1,4 @@
+import { Either, left, right } from '../../../domain/either';
 import { ProductIngredient } from '../../../domain/entities/product-ingredient.entity';
 import { NotFoundError } from '../../../domain/errors/domain.error';
 import { IIngredientRepository } from '../../../domain/repositories/ingredient.repository';
@@ -17,17 +18,20 @@ export class AddProductIngredientUseCase {
     private readonly productIngredientRepo: IProductIngredientRepository,
   ) {}
 
-  async execute(data: AddProductIngredientInput): Promise<ProductIngredient> {
+  async execute(
+    data: AddProductIngredientInput,
+  ): Promise<Either<NotFoundError, ProductIngredient>> {
     const product = await this.productRepo.findById(data.productId);
-    if (!product) throw new NotFoundError(`Product ${data.productId}`);
+    if (!product) return left(new NotFoundError(`Product ${data.productId}`));
 
     const ingredient = await this.ingredientRepo.findById(data.ingredientId);
-    if (!ingredient) throw new NotFoundError(`Ingredient ${data.ingredientId}`);
+    if (!ingredient) return left(new NotFoundError(`Ingredient ${data.ingredientId}`));
 
-    return this.productIngredientRepo.save({
+    const result = await this.productIngredientRepo.save({
       productId: data.productId,
       ingredientId: data.ingredientId,
       quantity: data.quantity,
     });
+    return right(result);
   }
 }

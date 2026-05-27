@@ -1,3 +1,4 @@
+import { Either, left, right } from '../../../domain/either';
 import { Product } from '../../../domain/entities/product.entity';
 import { NotFoundError } from '../../../domain/errors/domain.error';
 import { ICategoryRepository } from '../../../domain/repositories/category.repository';
@@ -12,19 +13,20 @@ export class UpdateProductUseCase {
     private readonly categoryRepo: ICategoryRepository,
   ) {}
 
-  async execute(id: string, data: UpdateProductData): Promise<Product> {
+  async execute(id: string, data: UpdateProductData): Promise<Either<NotFoundError, Product>> {
     const existing = await this.productRepo.findById(id);
     if (!existing) {
-      throw new NotFoundError('Product');
+      return left(new NotFoundError('Product'));
     }
 
     if (data.categoryId) {
       const category = await this.categoryRepo.findById(data.categoryId);
       if (!category) {
-        throw new NotFoundError('Category');
+        return left(new NotFoundError('Category'));
       }
     }
 
-    return this.productRepo.update(id, data);
+    const updated = await this.productRepo.update(id, data);
+    return right(updated);
   }
 }

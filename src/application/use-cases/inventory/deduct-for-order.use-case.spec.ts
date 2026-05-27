@@ -44,8 +44,9 @@ describe('DeductForOrderUseCase', () => {
 
     const order = makeOrder([makeOrderItem('prod-1', 2)]);
 
-    await sut.execute(order);
+    const result = await sut.execute(order);
 
+    expect(result.isRight()).toBe(true);
     const updated = ingredientRepo.items.find((i) => i.id === 'ing-1')!;
     expect(parseFloat(updated.currentStock)).toBeCloseTo(980);
   });
@@ -57,22 +58,26 @@ describe('DeductForOrderUseCase', () => {
 
     const order = makeOrder([makeOrderItem('prod-1', 1)]);
 
-    await sut.execute(order);
+    const result = await sut.execute(order);
 
+    expect(result.isRight()).toBe(true);
     expect(movementRepo.items).toHaveLength(1);
     expect(movementRepo.items[0].type).toBe('DEDUCTION');
     expect(movementRepo.items[0].ingredientId).toBe('ing-1');
     expect(movementRepo.items[0].orderId).toBe('order-1');
   });
 
-  it('should throw InsufficientStockError when stock is insufficient', async () => {
+  it('should return Left(InsufficientStockError) when stock is insufficient', async () => {
     const ingredient = new Ingredient('ing-1', 'Café', 'g', '5', '0', new Date(), new Date());
     ingredientRepo.items.push(ingredient);
     ingredientRepo.recipes.push({ productId: 'prod-1', ingredientId: 'ing-1', quantity: '10' });
 
     const order = makeOrder([makeOrderItem('prod-1', 1)]);
 
-    await expect(sut.execute(order)).rejects.toThrow(InsufficientStockError);
+    const result = await sut.execute(order);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(InsufficientStockError);
     expect(movementRepo.items).toHaveLength(0);
   });
 });

@@ -51,7 +51,9 @@ export class CategoriesController {
   @ApiResponse({ status: 200, type: CategoryResponseDto })
   @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
   async getOne(@Param('id') id: string): Promise<Category> {
-    return this.getCategory.execute(id);
+    const result = await this.getCategory.execute(id);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Post()
@@ -63,7 +65,9 @@ export class CategoriesController {
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   async create(@Body() dto: CreateCategoryDto): Promise<Category> {
-    return this.createCategory.execute(dto);
+    const result = await this.createCategory.execute(dto);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Patch(':id')
@@ -75,7 +79,9 @@ export class CategoriesController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
   async update(@Param('id') id: string, @Body() dto: UpdateCategoryDto): Promise<Category> {
-    return this.updateCategory.execute(id, dto);
+    const result = await this.updateCategory.execute(id, dto);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Delete(':id')
@@ -88,6 +94,7 @@ export class CategoriesController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
   async remove(@Param('id') id: string): Promise<void> {
-    await this.deleteCategory.execute(id);
+    const result = await this.deleteCategory.execute(id);
+    if (result.isLeft()) throw result.value;
   }
 }

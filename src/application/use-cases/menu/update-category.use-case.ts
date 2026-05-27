@@ -1,3 +1,4 @@
+import { Either, left, right } from '../../../domain/either';
 import { Category } from '../../../domain/entities/category.entity';
 import { NotFoundError } from '../../../domain/errors/domain.error';
 import {
@@ -8,12 +9,13 @@ import {
 export class UpdateCategoryUseCase {
   constructor(private readonly categoryRepo: ICategoryRepository) {}
 
-  async execute(id: string, data: UpdateCategoryData): Promise<Category> {
+  async execute(id: string, data: UpdateCategoryData): Promise<Either<NotFoundError, Category>> {
     const existing = await this.categoryRepo.findById(id);
     if (!existing) {
-      throw new NotFoundError('Category');
+      return left(new NotFoundError('Category'));
     }
 
-    return this.categoryRepo.update(id, data);
+    const updated = await this.categoryRepo.update(id, data);
+    return right(updated);
   }
 }

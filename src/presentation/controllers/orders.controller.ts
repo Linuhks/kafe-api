@@ -45,12 +45,14 @@ export class OrdersController {
     @Body() dto: CreateOrderDto,
     @CurrentUser() user: UserSession<Auth> | undefined,
   ): Promise<Order> {
-    return this.createOrder.execute({
+    const result = await this.createOrder.execute({
       clientId: user?.user.id,
       clientName: user?.user.name ?? dto.clientName,
       notes: dto.notes,
       items: dto.items,
     });
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Get()
@@ -126,7 +128,9 @@ export class OrdersController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Pedido não encontrado' })
   async getOne(@Param('id') id: string): Promise<Order> {
-    return this.getOrder.execute(id);
+    const result = await this.getOrder.execute(id);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Patch(':id/status')
@@ -143,6 +147,8 @@ export class OrdersController {
     @Body() dto: UpdateOrderStatusDto,
     @CurrentUser() user: UserSession<Auth> | undefined,
   ): Promise<Order> {
-    return this.updateOrderStatus.execute(id, dto.status, user?.user.id);
+    const result = await this.updateOrderStatus.execute(id, dto.status, user?.user.id);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 }

@@ -37,6 +37,30 @@ export abstract class IUserRepository {
 
 Repositories: `IUserRepository`, `IProductRepository`, `ICategoryRepository`, `IIngredientRepository`, `IInventoryMovementRepository`, `IOrderRepository`.
 
+## Either (`either.ts`)
+
+Custom `Either<L, R>` type for explicit error handling — zero external dependencies.
+
+```typescript
+import { Either, left, right } from '../either';
+
+// Left = error path, Right = success path
+const result: Either<NotFoundError, User> = user
+  ? right(user)
+  : left(new NotFoundError('User'));
+
+result.isLeft()  // true when error
+result.isRight() // true when success
+result.value     // L or R depending on branch
+```
+
+All use cases return `Either` instead of throwing. Controllers unwrap with:
+```typescript
+const result = await this.useCase.execute(...);
+if (result.isLeft()) throw result.value; // DomainError → HttpExceptionFilter
+return result.value;
+```
+
 ## Errors (`errors/domain.error.ts`)
 
 `DomainError` base carries `statusCode` — the HTTP filter uses it directly.
@@ -47,4 +71,4 @@ Available error classes:
 - `InvalidOrderTransitionError(from: string, to: string)` → 400
 - `InsufficientStockError(ingredient: string)` → 400
 
-Throw these from use cases. Never throw `HttpException` in the domain or application layers.
+Never throw these directly in use cases — return `left(new XxxError(...))` instead.

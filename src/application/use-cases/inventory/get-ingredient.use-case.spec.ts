@@ -17,11 +17,15 @@ describe('GetIngredientUseCase', () => {
 
     const result = await sut.execute(ingredient.id);
 
-    expect(result.id).toBe(ingredient.id);
-    expect(result.name).toBe('Leite');
+    expect(result.isRight()).toBe(true);
+    expect(result.value.id).toBe(ingredient.id);
+    expect(result.value.name).toBe('Leite');
   });
 
-  it('should throw NotFoundError for unknown ID', async () => {
-    await expect(sut.execute('non-existent')).rejects.toThrow(NotFoundError);
+  it('should return Left(NotFoundError) for unknown ID', async () => {
+    const result = await sut.execute('non-existent');
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotFoundError);
   });
 });

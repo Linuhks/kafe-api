@@ -20,13 +20,14 @@ describe('CreateUserUseCase', () => {
       role: 'CLIENT',
     });
 
-    expect(result.name).toBe('Ana');
-    expect(result.email).toBe('ana@example.com');
-    expect(result.role).toBe('CLIENT');
+    expect(result.isRight()).toBe(true);
+    expect(result.value.name).toBe('Ana');
+    expect(result.value.email).toBe('ana@example.com');
+    expect(result.value.role).toBe('CLIENT');
     expect(userRepo.items).toHaveLength(1);
   });
 
-  it('should throw ConflictError if email already exists', async () => {
+  it('should return Left(ConflictError) if email already exists', async () => {
     await sut.execute({
       name: 'Ana',
       email: 'ana@example.com',
@@ -34,13 +35,14 @@ describe('CreateUserUseCase', () => {
       role: 'CLIENT',
     });
 
-    await expect(
-      sut.execute({
-        name: 'Outro',
-        email: 'ana@example.com',
-        password: 'outrasenha',
-        role: 'ADMIN',
-      }),
-    ).rejects.toThrow(ConflictError);
+    const result = await sut.execute({
+      name: 'Outro',
+      email: 'ana@example.com',
+      password: 'outrasenha',
+      role: 'ADMIN',
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ConflictError);
   });
 });

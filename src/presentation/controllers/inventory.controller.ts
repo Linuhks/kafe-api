@@ -102,7 +102,9 @@ export class InventoryController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Ingrediente não encontrado' })
   async getOne(@Param('id') id: string): Promise<Ingredient> {
-    return this.getIngredient.execute(id);
+    const result = await this.getIngredient.execute(id);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Post()
@@ -113,7 +115,9 @@ export class InventoryController {
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   async create(@Body() dto: CreateIngredientDto): Promise<Ingredient> {
-    return this.createIngredient.execute(dto);
+    const result = await this.createIngredient.execute(dto);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Patch(':id')
@@ -124,7 +128,9 @@ export class InventoryController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Ingrediente não encontrado' })
   async update(@Param('id') id: string, @Body() dto: UpdateIngredientDto): Promise<Ingredient> {
-    return this.updateIngredient.execute(id, dto);
+    const result = await this.updateIngredient.execute(id, dto);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 
   @Post(':id/restock')
@@ -135,6 +141,8 @@ export class InventoryController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Ingrediente não encontrado' })
   async restock(@Param('id') id: string, @Body() dto: RestockIngredientDto): Promise<Ingredient> {
-    return this.restockIngredient.execute(id, dto.quantity, dto.note);
+    const result = await this.restockIngredient.execute(id, dto.quantity, dto.note);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 }

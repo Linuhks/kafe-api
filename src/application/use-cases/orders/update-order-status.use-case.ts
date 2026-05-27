@@ -1,5 +1,6 @@
+import { Either, left, right } from '../../../domain/either';
 import { Order, OrderStatus } from '../../../domain/entities/order.entity';
-import { NotFoundError } from '../../../domain/errors/domain.error';
+import { DomainError, NotFoundError } from '../../../domain/errors/domain.error';
 import { IOrderRepository } from '../../../domain/repositories/order.repository';
 import { DeductForOrderUseCase } from '../inventory/deduct-for-order.use-case';
 
@@ -9,16 +10,23 @@ export class UpdateOrderStatusUseCase {
     private readonly deductForOrder: DeductForOrderUseCase,
   ) {}
 
-  async execute(id: string, newStatus: OrderStatus, baristaId?: string): Promise<Order> {
+  async execute(
+    id: string,
+    newStatus: OrderStatus,
+    baristaId?: string,
+  ): Promise<Either<DomainError, Order>> {
     const order = await this.orderRepo.findById(id);
-    if (!order) throw new NotFoundError('Order');
+    if (!order) return left(new NotFoundError('Order'));
 
-    order.validateTransition(newStatus);
+    const transitionResult = order.validateTransition(newStatus);
+    if (transitionResult.isLeft()) return left(transitionResult.value);
 
     if (newStatus === 'IN_PREPARATION') {
-      await this.deductForOrder.execute(order);
+      const deductResult = await this.deductForOrder.execute(order);
+      if (deductResult.isLeft()) return left(deductResult.value);
     }
 
-    return this.orderRepo.updateStatus(id, newStatus, baristaId);
+    const updated = await this.orderRepo.updateStatus(id, newStatus, baristaId);
+    return right(updated);
   }
 }

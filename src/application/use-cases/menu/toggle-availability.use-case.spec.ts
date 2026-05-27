@@ -21,7 +21,8 @@ describe('ToggleAvailabilityUseCase', () => {
 
     const result = await sut.execute(product.id);
 
-    expect(result.isAvailable).toBe(false);
+    expect(result.isRight()).toBe(true);
+    expect(result.value.isAvailable).toBe(false);
   });
 
   it('should toggle isAvailable from false to true', async () => {
@@ -34,10 +35,14 @@ describe('ToggleAvailabilityUseCase', () => {
 
     const result = await sut.execute(product.id);
 
-    expect(result.isAvailable).toBe(true);
+    expect(result.isRight()).toBe(true);
+    expect(result.value.isAvailable).toBe(true);
   });
 
-  it('should throw NOT_FOUND if product does not exist', async () => {
-    await expect(sut.execute('non-existent')).rejects.toThrow('Product not found');
+  it('should return Left(NotFoundError) if product does not exist', async () => {
+    const result = await sut.execute('non-existent');
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value.message).toBe('Product not found');
   });
 });

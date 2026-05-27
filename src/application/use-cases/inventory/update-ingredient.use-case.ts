@@ -1,3 +1,4 @@
+import { Either, left, right } from '../../../domain/either';
 import { Ingredient } from '../../../domain/entities/ingredient.entity';
 import { NotFoundError } from '../../../domain/errors/domain.error';
 import { IIngredientRepository } from '../../../domain/repositories/ingredient.repository';
@@ -11,11 +12,12 @@ export interface UpdateIngredientDto {
 export class UpdateIngredientUseCase {
   constructor(private readonly ingredientRepo: IIngredientRepository) {}
 
-  async execute(id: string, dto: UpdateIngredientDto): Promise<Ingredient> {
+  async execute(id: string, dto: UpdateIngredientDto): Promise<Either<NotFoundError, Ingredient>> {
     const ingredient = await this.ingredientRepo.findById(id);
     if (!ingredient) {
-      throw new NotFoundError('Ingredient');
+      return left(new NotFoundError('Ingredient'));
     }
-    return this.ingredientRepo.update(id, dto);
+    const updated = await this.ingredientRepo.update(id, dto);
+    return right(updated);
   }
 }

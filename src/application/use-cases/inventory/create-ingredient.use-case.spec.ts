@@ -20,16 +20,20 @@ describe('CreateIngredientUseCase', () => {
       minimumStock: '200',
     });
 
-    expect(result.name).toBe('Café');
-    expect(result.unit).toBe('g');
-    expect(result.currentStock).toBe('1000');
-    expect(result.minimumStock).toBe('200');
+    expect(result.isRight()).toBe(true);
+    expect(result.value.name).toBe('Café');
+    expect(result.value.unit).toBe('g');
+    expect(result.value.currentStock).toBe('1000');
+    expect(result.value.minimumStock).toBe('200');
     expect(ingredientRepo.items).toHaveLength(1);
   });
 
-  it('should throw ConflictError if name already exists', async () => {
+  it('should return Left(ConflictError) if name already exists', async () => {
     await sut.execute({ name: 'Café', unit: 'g' });
 
-    await expect(sut.execute({ name: 'Café', unit: 'kg' })).rejects.toThrow(ConflictError);
+    const result = await sut.execute({ name: 'Café', unit: 'kg' });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ConflictError);
   });
 });

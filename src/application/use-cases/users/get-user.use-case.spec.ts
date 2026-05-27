@@ -20,11 +20,15 @@ describe('GetUserUseCase', () => {
 
     const result = await sut.execute('u-1');
 
-    expect(result.id).toBe('u-1');
-    expect(result.name).toBe('Carlos');
+    expect(result.isRight()).toBe(true);
+    expect(result.value.id).toBe('u-1');
+    expect(result.value.name).toBe('Carlos');
   });
 
-  it('should throw NotFoundError if user does not exist', async () => {
-    await expect(sut.execute('non-existent')).rejects.toThrow(NotFoundError);
+  it('should return Left(NotFoundError) if user does not exist', async () => {
+    const result = await sut.execute('non-existent');
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotFoundError);
   });
 });

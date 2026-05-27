@@ -20,12 +20,16 @@ describe('UpdateUserUseCase', () => {
 
     const result = await sut.execute('u-1', { role: 'BARISTA' });
 
-    expect(result.name).toBe('Maria');
-    expect(result.role).toBe('BARISTA');
-    expect(result.email).toBe('maria@example.com');
+    expect(result.isRight()).toBe(true);
+    expect(result.value.name).toBe('Maria');
+    expect(result.value.role).toBe('BARISTA');
+    expect(result.value.email).toBe('maria@example.com');
   });
 
-  it('should throw NotFoundError if user does not exist', async () => {
-    await expect(sut.execute('non-existent', { name: 'X' })).rejects.toThrow(NotFoundError);
+  it('should return Left(NotFoundError) if user does not exist', async () => {
+    const result = await sut.execute('non-existent', { name: 'X' });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotFoundError);
   });
 });

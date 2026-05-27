@@ -1,3 +1,4 @@
+import { Either, left, right } from '../../../domain/either';
 import { ProductIngredient } from '../../../domain/entities/product-ingredient.entity';
 import { NotFoundError } from '../../../domain/errors/domain.error';
 import { IProductRepository } from '../../../domain/repositories/product.repository';
@@ -9,10 +10,11 @@ export class ListProductIngredientsUseCase {
     private readonly productIngredientRepo: IProductIngredientRepository,
   ) {}
 
-  async execute(productId: string): Promise<ProductIngredient[]> {
+  async execute(productId: string): Promise<Either<NotFoundError, ProductIngredient[]>> {
     const product = await this.productRepo.findById(productId);
-    if (!product) throw new NotFoundError(`Product ${productId}`);
+    if (!product) return left(new NotFoundError(`Product ${productId}`));
 
-    return this.productIngredientRepo.findByProductId(productId);
+    const items = await this.productIngredientRepo.findByProductId(productId);
+    return right(items);
   }
 }

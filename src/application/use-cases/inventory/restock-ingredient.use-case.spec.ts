@@ -24,14 +24,16 @@ describe('RestockIngredientUseCase', () => {
 
     const result = await sut.execute(ingredient.id, '250');
 
-    expect(parseFloat(result.currentStock)).toBeCloseTo(750);
+    expect(result.isRight()).toBe(true);
+    expect(parseFloat(result.value.currentStock)).toBeCloseTo(750);
   });
 
   it('should create a RESTOCK movement', async () => {
     const ingredient = await ingredientRepo.create({ name: 'Café', unit: 'g', currentStock: '0' });
 
-    await sut.execute(ingredient.id, '100', 'Compra semanal');
+    const result = await sut.execute(ingredient.id, '100', 'Compra semanal');
 
+    expect(result.isRight()).toBe(true);
     expect(movementRepo.items).toHaveLength(1);
     expect(movementRepo.items[0].type).toBe('RESTOCK');
     expect(movementRepo.items[0].quantity).toBe('100');
@@ -39,7 +41,10 @@ describe('RestockIngredientUseCase', () => {
     expect(movementRepo.items[0].ingredientId).toBe(ingredient.id);
   });
 
-  it('should throw NotFoundError if ingredient does not exist', async () => {
-    await expect(sut.execute('non-existent', '100')).rejects.toThrow(NotFoundError);
+  it('should return Left(NotFoundError) if ingredient does not exist', async () => {
+    const result = await sut.execute('non-existent', '100');
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotFoundError);
   });
 });
