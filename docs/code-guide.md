@@ -1,49 +1,49 @@
 # Code Guide
 
-Guia de convenções, padrões e fluxo de contribuição do `kafe-api`.
+Conventions, patterns, and contribution flow for `kafe-api`.
 
 ---
 
-## Comandos de desenvolvimento
+## Development commands
 
 ```bash
-pnpm run start:dev     # Sobe a API com hot reload (watch mode)
-pnpm run build         # Compila TypeScript para dist/
+pnpm run start:dev     # Start the API with hot reload (watch mode)
+pnpm run build         # Compile TypeScript to dist/
 
-pnpm run test          # Roda os testes unitários
-pnpm run test:watch    # Testes em modo watch
-pnpm run test:cov      # Testes com relatório de cobertura
-pnpm run test:e2e      # Testes end-to-end
+pnpm run test          # Run unit tests
+pnpm run test:watch    # Tests in watch mode
+pnpm run test:cov      # Tests with coverage report
+pnpm run test:e2e      # End-to-end tests
 
-pnpm run lint          # ESLint com auto-fix
-pnpm run format        # Prettier
+pnpm run lint          # Biome linter with auto-fix
+pnpm run format        # Biome formatter
 
-pnpm run seed          # Popula o banco com dados de exemplo
-pnpm run db:studio     # Abre o Drizzle Studio no navegador (UI para o banco)
+pnpm run seed          # Seed the database with sample data
+pnpm run db:studio     # Open Drizzle Studio in the browser (database UI)
 ```
 
-Pré-requisito: `docker compose up -d` para subir o PostgreSQL (porta 5432).
+Prerequisite: `docker compose up -d` to start PostgreSQL (port 5432).
 
 ---
 
-## Padrão de injeção de dependência
+## Dependency injection pattern
 
-Use cases **não usam** `@Injectable()` do NestJS. Eles são instanciados manualmente via `useFactory` dentro do módulo.
+Use cases **do not use** NestJS's `@Injectable()`. They are manually instantiated via `useFactory` inside the module.
 
 ```typescript
-// ✅ Correto
+// ✅ Correct
 {
   provide: CreateUserUseCase,
   useFactory: (repo: IUserRepository) => new CreateUserUseCase(repo),
   inject: [IUserRepository],
 }
 
-// ❌ Evitar — use cases não devem depender do container do NestJS
+// ❌ Avoid — use cases must not depend on the NestJS container
 @Injectable()
 export class CreateUserUseCase { ... }
 ```
 
-Repositórios seguem o padrão oposto: a interface é registrada com `useClass` apontando para a implementação Drizzle.
+Repositories follow the opposite pattern: the interface is registered with `useClass` pointing to the Drizzle implementation.
 
 ```typescript
 { provide: IUserRepository, useClass: DrizzleUserRepository }
@@ -51,84 +51,83 @@ Repositórios seguem o padrão oposto: a interface é registrada com `useClass` 
 
 ---
 
-## Convenções de nomenclatura
+## Naming conventions
 
-| Tipo | Sufixo | Exemplo |
+| Type | Suffix | Example |
 |---|---|---|
-| Entidade de domínio | `.entity.ts` | `order.entity.ts` → `Order` |
-| Interface de repositório | `.repository.ts` | `user.repository.ts` → `IUserRepository` |
+| Domain entity | `.entity.ts` | `order.entity.ts` → `Order` |
+| Repository interface | `.repository.ts` | `user.repository.ts` → `IUserRepository` |
 | Use case | `.use-case.ts` | `create-user.use-case.ts` → `CreateUserUseCase` |
-| Implementação Drizzle | `drizzle-<nome>.repository.ts` | `DrizzleUserRepository` |
-| Fake para testes | `in-memory-<nome>.repository.ts` | `InMemoryUserRepository` |
+| Drizzle implementation | `drizzle-<name>.repository.ts` | `DrizzleUserRepository` |
+| Test fake | `in-memory-<name>.repository.ts` | `InMemoryUserRepository` |
 | Controller | `.controller.ts` | `users.controller.ts` → `UsersController` |
 | DTO | `.dto.ts` | `create-user.dto.ts` → `CreateUserDto` |
-| Módulo | `.module.ts` | `users.module.ts` → `UsersModule` |
+| Module | `.module.ts` | `users.module.ts` → `UsersModule` |
 
-Todos os arquivos: **kebab-case**. Todas as classes: **PascalCase**.
+All files: **kebab-case**. All classes: **PascalCase**.
 
 ---
 
-## Onde criar cada tipo de arquivo
+## Where to create each file type
 
 ```
 src/
 ├── domain/
-│   ├── entities/          ← novas entidades de negócio
-│   ├── repositories/      ← novas interfaces de repositório
-│   └── errors/            ← novos erros de domínio tipados
+│   ├── entities/          ← new business entities
+│   ├── repositories/      ← new repository interfaces
+│   └── errors/            ← new typed domain errors
 │
 ├── application/use-cases/
-│   └── <módulo>/          ← novos use cases (ex: menu/, orders/)
+│   └── <module>/          ← new use cases (e.g. menu/, orders/)
 │
 ├── infrastructure/
-│   └── db/repositories/   ← implementações Drizzle dos repositórios
+│   └── db/repositories/   ← Drizzle repository implementations
 │
 ├── presentation/
-│   ├── controllers/       ← novos controllers HTTP
-│   └── dtos/              ← DTOs de entrada e saída
+│   ├── controllers/       ← new HTTP controllers
+│   └── dtos/              ← input and output DTOs
 │
-└── test/repositories/     ← fakes in-memory para testes unitários
+└── test/repositories/     ← in-memory fakes for unit tests
 ```
 
 ---
 
-## Fluxo para adicionar uma feature
+## Flow for adding a feature
 
-1. **Domain**: criar/atualizar a entidade e a interface de repositório
-2. **Application**: criar o use case em `use-cases/<módulo>/`
-3. **Infrastructure**: implementar o repositório Drizzle (se novo)
-4. **Test**: criar o fake in-memory em `src/test/repositories/`
-5. **Presentation**: criar o DTO e adicionar o endpoint no controller
-6. **Módulo**: registrar o use case e o repositório no `.module.ts` da feature
+1. **Domain**: create/update the entity and repository interface
+2. **Application**: create the use case in `use-cases/<module>/`
+3. **Infrastructure**: implement the Drizzle repository (if new)
+4. **Test**: create the in-memory fake in `src/test/repositories/`
+5. **Presentation**: create the DTO and add the endpoint to the controller
+6. **Module**: register the use case and repository in the feature's `.module.ts`
 
 ---
 
-## Testes unitários
+## Unit tests
 
-Use cases são testados com repositórios in-memory (sem banco real). O fake implementa a mesma interface do repositório Drizzle.
+Use cases are tested with in-memory repositories (no real database). The fake implements the same interface as the Drizzle repository.
 
 ```typescript
-// Exemplo de teste de use case
 const repo = new InMemoryUserRepository();
 const useCase = new CreateUserUseCase(repo);
 
-const result = await useCase.execute({ name: 'João', email: 'joao@kafe.com', role: 'CLIENT' });
-expect(result.name).toBe('João');
+const result = await useCase.execute({ name: 'John', email: 'john@kafe.com', role: 'CLIENT' });
+expect(result.name).toBe('John');
 ```
 
-Cada use case deve ter seu arquivo `.spec.ts` no mesmo diretório.
+Each use case must have a sibling `.spec.ts` file in the same directory.
 
 ---
 
-## Banco de dados
+## Database
 
-- ORM: **Drizzle** com PostgreSQL
-- Schema em `src/infrastructure/db/schema.ts` (tabelas de negócio)
-- Schema de auth em `src/infrastructure/db/auth-schema.ts` (gerenciado pelo Better-Auth)
-- Migrations: geradas e aplicadas via CLI do Drizzle
+- ORM: **Drizzle** with PostgreSQL
+- Schema in `src/infrastructure/db/schema.ts` (business tables)
+- Auth schema in `src/infrastructure/db/auth-schema.ts` (managed by Better-Auth)
+- Migrations: generated and applied via the Drizzle CLI
 
 ---
 
-## Autenticação
+## Authentication
 
-Gerenciada pelo **Better-Auth**. O token JWT é obtido via `POST /api/v1/auth/login` e enviado no header `Authorization: Bearer <token>`. Guards e decorators de controle de acesso ficam em `src/presentation/`.
+Managed by **Better-Auth**. The JWT token is obtained via `POST /api/v1/auth/login` and sent in the `Authorization: Bearer <token>` header. Access control guards and decorators live in `src/presentation/`.

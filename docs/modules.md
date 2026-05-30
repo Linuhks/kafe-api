@@ -1,130 +1,130 @@
-# Módulos
+# Modules
 
-Índice dos módulos NestJS do `kafe-api`. Cada módulo encapsula uma feature completa: controller, use cases e repositórios.
+Index of NestJS modules in `kafe-api`. Each module encapsulates a complete feature: controller, use cases, and repositories.
 
 ---
 
 ## UsersModule
 
-**Arquivo:** `src/users.module.ts`
+**File:** `src/users.module.ts`
 
-Gerencia usuários do sistema. Usado pelo ADMIN para administração de contas.
+Manages system users. Used by the ADMIN for account administration.
 
 **Use Cases:**
 
-| Use Case | Arquivo | Descrição |
+| Use Case | File | Description |
 |---|---|---|
-| `CreateUserUseCase` | `users/create-user.use-case.ts` | Cria um novo usuário |
-| `ListUsersUseCase` | `users/list-users.use-case.ts` | Lista todos os usuários |
-| `GetUserUseCase` | `users/get-user.use-case.ts` | Busca um usuário por ID |
-| `UpdateUserUseCase` | `users/update-user.use-case.ts` | Atualiza dados de um usuário |
-| `DeleteUserUseCase` | `users/delete-user.use-case.ts` | Remove um usuário |
+| `CreateUserUseCase` | `users/create-user.use-case.ts` | Creates a new user |
+| `ListUsersUseCase` | `users/list-users.use-case.ts` | Lists all users |
+| `GetUserUseCase` | `users/get-user.use-case.ts` | Fetches a user by ID |
+| `UpdateUserUseCase` | `users/update-user.use-case.ts` | Updates user data |
+| `DeleteUserUseCase` | `users/delete-user.use-case.ts` | Removes a user |
 
-**Entidades:** `User`
-**Repositório:** `IUserRepository` → `DrizzleUserRepository`
+**Entities:** `User`  
+**Repository:** `IUserRepository` → `DrizzleUserRepository`  
 **Controller:** `UsersController` (`src/presentation/controllers/users.controller.ts`)
 
 ---
 
 ## MenuModule
 
-**Arquivo:** `src/menu.module.ts`
+**File:** `src/menu.module.ts`
 
-Gerencia o cardápio: categorias, produtos e a relação produto-ingrediente.
+Manages the menu: categories, products, and the product-ingredient relationship.
 
-**Use Cases — Categorias:**
+**Use Cases — Categories:**
 
-| Use Case | Descrição |
+| Use Case | Description |
 |---|---|
-| `CreateCategoryUseCase` | Cria uma nova categoria |
-| `ListCategoriesUseCase` | Lista categorias (ativas ou todas) |
-| `GetCategoryUseCase` | Busca categoria por ID |
-| `UpdateCategoryUseCase` | Atualiza dados de uma categoria |
-| `DeleteCategoryUseCase` | Remove uma categoria |
+| `CreateCategoryUseCase` | Creates a new category |
+| `ListCategoriesUseCase` | Lists categories (active or all) |
+| `GetCategoryUseCase` | Fetches a category by ID |
+| `UpdateCategoryUseCase` | Updates category data |
+| `DeleteCategoryUseCase` | Removes a category |
 
-**Use Cases — Produtos:**
+**Use Cases — Products:**
 
-| Use Case | Descrição |
+| Use Case | Description |
 |---|---|
-| `CreateProductUseCase` | Cria um produto vinculado a uma categoria |
-| `ListProductsUseCase` | Lista produtos (com filtros de disponibilidade) |
-| `GetProductUseCase` | Busca produto por ID |
-| `UpdateProductUseCase` | Atualiza dados de um produto |
-| `DeleteProductUseCase` | Remove um produto |
-| `ToggleAvailabilityUseCase` | Ativa/desativa disponibilidade de um produto |
-| `AddProductIngredientUseCase` | Vincula um ingrediente a um produto com quantidade |
-| `RemoveProductIngredientUseCase` | Remove um ingrediente da receita de um produto |
-| `ListProductIngredientsUseCase` | Lista ingredientes de um produto |
+| `CreateProductUseCase` | Creates a product linked to a category |
+| `ListProductsUseCase` | Lists products (with availability filters) |
+| `GetProductUseCase` | Fetches a product by ID |
+| `UpdateProductUseCase` | Updates product data |
+| `DeleteProductUseCase` | Removes a product |
+| `ToggleAvailabilityUseCase` | Toggles a product's availability |
+| `AddProductIngredientUseCase` | Links an ingredient to a product with a quantity |
+| `RemoveProductIngredientUseCase` | Removes an ingredient from a product's recipe |
+| `ListProductIngredientsUseCase` | Lists a product's ingredients |
 
-**Entidades:** `Category`, `Product`, `ProductIngredient`
-**Repositórios:** `ICategoryRepository`, `IProductRepository`, `IIngredientRepository`, `IProductIngredientRepository`
+**Entities:** `Category`, `Product`, `ProductIngredient`  
+**Repositories:** `ICategoryRepository`, `IProductRepository`, `IIngredientRepository`, `IProductIngredientRepository`  
 **Controllers:** `CategoriesController`, `ProductsController`
 
 ---
 
 ## OrdersModule
 
-**Arquivo:** `src/orders.module.ts`
+**File:** `src/orders.module.ts`
 
-Gerencia o ciclo de vida dos pedidos, desde a criação até a entrega.
+Manages the full order lifecycle, from creation to delivery.
 
 **Use Cases:**
 
-| Use Case | Descrição |
+| Use Case | Description |
 |---|---|
-| `CreateOrderUseCase` | Cria um pedido; valida produtos e calcula o total |
-| `GetOrderUseCase` | Busca um pedido por ID |
-| `ListOrdersUseCase` | Lista pedidos (ADMIN: todos; CLIENT: os próprios) |
-| `UpdateOrderStatusUseCase` | Avança o status de um pedido (valida transição); ao passar para `IN_PREPARATION`, chama `DeductForOrderUseCase` para deduzir ingredientes do estoque |
-| `GetBaristaQueueUseCase` | Retorna fila de pedidos pendentes para o barista |
-| `GetMyOrdersUseCase` | Retorna pedidos do cliente autenticado |
+| `CreateOrderUseCase` | Creates an order; validates products and calculates the total |
+| `GetOrderUseCase` | Fetches an order by ID |
+| `ListOrdersUseCase` | Lists orders (ADMIN: all; CLIENT: own orders) |
+| `UpdateOrderStatusUseCase` | Advances order status (validates transition); when moving to `IN_PREPARATION`, calls `DeductForOrderUseCase` to deduct ingredients from stock |
+| `GetBaristaQueueUseCase` | Returns the queue of pending orders for the barista |
+| `GetMyOrdersUseCase` | Returns the authenticated client's orders |
 
-**Entidades:** `Order`, `OrderItem`
-**Repositórios:** `IOrderRepository`
+**Entities:** `Order`, `OrderItem`  
+**Repositories:** `IOrderRepository`  
 **Controller:** `OrdersController`
 
-> O `OrdersModule` importa `MenuModule` para acessar `IProductRepository` e `InventoryModule` para acessar `IIngredientRepository` e `IInventoryMovementRepository` na criação de pedidos.
+> `OrdersModule` imports `MenuModule` to access `IProductRepository` and `InventoryModule` to access `IIngredientRepository` and `IInventoryMovementRepository` when creating orders.
 
 ---
 
 ## InventoryModule
 
-**Arquivo:** `src/inventory.module.ts`
+**File:** `src/inventory.module.ts`
 
-Controla o estoque de ingredientes e registra todas as movimentações.
+Controls ingredient stock and records all movements.
 
 **Use Cases:**
 
-| Use Case | Descrição |
+| Use Case | Description |
 |---|---|
-| `CreateIngredientUseCase` | Cadastra um novo ingrediente |
-| `ListIngredientsUseCase` | Lista todos os ingredientes |
-| `GetIngredientUseCase` | Busca ingrediente por ID |
-| `UpdateIngredientUseCase` | Atualiza dados de um ingrediente |
-| `RestockIngredientUseCase` | Adiciona estoque a um ingrediente (gera movimentação `RESTOCK`) |
-| `DeductForOrderUseCase` | Deduz ingredientes do estoque para um pedido (gera `DEDUCTION`) |
-| `ListMovementsUseCase` | Lista histórico de movimentações de estoque |
-| `GetStockAlertsUseCase` | Retorna ingredientes com estoque abaixo do mínimo |
+| `CreateIngredientUseCase` | Registers a new ingredient |
+| `ListIngredientsUseCase` | Lists all ingredients |
+| `GetIngredientUseCase` | Fetches an ingredient by ID |
+| `UpdateIngredientUseCase` | Updates ingredient data |
+| `RestockIngredientUseCase` | Adds stock to an ingredient (generates a `RESTOCK` movement) |
+| `DeductForOrderUseCase` | Deducts ingredients from stock for an order (generates `DEDUCTION`) |
+| `ListMovementsUseCase` | Lists stock movement history |
+| `GetStockAlertsUseCase` | Returns ingredients with stock below the minimum |
 
-**Entidades:** `Ingredient`, `InventoryMovement`
-**Repositórios:** `IIngredientRepository`, `IInventoryMovementRepository`
+**Entities:** `Ingredient`, `InventoryMovement`  
+**Repositories:** `IIngredientRepository`, `IInventoryMovementRepository`  
 **Controller:** `InventoryController`
 
 ---
 
 ## DashboardModule
 
-**Arquivo:** `src/dashboard.module.ts`
+**File:** `src/dashboard.module.ts`
 
-Agrega métricas e dados analíticos para o painel gerencial (ADMIN).
+Aggregates metrics and analytical data for the management panel (ADMIN).
 
 **Use Cases:**
 
-| Use Case | Descrição |
+| Use Case | Description |
 |---|---|
-| `GetSummaryUseCase` | Retorna totais de pedidos, receita e métricas do período |
-| `GetTopProductsUseCase` | Lista produtos mais vendidos |
-| `GetPeakHoursUseCase` | Distribuição de pedidos por hora do dia |
+| `GetSummaryUseCase` | Returns order totals, revenue, and period metrics |
+| `GetTopProductsUseCase` | Lists best-selling products |
+| `GetPeakHoursUseCase` | Order distribution by hour of the day |
 
-**Repositórios:** utiliza `IOrderRepository` (importado do `OrdersModule`)
+**Repositories:** uses `IOrderRepository` (imported from `OrdersModule`)  
 **Controller:** `DashboardController`

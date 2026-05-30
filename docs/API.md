@@ -46,7 +46,7 @@ Paginated responses have the shape:
 ```json
 {
   "statusCode": 404,
-  "message": "Recurso não encontrado",
+  "message": "Resource not found",
   "code": "RESOURCE_NOT_FOUND"
 }
 ```
@@ -67,7 +67,7 @@ Authenticate with email and password. Returns a Bearer token.
 ```json
 {
   "email": "maria@kafe.com",
-  "password": "senha1234"
+  "password": "secret1234"
 }
 ```
 
@@ -116,8 +116,8 @@ List categories with pagination.
   "data": [
     {
       "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-      "name": "Cafés Especiais",
-      "description": "Cafés de origem única",
+      "name": "Specialty Coffees",
+      "description": "Single-origin coffees",
       "sortOrder": 1,
       "isActive": true,
       "createdAt": "2024-01-01T10:00:00.000Z"
@@ -162,8 +162,8 @@ Create a new category.
 
 ```json
 {
-  "name": "Cafés",
-  "description": "Cafés especiais e espressos",
+  "name": "Coffees",
+  "description": "Specialty coffees and espressos",
   "sortOrder": 1
 }
 ```
@@ -190,8 +190,8 @@ Update a category.
 
 ```json
 {
-  "name": "Cafés",
-  "description": "Cafés especiais e espressos",
+  "name": "Coffees",
+  "description": "Specialty coffees and espressos",
   "sortOrder": 1,
   "isActive": true
 }
@@ -249,7 +249,7 @@ List products with pagination, optionally filtered by category.
       "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
       "categoryId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
       "name": "Cappuccino",
-      "description": "Espresso com leite vaporizado",
+      "description": "Espresso with steamed milk",
       "price": "12.50",
       "imageUrl": "https://example.com/cappuccino.jpg",
       "isAvailable": true,
@@ -287,7 +287,7 @@ Create a new product.
 {
   "categoryId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
   "name": "Espresso",
-  "description": "Café espresso tradicional",
+  "description": "Traditional espresso",
   "price": "5.50",
   "imageUrl": "https://cdn.kafe.com/espresso.jpg",
   "isAvailable": true
@@ -424,8 +424,8 @@ Create a new order. Works for anonymous and authenticated users.
 
 ```json
 {
-  "clientName": "João Silva",
-  "notes": "Sem açúcar",
+  "clientName": "John Silva",
+  "notes": "No sugar",
   "items": [
     { "productId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890", "quantity": 2 }
   ]
@@ -446,10 +446,10 @@ Create a new order. Works for anonymous and authenticated users.
 {
   "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "clientId": null,
-  "clientName": "João Silva",
+  "clientName": "John Silva",
   "baristaId": null,
   "status": "RECEIVED",
-  "notes": "Sem açúcar",
+  "notes": "No sugar",
   "totalAmount": "25.00",
   "items": [
     {
@@ -596,7 +596,7 @@ List all ingredients with pagination.
   "data": [
     {
       "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-      "name": "Café Espresso",
+      "name": "Espresso Coffee",
       "unit": "ml",
       "currentStock": "5000.000",
       "minimumStock": "500.000",
@@ -646,7 +646,7 @@ Create a new ingredient.
 
 ```json
 {
-  "name": "Café",
+  "name": "Coffee",
   "unit": "kg",
   "currentStock": "10.000",
   "minimumStock": "2.000"
@@ -691,7 +691,7 @@ Add stock to an ingredient and record a `RESTOCK` movement.
 ```json
 {
   "quantity": "5.000",
-  "note": "Entrega semanal"
+  "note": "Weekly delivery"
 }
 ```
 
@@ -734,7 +734,7 @@ List stock movement history with optional filters.
       "orderId": null,
       "type": "RESTOCK",
       "quantity": "500.000",
-      "note": "Reposição semanal",
+      "note": "Weekly restock",
       "createdAt": "2024-01-01T10:00:00.000Z"
     }
   ],
@@ -809,7 +809,7 @@ Create a new user.
 {
   "name": "Maria Silva",
   "email": "maria@kafe.com",
-  "password": "senha1234",
+  "password": "secret1234",
   "role": "CLIENT"
 }
 ```

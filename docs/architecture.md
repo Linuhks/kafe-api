@@ -1,6 +1,6 @@
-# Arquitetura
+# Architecture
 
-O `kafe-api` segue **Clean Architecture** sobre NestJS. O código é organizado em quatro camadas com dependências unidirecionais: as camadas internas não conhecem as externas.
+`kafe-api` follows **Clean Architecture** on top of NestJS. Code is organised into four layers with unidirectional dependencies: inner layers have no knowledge of outer layers.
 
 ```
 presentation  →  application  →  domain
@@ -9,20 +9,20 @@ infrastructure                →  domain
 
 ---
 
-## Camadas
+## Layers
 
 ### Domain
 
 `src/domain/`
 
-O núcleo do sistema. Não depende de nenhum framework, biblioteca externa ou banco de dados.
+The core of the system. Has no dependency on any framework, external library, or database.
 
-Contém:
-- **Entities**: classes que representam os conceitos do negócio (`Order`, `Product`, `Ingredient`, `User`, etc.) e encapsulam as regras de validação e transição de estado
-- **Repository interfaces**: contratos (`IOrderRepository`, `IUserRepository`, etc.) que definem o que a aplicação precisa persistir — sem saber *como*
-- **Domain errors**: erros tipados que representam violações de regra de negócio (`InvalidOrderTransitionError`, `InsufficientStockError`, etc.)
+Contains:
+- **Entities**: classes representing business concepts (`Order`, `Product`, `Ingredient`, `User`, etc.) that encapsulate validation rules and state transitions
+- **Repository interfaces**: contracts (`IOrderRepository`, `IUserRepository`, etc.) that define what the application needs to persist — without specifying *how*
+- **Domain errors**: typed errors representing business rule violations (`InvalidOrderTransitionError`, `InsufficientStockError`, etc.)
 
-Regra: nenhum `import` de `@nestjs/*`, Drizzle, Better-Auth ou qualquer dependência externa nesta camada.
+Rule: no `import` from `@nestjs/*`, Drizzle, Better-Auth, or any external dependency in this layer.
 
 ---
 
@@ -30,12 +30,12 @@ Regra: nenhum `import` de `@nestjs/*`, Drizzle, Better-Auth ou qualquer dependê
 
 `src/application/use-cases/`
 
-Orquestra os casos de uso do negócio. Cada use case é uma classe com um único método `execute()`.
+Orchestrates business use cases. Each use case is a class with a single `execute()` method.
 
-- Recebe e retorna tipos de domínio (entities, primitivos)
-- Depende apenas de interfaces de repositório do domínio
-- Não conhece HTTP, banco de dados ou NestJS
-- Um use case por arquivo, agrupados por módulo (`users/`, `menu/`, `orders/`, `inventory/`, `dashboard/`)
+- Receives and returns domain types (entities, primitives)
+- Depends only on domain repository interfaces
+- Has no knowledge of HTTP, database, or NestJS
+- One use case per file, grouped by module (`users/`, `menu/`, `orders/`, `inventory/`, `dashboard/`)
 
 ---
 
@@ -43,11 +43,11 @@ Orquestra os casos de uso do negócio. Cada use case é uma classe com um único
 
 `src/infrastructure/`
 
-Implementações concretas dos contratos definidos no domínio.
+Concrete implementations of the contracts defined in the domain.
 
-- **Drizzle repositories**: implementam `IXxxRepository` usando Drizzle ORM + PostgreSQL
-- **Better-Auth**: autenticação e sessão (gerenciado separadamente em `auth-schema.ts`)
-- **Schema**: definição das tabelas em `schema.ts`
+- **Drizzle repositories**: implement `IXxxRepository` using Drizzle ORM + PostgreSQL
+- **Better-Auth**: authentication and session management (managed separately in `auth-schema.ts`)
+- **Schema**: table definitions in `schema.ts`
 
 ---
 
@@ -55,51 +55,51 @@ Implementações concretas dos contratos definidos no domínio.
 
 `src/presentation/`
 
-Camada HTTP. Integra com NestJS e expõe a API REST.
+HTTP layer. Integrates with NestJS and exposes the REST API.
 
-- **Controllers**: recebem requisições, chamam use cases, retornam respostas
-- **DTOs**: validação e tipagem de entrada/saída com `class-validator` e `class-transformer`
-- **Guards / Decorators**: controle de acesso por papel (`@Roles`, `AuthGuard`)
+- **Controllers**: receive requests, call use cases, return responses
+- **DTOs**: input/output validation and typing with `class-validator` and `class-transformer`
+- **Guards / Decorators**: role-based access control (`@Roles`, `AuthGuard`)
 
 ---
 
-## Fluxo de uma requisição
+## Request flow
 
 ```
 HTTP Request
     ↓
 Controller (presentation)
-    → valida DTO
-    → chama Use Case (application)
-        → chama Repository Interface (domain)
-            → Drizzle Repository (infrastructure) executa SQL
-        ← retorna Entity
-    ← retorna resultado
-    → mapeia para resposta HTTP
+    → validates DTO
+    → calls Use Case (application)
+        → calls Repository Interface (domain)
+            → Drizzle Repository (infrastructure) executes SQL
+        ← returns Entity
+    ← returns result
+    → maps to HTTP response
 HTTP Response
 ```
 
-Exemplo concreto — `POST /api/v1/orders`:
+Concrete example — `POST /api/v1/orders`:
 
-1. `OrdersController.create()` recebe o body, valida com `CreateOrderDto`
-2. Chama `CreateOrderUseCase.execute(dto)`
-3. O use case busca produtos via `IProductRepository`, calcula o total e persiste via `IOrderRepository`
-4. O controller retorna o pedido criado com status 201
+1. `OrdersController.create()` receives the body, validates with `CreateOrderDto`
+2. Calls `CreateOrderUseCase.execute(dto)`
+3. The use case fetches products via `IProductRepository`, calculates the total, and persists via `IOrderRepository`
+4. The controller returns the created order with status 201
 
-Exemplo — `PATCH /api/v1/orders/:id/status` para `IN_PREPARATION`:
+Example — `PATCH /api/v1/orders/:id/status` to `IN_PREPARATION`:
 
-1. `OrdersController.updateStatus()` valida o body com `UpdateOrderStatusDto`
-2. Chama `UpdateOrderStatusUseCase.execute(id, 'IN_PREPARATION', baristaId)`
-3. O use case valida a transição de estado, então chama `DeductForOrderUseCase`
-4. `DeductForOrderUseCase` verifica e deduz os ingredientes do estoque; lança `InsufficientStockError` se faltar estoque
-5. O controller retorna o pedido atualizado com status 200
+1. `OrdersController.updateStatus()` validates the body with `UpdateOrderStatusDto`
+2. Calls `UpdateOrderStatusUseCase.execute(id, 'IN_PREPARATION', baristaId)`
+3. The use case validates the state transition, then calls `DeductForOrderUseCase`
+4. `DeductForOrderUseCase` checks and deducts ingredients from stock; throws `InsufficientStockError` if stock is insufficient
+5. The controller returns the updated order with status 200
 
 ---
 
-## Módulos NestJS
+## NestJS modules
 
-Cada módulo (`UsersModule`, `MenuModule`, `OrdersModule`, `InventoryModule`, `DashboardModule`) é responsável por:
+Each module (`UsersModule`, `MenuModule`, `OrdersModule`, `InventoryModule`, `DashboardModule`) is responsible for:
 
-1. Registrar o controller da feature
-2. Vincular a interface de repositório (`IXxxRepository`) à sua implementação Drizzle
-3. Instanciar os use cases via factory (sem usar o sistema de injeção padrão do NestJS para use cases — ver [Code Guide](./code-guide.md))
+1. Registering the feature's controller
+2. Binding the repository interface (`IXxxRepository`) to its Drizzle implementation
+3. Instantiating use cases via factory (without using NestJS's standard injection system for use cases — see [Code Guide](./code-guide.md))

@@ -1,26 +1,26 @@
-# Regras de Negócio
+# Business Rules
 
 ---
 
-## Usuários e Papéis
+## Users and Roles
 
-O sistema possui três papéis (`user_role`):
+The system has three roles (`user_role`):
 
-| Papel | Descrição |
+| Role | Description |
 |---|---|
-| `ADMIN` | Acesso total: gerencia usuários, cardápio, ingredientes e visualiza dashboard |
-| `BARISTA` | Opera pedidos: visualiza a fila, atualiza status e consulta estoque |
-| `CLIENT` | Faz pedidos e consulta seus próprios pedidos |
+| `ADMIN` | Full access: manages users, menu, ingredients, and views the dashboard |
+| `BARISTA` | Operates orders: views the queue, updates status, and checks stock |
+| `CLIENT` | Places orders and views their own order history |
 
-Um usuário pode estar ativo (`isActive: true`) ou inativo. Usuários inativos não devem conseguir autenticar.
+A user can be active (`isActive: true`) or inactive. Inactive users must not be able to authenticate.
 
 ---
 
-## Pedidos
+## Orders
 
-### Ciclo de vida
+### Lifecycle
 
-Todo pedido nasce com status `RECEIVED` e progride através de transições válidas:
+Every order starts with status `RECEIVED` and progresses through valid transitions:
 
 ```
 RECEIVED → IN_PREPARATION → READY → DELIVERED
@@ -28,92 +28,92 @@ RECEIVED → IN_PREPARATION → READY → DELIVERED
 CANCELLED      CANCELLED
 ```
 
-Transições válidas por status:
+Valid transitions by status:
 
-| Status atual | Pode ir para |
+| Current status | Can transition to |
 |---|---|
 | `RECEIVED` | `IN_PREPARATION`, `CANCELLED` |
 | `IN_PREPARATION` | `READY`, `CANCELLED` |
 | `READY` | `DELIVERED` |
-| `DELIVERED` | — (estado final) |
-| `CANCELLED` | — (estado final) |
+| `DELIVERED` | — (final state) |
+| `CANCELLED` | — (final state) |
 
-Tentar uma transição inválida lança `InvalidOrderTransitionError`.
+Attempting an invalid transition throws `InvalidOrderTransitionError`.
 
-### Criação de pedido
+### Order creation
 
-- Um pedido precisa ter ao menos um item (`OrderItem`)
-- Cada item referencia um `Product` e uma quantidade
-- O `totalAmount` é calculado com base nos preços dos produtos × quantidades
-- A criação do pedido **não deduz estoque** — apenas valida que os produtos existem e estão disponíveis
+- An order must have at least one item (`OrderItem`)
+- Each item references a `Product` and a quantity
+- `totalAmount` is calculated based on product prices × quantities
+- Order creation **does not deduct stock** — it only validates that products exist and are available
 
-### Dedução de estoque
+### Stock deduction
 
-A dedução dos ingredientes ocorre quando o barista avança o pedido para `IN_PREPARATION`:
+Ingredient deduction occurs when the barista advances the order to `IN_PREPARATION`:
 
-- O sistema calcula a quantidade necessária de cada ingrediente com base na receita de cada produto do pedido
-- Se qualquer ingrediente estiver com estoque insuficiente, a transição falha com `InsufficientStockError` e nenhuma dedução é realizada
-- Caso o estoque seja suficiente, todos os ingredientes são deduzidos e um registro `DEDUCTION` é criado em `inventory_movements`
+- The system calculates the required quantity of each ingredient based on the recipe of each product in the order
+- If any ingredient has insufficient stock, the transition fails with `InsufficientStockError` and no deduction is performed
+- If stock is sufficient, all ingredients are deducted and a `DEDUCTION` record is created in `inventory_movements`
 
-> **Observação:** o estoque não é reservado no momento da criação do pedido. Dois pedidos simultâneos para o mesmo produto podem ambos ser aceitos mesmo que haja ingredientes suficientes para apenas um.
+> **Note:** stock is not reserved when the order is created. Two simultaneous orders for the same product can both be accepted even if there are only enough ingredients for one.
 
-### Fila do barista
+### Barista queue
 
-O endpoint de fila retorna pedidos nos status `RECEIVED` e `IN_PREPARATION`, ordenados por data de criação (mais antigos primeiro).
-
----
-
-## Cardápio
-
-### Categorias
-
-- Cada categoria tem um `sortOrder` para controlar a ordem de exibição
-- Uma categoria pode ser ativada/desativada (`isActive`)
-- Não é possível excluir uma categoria que tenha produtos vinculados
-
-### Produtos
-
-- Todo produto pertence a uma categoria
-- Um produto pode estar disponível (`isAvailable: true`) ou indisponível
-- `ToggleAvailability` inverte o estado de disponibilidade de um produto
-- Um produto pode ter zero ou mais ingredientes na sua receita (`product_ingredients`)
-- Cada vínculo produto-ingrediente define a `quantity` de ingrediente necessária por unidade do produto
-
-### Ingredientes no cardápio
-
-- Ingredientes são gerenciados no módulo de inventário, mas são referenciados pelo cardápio via `product_ingredients`
-- Adicionar um ingrediente a um produto requer que tanto o produto quanto o ingrediente existam
+The queue endpoint returns orders with status `RECEIVED` and `IN_PREPARATION`, sorted by creation date (oldest first).
 
 ---
 
-## Inventário
+## Menu
 
-### Estoque de ingredientes
+### Categories
 
-- Cada ingrediente tem `currentStock` (estoque atual) e `minimumStock` (estoque mínimo)
-- Unidades de medida são livres (`unit`: ex. `g`, `ml`, `un`)
-- Um ingrediente está em alerta quando `currentStock ≤ minimumStock`
+- Each category has a `sortOrder` to control display order
+- A category can be activated/deactivated (`isActive`)
+- A category with linked products cannot be deleted
 
-### Movimentações
+### Products
 
-Todo ajuste de estoque gera um registro em `inventory_movements` com tipo (`movement_type`):
+- Every product belongs to a category
+- A product can be available (`isAvailable: true`) or unavailable
+- `ToggleAvailability` flips the availability state of a product
+- A product can have zero or more ingredients in its recipe (`product_ingredients`)
+- Each product-ingredient link defines the `quantity` of ingredient required per product unit
 
-| Tipo | Quando ocorre |
+### Ingredients in the menu
+
+- Ingredients are managed in the inventory module but referenced by the menu via `product_ingredients`
+- Adding an ingredient to a product requires both the product and the ingredient to exist
+
+---
+
+## Inventory
+
+### Ingredient stock
+
+- Each ingredient has `currentStock` (current stock) and `minimumStock` (minimum stock)
+- Units of measure are freeform (`unit`: e.g. `g`, `ml`, `un`)
+- An ingredient is in alert state when `currentStock ≤ minimumStock`
+
+### Movements
+
+Every stock adjustment generates a record in `inventory_movements` with a type (`movement_type`):
+
+| Type | When it occurs |
 |---|---|
-| `DEDUCTION` | Dedução automática ao criar um pedido |
-| `RESTOCK` | Reabastecimento manual de um ingrediente |
-| `ADJUSTMENT` | Correção manual de estoque (inventário físico) |
+| `DEDUCTION` | Automatic deduction when an order moves to `IN_PREPARATION` |
+| `RESTOCK` | Manual ingredient replenishment |
+| `ADJUSTMENT` | Manual stock correction (physical inventory) |
 
-### Alertas de estoque
+### Stock alerts
 
-`GetStockAlertsUseCase` retorna todos os ingredientes onde `currentStock ≤ minimumStock`. Usado para alertas operacionais no painel do ADMIN/BARISTA.
+`GetStockAlertsUseCase` returns all ingredients where `currentStock ≤ minimumStock`. Used for operational alerts in the ADMIN/BARISTA panel.
 
 ---
 
 ## Dashboard
 
-O módulo de dashboard agrega dados para visão gerencial (acesso restrito a ADMIN):
+The dashboard module aggregates data for management overview (ADMIN access only):
 
-- **Resumo** (`GetSummaryUseCase`): totais de pedidos, receita e métricas gerais
-- **Top produtos** (`GetTopProductsUseCase`): produtos mais vendidos por período
-- **Horários de pico** (`GetPeakHoursUseCase`): distribuição de pedidos por hora do dia
+- **Summary** (`GetSummaryUseCase`): order totals, revenue, and general metrics
+- **Top products** (`GetTopProductsUseCase`): best-selling products by period
+- **Peak hours** (`GetPeakHoursUseCase`): order distribution by hour of the day
