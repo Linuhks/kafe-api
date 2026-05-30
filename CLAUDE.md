@@ -16,30 +16,13 @@ pnpm test    # Vitest unit tests
 
 All three must pass before committing. One commit per subtask, one commit per completed task.
 
+When a **task** is complete (not subtask), review and update affected docs before committing — see [`docs/workflow-dev.md`](docs/workflow-dev.md) for the full table.
+
 ---
 
 ## Commands
 
-```bash
-# Development
-pnpm run start:dev        # Start with hot reload
-pnpm run build            # Compile TypeScript
-
-# Testing
-pnpm run test             # Run unit tests
-pnpm run test:watch       # Watch mode
-pnpm run test:cov         # With coverage
-pnpm run test:e2e         # End-to-end tests
-pnpm run test -- path/to/file.spec.ts  # Single file
-
-# Code quality
-pnpm run lint             # ESLint with auto-fix
-pnpm run format           # Prettier
-
-# Database
-pnpm run seed             # Seed database
-pnpm run db:studio        # Open Drizzle Studio (browser UI)
-```
+See [`docs/code-guide.md`](docs/code-guide.md) for the full command reference.
 
 ## Environment Setup
 

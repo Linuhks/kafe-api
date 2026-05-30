@@ -10,10 +10,11 @@ Conventions, patterns, and contribution flow for `kafe-api`.
 pnpm run start:dev     # Start the API with hot reload (watch mode)
 pnpm run build         # Compile TypeScript to dist/
 
-pnpm run test          # Run unit tests
-pnpm run test:watch    # Tests in watch mode
-pnpm run test:cov      # Tests with coverage report
-pnpm run test:e2e      # End-to-end tests
+pnpm run test                              # Run unit tests
+pnpm run test:watch                        # Tests in watch mode
+pnpm run test:cov                          # Tests with coverage report
+pnpm run test:e2e                          # End-to-end tests
+pnpm run test -- path/to/file.spec.ts      # Single file
 
 pnpm run lint          # Biome linter with auto-fix
 pnpm run format        # Biome formatter

@@ -42,6 +42,23 @@ Then move on to the next subtask or task and repeat.
 
 ---
 
+## Documentation update
+
+When **all subtasks of a task are done** (task complete, not subtask), review whether any of the following need updating before committing:
+
+| File | Update when |
+|---|---|
+| `docs/architecture.md` | New layer, new cross-cutting pattern, or flow change |
+| `docs/modules.md` | New use case, entity, repository, or controller added |
+| `docs/business-rules.md` | New or changed business rule, state transition, or permission |
+| `docs/code-guide.md` | New naming convention, new file type, or changed dev command |
+| `docs/API.md` | New or changed endpoint, DTO, or auth requirement |
+| `src/<layer>/CLAUDE.md` | New invariant or pattern specific to that layer |
+
+If nothing changed that affects the docs, no update is needed — the check itself is the requirement, not the update.
+
+---
+
 ## Example flow
 
 ```
@@ -63,7 +80,7 @@ git commit -m "feat(orders): add DrizzleOrderRepository"
   ↓
 Implement 1.3  →  gate  →  commit
   ↓
-── Task 1 complete: gate  →  commit ──
+── Task 1 complete: gate  →  update docs  →  commit ──
   ↓
 Implement 2.1
   ↓
@@ -75,7 +92,7 @@ git commit -m "feat(inventory): add RestockIngredientUseCase"
   ↓
 Implement 2.2  →  gate  →  commit
   ↓
-── Task 2 complete: gate  →  commit ──
+── Task 2 complete: gate  →  update docs  →  commit ──
 ```
 
 One commit per subtask, one commit per completed task. Each commit must leave the codebase in a working state.

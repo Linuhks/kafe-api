@@ -98,8 +98,4 @@ Example — `PATCH /api/v1/orders/:id/status` to `IN_PREPARATION`:
 
 ## NestJS modules
 
-Each module (`UsersModule`, `MenuModule`, `OrdersModule`, `InventoryModule`, `DashboardModule`) is responsible for:
-
-1. Registering the feature's controller
-2. Binding the repository interface (`IXxxRepository`) to its Drizzle implementation
-3. Instantiating use cases via factory (without using NestJS's standard injection system for use cases — see [Code Guide](./code-guide.md))
+See [`docs/modules.md`](./modules.md) for the full module index with use cases, entities, and repositories per feature.
