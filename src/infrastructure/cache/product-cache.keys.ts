@@ -1,4 +1,4 @@
-import type { Cache } from 'cache-manager';
+import type { Cache } from '@nestjs/cache-manager';
 
 const PREFIX = 'products:list:';
 

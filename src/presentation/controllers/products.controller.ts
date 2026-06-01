@@ -1,4 +1,4 @@
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import {
   Body,
   Controller,
@@ -13,7 +13,6 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
-import { Cache } from 'cache-manager';
 import { IsOptional, IsUUID } from 'class-validator';
 import { AddProductIngredientUseCase } from '../../application/use-cases/menu/add-product-ingredient.use-case';
 import { CreateProductUseCase } from '../../application/use-cases/menu/create-product.use-case';
@@ -70,7 +69,7 @@ export class ProductsController {
     data: Product[];
     pagination: { page: number; limit: number; total: number; totalPages: number };
   }> {
-    const cacheKey = buildProductListKey(query as Record<string, unknown>);
+    const cacheKey = buildProductListKey(query as unknown as Record<string, unknown>);
     const cached = await this.cacheManager.get<{
       data: Product[];
       pagination: { page: number; limit: number; total: number; totalPages: number };
