@@ -23,7 +23,7 @@ pnpm run seed          # Seed the database with sample data
 pnpm run db:studio     # Open Drizzle Studio in the browser (database UI)
 ```
 
-Prerequisite: `docker compose up -d` to start PostgreSQL (port 5432).
+Prerequisite: `docker compose up -d` to start PostgreSQL (port 5432) and Redis (port 6379). Set `REDIS_URL=redis://localhost:6379` in `.env`.
 
 ---
 

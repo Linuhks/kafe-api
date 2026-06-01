@@ -60,6 +60,8 @@ Manages the menu: categories, products, and the product-ingredient relationship.
 **Repositories:** `ICategoryRepository`, `IProductRepository`, `IIngredientRepository`, `IProductIngredientRepository`  
 **Controllers:** `CategoriesController`, `ProductsController`
 
+> `ProductsController` caches `GET /products` responses in Redis (TTL 60 s) and invalidates the cache on create, update, and delete operations via `src/infrastructure/cache/product-cache.keys.ts`.
+
 ---
 
 ## OrdersModule

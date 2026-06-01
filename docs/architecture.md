@@ -48,6 +48,7 @@ Concrete implementations of the contracts defined in the domain.
 - **Drizzle repositories**: implement `IXxxRepository` using Drizzle ORM + PostgreSQL
 - **Better-Auth**: authentication and session management (managed separately in `auth-schema.ts`)
 - **Schema**: table definitions in `schema.ts`
+- **Cache**: `src/infrastructure/cache/` — Redis-backed cache helpers (key builders, invalidation utilities) used by controllers; powered by `@nestjs/cache-manager` + `@keyv/redis`, registered globally in `AppModule`
 
 ---
 
