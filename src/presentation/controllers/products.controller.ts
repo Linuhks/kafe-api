@@ -1,6 +1,19 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Inject,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
+import { Cache } from 'cache-manager';
 import { IsOptional, IsUUID } from 'class-validator';
 import { AddProductIngredientUseCase } from '../../application/use-cases/menu/add-product-ingredient.use-case';
 import { CreateProductUseCase } from '../../application/use-cases/menu/create-product.use-case';
@@ -13,6 +26,10 @@ import { ToggleAvailabilityUseCase } from '../../application/use-cases/menu/togg
 import { UpdateProductUseCase } from '../../application/use-cases/menu/update-product.use-case';
 import { Product } from '../../domain/entities/product.entity';
 import { ProductIngredient } from '../../domain/entities/product-ingredient.entity';
+import {
+  buildProductListKey,
+  clearProductListCache,
+} from '../../infrastructure/cache/product-cache.keys';
 import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { AddProductIngredientDto } from '../dtos/menu/add-product-ingredient.dto';
@@ -41,6 +58,7 @@ export class ProductsController {
     private readonly addProductIngredient: AddProductIngredientUseCase,
     private readonly removeProductIngredient: RemoveProductIngredientUseCase,
     private readonly listProductIngredients: ListProductIngredientsUseCase,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   @Get()
@@ -52,8 +70,15 @@ export class ProductsController {
     data: Product[];
     pagination: { page: number; limit: number; total: number; totalPages: number };
   }> {
+    const cacheKey = buildProductListKey(query as Record<string, unknown>);
+    const cached = await this.cacheManager.get<{
+      data: Product[];
+      pagination: { page: number; limit: number; total: number; totalPages: number };
+    }>(cacheKey);
+    if (cached) return cached;
+
     const result = await this.listProducts.execute(query);
-    return {
+    const response = {
       data: result.data,
       pagination: {
         page: query.page,
@@ -62,6 +87,8 @@ export class ProductsController {
         totalPages: Math.ceil(result.total / query.limit),
       },
     };
+    await this.cacheManager.set(cacheKey, response, 60_000);
+    return response;
   }
 
   @Get(':id')
@@ -86,6 +113,7 @@ export class ProductsController {
   async create(@Body() dto: CreateProductDto): Promise<Product> {
     const result = await this.createProduct.execute(dto);
     if (result.isLeft()) throw result.value;
+    await clearProductListCache(this.cacheManager);
     return result.value;
   }
 
@@ -100,6 +128,7 @@ export class ProductsController {
   async update(@Param('id') id: string, @Body() dto: UpdateProductDto): Promise<Product> {
     const result = await this.updateProduct.execute(id, dto);
     if (result.isLeft()) throw result.value;
+    await clearProductListCache(this.cacheManager);
     return result.value;
   }
 
@@ -115,6 +144,7 @@ export class ProductsController {
   async remove(@Param('id') id: string): Promise<void> {
     const result = await this.deleteProduct.execute(id);
     if (result.isLeft()) throw result.value;
+    await clearProductListCache(this.cacheManager);
   }
 
   @Patch(':id/availability')
