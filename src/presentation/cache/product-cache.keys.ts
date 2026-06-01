@@ -1,6 +1,7 @@
 import type { Cache } from '@nestjs/cache-manager';
 
 const PREFIX = 'products:list:';
+const activeKeys = new Set<string>();
 
 export function buildProductListKey(params: Record<string, unknown>): string {
   const sorted = Object.keys(params)
@@ -9,13 +10,12 @@ export function buildProductListKey(params: Record<string, unknown>): string {
       acc[k] = params[k];
       return acc;
     }, {});
-  return PREFIX + Buffer.from(JSON.stringify(sorted)).toString('base64');
+  const key = PREFIX + Buffer.from(JSON.stringify(sorted)).toString('base64');
+  activeKeys.add(key);
+  return key;
 }
 
 export async function clearProductListCache(cacheManager: Cache): Promise<void> {
-  const store = cacheManager.store as { keys?: (pattern: string) => Promise<string[]> };
-  if (typeof store.keys === 'function') {
-    const keys = await store.keys(`${PREFIX}*`);
-    await Promise.all(keys.map((k) => cacheManager.del(k)));
-  }
+  await Promise.all([...activeKeys].map((k) => cacheManager.del(k)));
+  activeKeys.clear();
 }
