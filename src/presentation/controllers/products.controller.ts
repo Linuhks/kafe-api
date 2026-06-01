@@ -25,10 +25,7 @@ import { ToggleAvailabilityUseCase } from '../../application/use-cases/menu/togg
 import { UpdateProductUseCase } from '../../application/use-cases/menu/update-product.use-case';
 import { Product } from '../../domain/entities/product.entity';
 import { ProductIngredient } from '../../domain/entities/product-ingredient.entity';
-import {
-  buildProductListKey,
-  clearProductListCache,
-} from '../../infrastructure/cache/product-cache.keys';
+import { buildProductListKey, clearProductListCache } from '../cache/product-cache.keys';
 import { ApiPaginatedResponse } from '../decorators/api-paginated-response.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { AddProductIngredientDto } from '../dtos/menu/add-product-ingredient.dto';
