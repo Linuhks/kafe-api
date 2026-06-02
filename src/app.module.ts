@@ -19,10 +19,14 @@ import { UsersModule } from './users.module';
     CacheModule.registerAsync({
       isGlobal: true,
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        stores: [new KeyvRedis(config.get<string>('REDIS_URL') ?? 'redis://localhost:6379')],
-        ttl: 60_000,
-      }),
+      useFactory: (config: ConfigService) => {
+        const redisUrl = config.get<string>('REDIS_URL');
+        if (!redisUrl) return { ttl: 60_000 };
+        return {
+          stores: [new KeyvRedis(redisUrl, { connectTimeout: 5000, maxRetriesPerRequest: 1 })],
+          ttl: 60_000,
+        };
+      },
     }),
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 10 }]),
     DrizzleModule,
