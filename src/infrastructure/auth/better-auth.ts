@@ -8,6 +8,8 @@ import * as schema from '../db/auth-schema';
 
 // Instância de DB dedicada ao better-auth (fora do DI do NestJS)
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+// Prevent unhandled 'error' events (e.g. when connection is terminated externally)
+pool.on('error', () => {});
 const db = drizzle(pool, { schema });
 
 export const auth = betterAuth({

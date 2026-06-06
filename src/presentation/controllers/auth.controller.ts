@@ -18,14 +18,19 @@ export class AuthController {
   @ApiResponse({ status: 200, type: LoginResponseDto })
   @ApiResponse({ status: 401, description: 'Credenciais inválidas' })
   async login(@Body() dto: LoginDto): Promise<{ token: string; user: unknown }> {
-    const result = await this.authService.api.signInEmail({
-      body: { email: dto.email, password: dto.password },
-    });
+    try {
+      const result = await this.authService.api.signInEmail({
+        body: { email: dto.email, password: dto.password },
+      });
 
-    if (!result?.token) {
+      if (!result?.token) {
+        throw new UnauthorizedException('Credenciais inválidas');
+      }
+
+      return { token: result.token, user: result.user };
+    } catch (err) {
+      if (err instanceof UnauthorizedException) throw err;
       throw new UnauthorizedException('Credenciais inválidas');
     }
-
-    return { token: result.token, user: result.user };
   }
 }

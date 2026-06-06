@@ -29,7 +29,11 @@ pnpm check   # Biome full check (format + lint) with auto-fix
 pnpm test    # Vitest unit tests
 ```
 
-**All three must pass before committing.** If any command fails, fix the issue and re-run from `pnpm lint`.
+**All three must pass before committing.** `pnpm test:e2e` is intentionally excluded from the per-subtask loop (it requires a live PostgreSQL instance and is ~10× slower than unit tests). Run it manually before opening a PR and in CI.
+
+### E2E isolation model
+
+`pnpm test:e2e` creates a fresh PostgreSQL database named `kafe_test_<uuid>` per suite, runs all Drizzle migrations into it, boots the full `AppModule`, and drops the database on teardown — even when tests fail. No `kafe_test_*` databases are left behind after a complete run. If any command fails, fix the issue and re-run from `pnpm lint`.
 
 Once all three pass, commit:
 

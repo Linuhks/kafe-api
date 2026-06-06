@@ -121,6 +121,23 @@ pnpm run test:watch
 pnpm run test:cov
 ```
 
+## E2E testing
+
+E2E tests exercise every HTTP controller through a real NestJS app against a real PostgreSQL database.
+
+```bash
+# start the database first
+docker compose up -d
+
+# run all E2E suites
+pnpm run test:e2e
+
+# watch mode
+pnpm run test:e2e:watch
+```
+
+Each suite creates an isolated `kafe_test_<uuid>` database, runs all migrations, then drops the database on teardown — even when tests fail. Requires the PostgreSQL user to have `CREATEDB` privilege and PostgreSQL ≥ 13.
+
 ## License
 
 Private — all rights reserved.

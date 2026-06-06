@@ -13,7 +13,8 @@ pnpm run build         # Compile TypeScript to dist/
 pnpm run test                              # Run unit tests
 pnpm run test:watch                        # Tests in watch mode
 pnpm run test:cov                          # Tests with coverage report
-pnpm run test:e2e                          # End-to-end tests
+pnpm run test:e2e                          # End-to-end tests (requires docker compose up -d; CREATEDB privilege on the PostgreSQL user; PostgreSQL ≥ 13 for DROP DATABASE ... WITH (FORCE))
+pnpm run test:e2e:watch                    # E2E tests in watch mode
 pnpm run test -- path/to/file.spec.ts      # Single file
 
 pnpm run lint          # Biome linter with auto-fix
