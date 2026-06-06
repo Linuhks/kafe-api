@@ -26,6 +26,7 @@ export abstract class IIngredientRepository {
   abstract update(id: string, data: UpdateIngredientData): Promise<Ingredient>;
   abstract delete(id: string): Promise<void>;
   abstract deductStock(id: string, quantity: string): Promise<Ingredient>;
+  abstract deductStockIfSufficient(id: string, quantity: string): Promise<boolean>;
   abstract restockIngredient(id: string, quantity: string): Promise<Ingredient>;
   abstract findRecipeByProductId(productId: string): Promise<ProductIngredientRow[]>;
   abstract findLowStock(): Promise<Ingredient[]>;

@@ -36,9 +36,11 @@
 
 ## 7. Inventory Reservation
 
-- [ ] 7.1 In `CreateOrderUseCase`, wrap the ingredient stock check and inventory decrement in the same Drizzle transaction as the order insert
-- [ ] 7.2 If any ingredient has insufficient stock, roll back the transaction and throw a domain error
-- [ ] 7.3 Add a unit test covering the concurrent-order scenario (two orders for the same single-stock ingredient — only one should succeed)
+- [x] 7.1 Add `deductStockIfSufficient(id: string, quantity: string): Promise<boolean>` to `IIngredientRepository` (returns `true` if stock was sufficient and deducted, `false` if insufficient)
+- [x] 7.2 Implement `deductStockIfSufficient` in `DrizzleIngredientRepository` using a single atomic `UPDATE ... WHERE current_stock >= $qty RETURNING id` — return `true` if a row was affected
+- [x] 7.3 Implement `deductStockIfSufficient` in `InMemoryIngredientRepository` (fake) using a compare-and-swap: check then deduct only if sufficient, return boolean
+- [x] 7.4 Rewrite `DeductForOrderUseCase`: replace the two-pass loop (check loop + deduct loop) with a single pass that calls `deductStockIfSufficient` per ingredient; on `false` return, roll back already-deducted ingredients and return `left(new InsufficientStockError(...))`
+- [x] 7.5 Update `DeductForOrderUseCase` unit tests to cover: (a) sufficient stock succeeds, (b) insufficient stock returns `InsufficientStockError`, (c) concurrent scenario — two calls for same single-stock ingredient, only one succeeds
 
 ## 8. Session Cookie Hardening
 
@@ -49,5 +51,5 @@
 
 - [x] 9.1 Run `pnpm run lint` — no new lint errors
 - [x] 9.2 Run `pnpm run test` — all unit tests pass
-- [ ] 9.3 Start the server and verify security headers with `curl -I http://localhost:3000/api/v1/health`
-- [ ] 9.4 Verify rate limiting by sending 6 rapid auth requests and confirming the 6th returns 429
+- [x] 9.3 Start the server and verify security headers with `curl -I http://localhost:3000/api/v1/health`
+- [x] 9.4 Verify rate limiting by sending 6 rapid auth requests and confirming the 6th returns 429

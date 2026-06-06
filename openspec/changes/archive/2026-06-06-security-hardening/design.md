@@ -60,20 +60,35 @@ kafe-api is a NestJS REST API using Drizzle ORM and better-auth for authenticati
 
 ---
 
-### D5 — Inventory reservation via atomic transaction at order creation
+### D5 — Inventory reservation via atomic SQL update in `DeductForOrderUseCase`
 
-**Decision:** Inside `CreateOrderUseCase`, move the ingredient stock check + decrement into the same Drizzle transaction as order insertion. If stock is insufficient for any ingredient, roll back the whole transaction.
+**Decision:** Fix the TOCTOU race in `DeductForOrderUseCase` by replacing the two-pass loop (check pass, then deduct pass) with a single atomic SQL statement per ingredient:
 
-**Rationale:** The current flow checks stock and creates the order in separate operations. A `SELECT FOR UPDATE` (or equivalent Drizzle lock) on the inventory rows within a single transaction closes the TOCTOU race. This is the simplest correct solution and requires no schema changes.
+```sql
+UPDATE ingredients
+SET current_stock = current_stock - $qty
+WHERE id = $id AND current_stock >= $qty
+RETURNING id
+```
 
-**Alternatives considered:** `reserved_quantity` column — more observable but requires a schema migration and additional application logic to release reservations.
+If the update returns 0 rows, stock is insufficient — return `left(new InsufficientStockError(...))`. No explicit transaction wrapper needed; the single-statement update is inherently atomic.
+
+Add `deductStockIfSufficient(id: string, quantity: string): Promise<boolean>` to `IIngredientRepository`. The Drizzle implementation executes the atomic update and returns `true` if a row was affected. The in-memory fake does a compare-and-swap.
+
+**Rationale:** The race lives in `DeductForOrderUseCase` (called at `IN_PREPARATION` transition), not at order creation. Moving deduction to order creation (Option A) would require a `UnitOfWork` pattern to coordinate a transaction across multiple repositories — a pattern that does not exist in this codebase and is out of scope. It would also prematurely deduct stock before a barista accepts the order. The atomic SQL approach closes the race without layer boundary violations, no schema changes, and no new architectural patterns.
+
+**Alternatives considered:**
+- Option A (`CreateOrderUseCase` + cross-repo transaction) — ruled out: requires `UnitOfWork` pattern, premature stock deduction at order placement.
+- `reserved_quantity` column — more observable but requires schema migration and release logic.
+- Explicit `SELECT FOR UPDATE` inside a transaction — correct but more complex than a single conditional `UPDATE`; the atomic update is simpler and equivalent.
 
 ## Risks / Trade-offs
 
 - **Throttler and legitimate burst traffic** → Mitigation: set the global limit generously (10 req/60 s) and only tighten on auth. Adjust with real traffic data before going to production.
 - **Audit interceptor performance** → Logging on every mutating response adds I/O. Mitigation: use async logging; do not await the log write inside the response path.
 - **`getOrThrow` breaks local dev if `CORS_ORIGIN` is not in `.env`** → Mitigation: add `CORS_ORIGIN=http://localhost:3001` to `.env.example` with a clear comment marking it as required in production.
-- **Inventory transaction lock contention under high order volume** → Mitigation: lock duration is short (single insert + update). For high-throughput scenarios, a queue-based reservation system would be needed — noted as future work.
+- **Partial deduction on multi-ingredient failure** → If ingredient A is deducted atomically but ingredient B fails, A must be rolled back. Mitigation: `DeductForOrderUseCase` tracks successfully deducted ingredients and restocks them on any failure before returning the error.
+- **Atomic update under high order volume** → The conditional `UPDATE WHERE current_stock >= qty` holds a row-level lock for microseconds. For high-throughput scenarios, a queue-based reservation system would be needed — noted as future work.
 
 ## Migration Plan
 

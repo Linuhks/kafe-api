@@ -24,18 +24,26 @@ export class DeductForOrderUseCase {
       }
     }
 
-    for (const [ingredientId, qtyMillis] of neededMillis) {
-      const ingredient = await this.ingredientRepo.findById(ingredientId);
-      if (!ingredient) continue;
-      const currentMillis = Math.round(parseFloat(ingredient.currentStock) * 1000);
-      if (currentMillis < qtyMillis) {
-        return left(new InsufficientStockError(ingredient.name));
-      }
-    }
+    const deducted: Array<{ id: string; quantity: string }> = [];
 
     for (const [ingredientId, qtyMillis] of neededMillis) {
       const quantity = (qtyMillis / 1000).toFixed(3);
-      await this.ingredientRepo.deductStock(ingredientId, quantity);
+      const ingredient = await this.ingredientRepo.findById(ingredientId);
+      if (!ingredient) continue;
+
+      const ok = await this.ingredientRepo.deductStockIfSufficient(ingredientId, quantity);
+
+      if (!ok) {
+        for (const { id, quantity: q } of deducted) {
+          await this.ingredientRepo.restockIngredient(id, q);
+        }
+        return left(new InsufficientStockError(ingredient.name));
+      }
+
+      deducted.push({ id: ingredientId, quantity });
+    }
+
+    for (const { id: ingredientId, quantity } of deducted) {
       await this.movementRepo.create({
         ingredientId,
         orderId: order.id,

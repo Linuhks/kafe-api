@@ -54,6 +54,26 @@ export class InMemoryIngredientRepository extends IIngredientRepository {
     this.items = this.items.filter((i) => i.id !== id);
   }
 
+  async deductStockIfSufficient(id: string, quantity: string): Promise<boolean> {
+    const idx = this.items.findIndex((i) => i.id === id);
+    if (idx === -1) return false;
+    const existing = this.items[idx];
+    const currentMillis = Math.round(parseFloat(existing.currentStock) * 1000);
+    const qtyMillis = Math.round(parseFloat(quantity) * 1000);
+    if (currentMillis < qtyMillis) return false;
+    const newStock = ((currentMillis - qtyMillis) / 1000).toFixed(3);
+    this.items[idx] = new Ingredient(
+      existing.id,
+      existing.name,
+      existing.unit,
+      newStock,
+      existing.minimumStock,
+      existing.createdAt,
+      new Date(),
+    );
+    return true;
+  }
+
   async deductStock(id: string, quantity: string): Promise<Ingredient> {
     const idx = this.items.findIndex((i) => i.id === id);
     const existing = this.items[idx];

@@ -83,6 +83,18 @@ export class DrizzleIngredientRepository extends IIngredientRepository {
     return this.findById(id) as Promise<Ingredient>;
   }
 
+  async deductStockIfSufficient(id: string, quantity: string): Promise<boolean> {
+    const rows = await this.db
+      .update(ingredients)
+      .set({
+        currentStock: sql`${ingredients.currentStock} - ${quantity}::numeric`,
+        updatedAt: new Date(),
+      })
+      .where(sql`${ingredients.id} = ${id} AND ${ingredients.currentStock} >= ${quantity}::numeric`)
+      .returning({ id: ingredients.id });
+    return rows.length > 0;
+  }
+
   async restockIngredient(id: string, quantity: string): Promise<Ingredient> {
     await this.db
       .update(ingredients)
