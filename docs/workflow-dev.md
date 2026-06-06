@@ -42,6 +42,8 @@ git add <changed files>
 git commit -m "feat(scope): description of what was done"
 ```
 
+> **Note:** `git push` runs the pre-push Husky hook, which executes both `pnpm run test` and `pnpm run test:e2e` before the push is allowed. A running PostgreSQL instance is required for the e2e suite to pass. Use `git push --no-verify` only when you have a deliberate reason to skip the gate.
+
 Then move on to the next subtask or task and repeat.
 
 ---
