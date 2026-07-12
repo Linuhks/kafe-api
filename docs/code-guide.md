@@ -696,7 +696,7 @@ Use this as a PR review checklist. Each rule maps to a layer. Most are auto-enfo
 - [ ] Controllers inject **use cases**, never repositories.
 - [ ] `Either` is unwrapped with `if (result.isLeft()) throw result.value` at the controller boundary.
 - [ ] DTOs use `class-validator` + `@ApiProperty` / `@ApiPropertyOptional` for Swagger.
-- [ ] No manual response wrapping — `TransformInterceptor` wraps success; `HttpExceptionFilter` formats errors.
+- [ ] Success values returned as-is (no global envelope); pagination envelopes built manually; `HttpExceptionFilter` formats errors.
 - [ ] Role-based access via `@Roles(['ADMIN'])`; anonymous routes via `@AllowAnonymous()`.
 - [ ] Authenticated user accessed via `@CurrentUser()`.
 

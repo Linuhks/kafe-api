@@ -43,7 +43,7 @@ if (deductResult.isLeft()) return left(deductResult.value);
 
 ## Tests
 
-All use cases (except `dashboard/`) have a `*.spec.ts` sibling using in-memory repositories (see `src/test/repositories/CLAUDE.md`). No NestJS bootstrapping needed.
+All use cases have a `*.spec.ts` sibling using in-memory repositories from `test/repositories/` (project root), imported via the `@test/*` alias. No NestJS bootstrapping needed.
 
 ## Adding a new use case
 

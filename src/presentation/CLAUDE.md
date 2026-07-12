@@ -7,7 +7,7 @@ HTTP layer — controllers, DTOs, and response standardization.
 - Inject use cases directly (never repositories)
 - Use `@Roles(['ADMIN'])` at class or method level to restrict access
 - Use `@CurrentUser()` to get the authenticated user from the request
-- Do not wrap return values manually — `TransformInterceptor` handles it
+- Unwrap `Either` results: `if (result.isLeft()) throw result.value` — `HttpExceptionFilter` formats the error
 
 ```typescript
 @ApiTags('users')
@@ -20,7 +20,9 @@ export class UsersController {
   @Post()
   @HttpCode(201)
   async create(@Body() dto: CreateUserDto) {
-    return this.createUser.execute(dto);  // TransformInterceptor wraps the result
+    const result = await this.createUser.execute(dto);
+    if (result.isLeft()) throw result.value;
+    return result.value;
   }
 }
 ```
@@ -53,14 +55,16 @@ Shared DTOs to reuse:
 
 - `@CurrentUser()` — extract authenticated user from request (`current-user.decorator.ts`)
 - `@Roles(['ADMIN'])` — wrapper around `@thallesp/nestjs-better-auth` (`roles.decorator.ts`)
+- `@ApiPaginatedResponse(Dto)` — Swagger schema for paginated list responses (`api-paginated-response.decorator.ts`)
 
 ## Response Format
 
-- **Success**: `TransformInterceptor` wraps all responses automatically — no manual wrapping needed
+- **Success**: controller return values go out as-is — there is no global response envelope
 - **Errors**: `HttpExceptionFilter` catches `DomainError` and maps `error.statusCode` + `error.code` to HTTP response
-- Pagination responses: build manually in the controller — `{ data, pagination: { page, limit, total, totalPages } }`
+- Pagination responses: build manually in the controller — `{ data, pagination: { page, limit, total, totalPages } }` — and document with `@ApiPaginatedResponse(Dto)`
 
 ## filters/ and interceptors/
 
 - `filters/http-exception.filter.ts` — converts `DomainError` to standardized error response
-- `interceptors/transform.interceptor.ts` — wraps success data in `{ data, timestamp }` envelope
+- `interceptors/audit.interceptor.ts` — global (registered in `main.ts`); logs mutating requests (POST/PATCH/PUT/DELETE) as structured JSON
+- `interceptors/transform.interceptor.ts` — pass-through, **not registered anywhere**; its `PaginationMeta`/`PaginatedResult` types are also unused — candidate for deletion
