@@ -12,7 +12,9 @@ The system has three roles (`user_role`):
 | `BARISTA` | Operates orders: views the queue, updates status, and checks stock |
 | `CLIENT` | Places orders and views their own order history |
 
-A user can be active (`isActive: true`) or inactive. Inactive users must not be able to authenticate.
+A user can be active (`isActive: true`) or inactive. Inactive users must not be able to authenticate — this is enforced at session creation by a Better-Auth `databaseHooks.session.create.before` hook that rejects login when `isActive` is `false` (covers both `/api/v1/auth/login` and the native `/api/auth/sign-in/email` route).
+
+`role` and `isActive` are **server-assigned only**. They are declared with `input: false` in the Better-Auth config, so a client cannot set them through the public sign-up endpoint (`POST /api/auth/sign-up/email`) — an attempted `role` is rejected or forced to the default. New sign-ups are always `CLIENT`; role changes happen via direct SQL, the seed, or an authorized admin operation.
 
 ---
 

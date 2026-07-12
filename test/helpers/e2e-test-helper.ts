@@ -133,6 +133,18 @@ export class E2ETestHelper {
     return loginRes.body.token as string;
   }
 
+  async deactivateUser(email: string): Promise<void> {
+    await this.suitePool.query(`UPDATE "user" SET is_active = false WHERE email = $1`, [email]);
+  }
+
+  async getUserRole(email: string): Promise<string | null> {
+    const result = await this.suitePool.query<{ role: string }>(
+      `SELECT role FROM "user" WHERE email = $1`,
+      [email],
+    );
+    return result.rows[0]?.role ?? null;
+  }
+
   private getAdminUrl(databaseUrl: string): string {
     const url = new URL(databaseUrl);
     url.pathname = '/postgres';
