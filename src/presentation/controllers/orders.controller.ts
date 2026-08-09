@@ -1,6 +1,13 @@
 import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiPropertyOptional,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AllowAnonymous, UserSession } from '@thallesp/nestjs-better-auth';
+import { IsDateString, IsEnum, IsOptional } from 'class-validator';
 import { CreateOrderUseCase } from '../../application/use-cases/orders/create-order.use-case';
 import { GetBaristaQueueUseCase } from '../../application/use-cases/orders/get-barista-queue.use-case';
 import { GetMyOrdersUseCase } from '../../application/use-cases/orders/get-my-orders.use-case';
@@ -18,8 +25,19 @@ import { OrderResponseDto } from '../dtos/responses/order.response.dto';
 import { PaginationDto } from '../dtos/shared/pagination.dto';
 
 class ListOrdersQuery extends PaginationDto {
+  @ApiPropertyOptional({ enum: ['RECEIVED', 'IN_PREPARATION', 'READY', 'DELIVERED', 'CANCELLED'] })
+  @IsOptional()
+  @IsEnum(['RECEIVED', 'IN_PREPARATION', 'READY', 'DELIVERED', 'CANCELLED'])
   status?: OrderStatus;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
   from?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
   to?: string;
 }
 
