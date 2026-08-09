@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { CreateUserUseCase } from './application/use-cases/users/create-user.use-case';
-import { DeleteUserUseCase } from './application/use-cases/users/delete-user.use-case';
-import { GetUserUseCase } from './application/use-cases/users/get-user.use-case';
-import { ListUsersUseCase } from './application/use-cases/users/list-users.use-case';
-import { UpdateUserUseCase } from './application/use-cases/users/update-user.use-case';
-import { IUserRepository } from './domain/repositories/user.repository';
-import { DrizzleUserRepository } from './infrastructure/db/repositories/drizzle-user.repository';
-import { UsersController } from './presentation/controllers/users.controller';
+import { CreateUserUseCase } from '../application/use-cases/users/create-user.use-case';
+import { DeleteUserUseCase } from '../application/use-cases/users/delete-user.use-case';
+import { GetUserUseCase } from '../application/use-cases/users/get-user.use-case';
+import { ListUsersUseCase } from '../application/use-cases/users/list-users.use-case';
+import { UpdateUserUseCase } from '../application/use-cases/users/update-user.use-case';
+import { IUserRepository } from '../domain/repositories/user.repository';
+import { DrizzleUserRepository } from '../infrastructure/db/repositories/drizzle-user.repository';
+import { UsersController } from '../presentation/controllers/users.controller';
 
 @Module({
   controllers: [UsersController],

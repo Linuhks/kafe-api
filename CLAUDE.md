@@ -49,14 +49,15 @@ src/
 ├── domain/                 # Entities, Either, repo interfaces, errors — no framework deps (src/domain/CLAUDE.md)
 ├── application/use-cases/  # One class per use case, single execute() (src/application/use-cases/CLAUDE.md)
 ├── infrastructure/         # Drizzle ORM + Better-Auth (src/infrastructure/CLAUDE.md)
-└── presentation/           # Controllers, DTOs, filters, interceptors (src/presentation/CLAUDE.md)
+├── presentation/           # Controllers, DTOs, filters, interceptors (src/presentation/CLAUDE.md)
+└── modules/                # NestJS module wiring, one per feature (src/modules/<name>.module.ts)
 test/
 ├── repositories/           # In-memory fakes for unit tests — imported via the @test/* alias
 ├── controllers/            # E2E suites (<resource>.e2e.spec.ts)
 └── helpers/                # E2ETestHelper + global setup
 ```
 
-Feature modules at the `src/` root (`auth`, `users`, `menu`, `orders`, `inventory`, `dashboard` — `src/<name>.module.ts`) wire everything via NestJS DI: controller → use cases → repository interface → Drizzle implementation.
+Feature modules in `src/modules/` (`auth`, `users`, `menu`, `orders`, `inventory`, `dashboard` — `src/modules/<name>.module.ts`) wire everything via NestJS DI: controller → use cases → repository interface → Drizzle implementation.
 
 Non-negotiable patterns:
 

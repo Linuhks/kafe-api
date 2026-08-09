@@ -4,14 +4,14 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { AuthModule } from './auth.module';
-import { DashboardModule } from './dashboard.module';
 import { BetterAuthModule } from './infrastructure/auth/better-auth.module';
 import { DrizzleModule } from './infrastructure/db/drizzle.module';
-import { InventoryModule } from './inventory.module';
-import { MenuModule } from './menu.module';
-import { OrdersModule } from './orders.module';
-import { UsersModule } from './users.module';
+import { AuthModule } from './modules/auth.module';
+import { DashboardModule } from './modules/dashboard.module';
+import { InventoryModule } from './modules/inventory.module';
+import { MenuModule } from './modules/menu.module';
+import { OrdersModule } from './modules/orders.module';
+import { UsersModule } from './modules/users.module';
 
 @Module({
   imports: [

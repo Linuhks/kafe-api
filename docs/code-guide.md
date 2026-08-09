@@ -122,7 +122,7 @@ return result.value;
 | Test fake | `in-memory-<name>.repository.ts` | `InMemoryUserRepository` |
 | Controller | `.controller.ts` | `users.controller.ts` → `UsersController` |
 | DTO | `.dto.ts` | `create-user.dto.ts` → `CreateUserDto` |
-| Module | `.module.ts` | `users.module.ts` → `UsersModule` |
+| Module | `.module.ts` (in `src/modules/`) | `users.module.ts` → `UsersModule` |
 
 All files: **kebab-case**. All classes: **PascalCase**.
 
@@ -255,7 +255,7 @@ No NestJS bootstrapping, no real database. `sut` (system under test) is the cano
 
 ### Step 4 — Register in the feature module
 
-`src/users.module.ts`:
+`src/modules/users.module.ts`:
 
 ```typescript
 {
@@ -491,14 +491,14 @@ export class CouponsController {
 
 ### Step 8 — Wire the module
 
-`src/coupons.module.ts`:
+`src/modules/coupons.module.ts`:
 
 ```typescript
 import { Module } from '@nestjs/common';
-import { CreateCouponUseCase } from './application/use-cases/coupons/create-coupon.use-case';
-import { ICouponRepository } from './domain/repositories/coupon.repository';
-import { DrizzleCouponRepository } from './infrastructure/db/repositories/drizzle-coupon.repository';
-import { CouponsController } from './presentation/controllers/coupons.controller';
+import { CreateCouponUseCase } from '../application/use-cases/coupons/create-coupon.use-case';
+import { ICouponRepository } from '../domain/repositories/coupon.repository';
+import { DrizzleCouponRepository } from '../infrastructure/db/repositories/drizzle-coupon.repository';
+import { CouponsController } from '../presentation/controllers/coupons.controller';
 
 @Module({
   controllers: [CouponsController],

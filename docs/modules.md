@@ -6,7 +6,7 @@ Index of NestJS modules in `kafe-api`. Each module encapsulates a complete featu
 
 ## UsersModule
 
-**File:** `src/users.module.ts`
+**File:** `src/modules/users.module.ts`
 
 Manages system users. Used by the ADMIN for account administration.
 
@@ -28,7 +28,7 @@ Manages system users. Used by the ADMIN for account administration.
 
 ## MenuModule
 
-**File:** `src/menu.module.ts`
+**File:** `src/modules/menu.module.ts`
 
 Manages the menu: categories, products, and the product-ingredient relationship.
 
@@ -66,7 +66,7 @@ Manages the menu: categories, products, and the product-ingredient relationship.
 
 ## OrdersModule
 
-**File:** `src/orders.module.ts`
+**File:** `src/modules/orders.module.ts`
 
 Manages the full order lifecycle, from creation to delivery.
 
@@ -91,7 +91,7 @@ Manages the full order lifecycle, from creation to delivery.
 
 ## InventoryModule
 
-**File:** `src/inventory.module.ts`
+**File:** `src/modules/inventory.module.ts`
 
 Controls ingredient stock and records all movements.
 
@@ -116,7 +116,7 @@ Controls ingredient stock and records all movements.
 
 ## DashboardModule
 
-**File:** `src/dashboard.module.ts`
+**File:** `src/modules/dashboard.module.ts`
 
 Aggregates metrics and analytical data for the management panel (ADMIN).
 

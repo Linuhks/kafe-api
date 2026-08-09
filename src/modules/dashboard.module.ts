@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { GetPeakHoursUseCase } from './application/use-cases/dashboard/get-peak-hours.use-case';
-import { GetSummaryUseCase } from './application/use-cases/dashboard/get-summary.use-case';
-import { GetTopProductsUseCase } from './application/use-cases/dashboard/get-top-products.use-case';
-import { IOrderRepository } from './domain/repositories/order.repository';
-import { DrizzleOrderRepository } from './infrastructure/db/repositories/drizzle-order.repository';
-import { DashboardController } from './presentation/controllers/dashboard.controller';
+import { GetPeakHoursUseCase } from '../application/use-cases/dashboard/get-peak-hours.use-case';
+import { GetSummaryUseCase } from '../application/use-cases/dashboard/get-summary.use-case';
+import { GetTopProductsUseCase } from '../application/use-cases/dashboard/get-top-products.use-case';
+import { IOrderRepository } from '../domain/repositories/order.repository';
+import { DrizzleOrderRepository } from '../infrastructure/db/repositories/drizzle-order.repository';
+import { DashboardController } from '../presentation/controllers/dashboard.controller';
 
 @Module({
   controllers: [DashboardController],
