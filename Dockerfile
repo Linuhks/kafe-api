@@ -17,4 +17,4 @@ COPY --from=builder /app/src/infrastructure/db/migrations ./src/infrastructure/d
 ENV NODE_ENV=production
 EXPOSE 3000
 USER node
-CMD ["pnpm", "start:prod"]
+CMD ["sh", "-c", "node dist/src/migrate.js && node dist/src/main"]
