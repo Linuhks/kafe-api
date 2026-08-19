@@ -5,6 +5,7 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "packageManager": "pnpm@11.22.0",
   "scripts": {
     "build": "nest build",
     "format": "biome format --write ./src",
@@ -23,7 +24,7 @@
     "seed": "tsx src/infrastructure/db/seed.ts",
     "db:studio": "drizzle-kit studio --config=drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config=drizzle.config.ts",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@keyv/redis": "^5.1.6",
