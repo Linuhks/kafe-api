@@ -1,20 +1,32 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+context: |
+  Tech stack: NestJS, TypeScript, Drizzle ORM, PostgreSQL, Better-Auth, Redis cache.
+  Clean architecture: domain / application (use cases) / infrastructure / presentation.
+  Business rules live in docs/business-rules.md and must be kept in sync with behavior.
+  Roles: ADMIN, BARISTA, CLIENT. Auth is Better-Auth; role/isActive are server-assigned only.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+rules:
+  proposal:
+    - >
+      If the change touches authentication, roles/permissions, user-writable fields,
+      or payment/order state, add a "Security Considerations" section answering:
+      which fields become client-writable and why that's safe, which roles can reach
+      the new/changed endpoint, and whether an unauthenticated, wrong-role, or
+      deactivated user could still reach it.
+    - >
+      Add a "Verification" section stating how the change will be proven to work
+      end-to-end (which E2E suite, or a manual run via the app) before the task
+      implementing it is marked done — passing unit tests alone is not sufficient
+      for anything that crosses a layer boundary (controller, DB, or auth).
+  tasks:
+    - >
+      Every task that adds or changes an API contract, a stateful flow (orders,
+      inventory, auth), or a business rule from docs/business-rules.md must end
+      with a subtask that runs `pnpm test:e2e` for the affected suite (or a
+      documented manual verification) — not just unit tests — before the task is
+      marked complete.
+    - >
+      A task is not "done" until any tracker used alongside OpenSpec (e.g. Task
+      Master) is updated to match — do not archive a change while an external
+      tracker still shows it in progress.

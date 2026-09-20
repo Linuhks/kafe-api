@@ -41,3 +41,7 @@ Provides two Drizzle instances:
 
 - `better-auth.ts` — Better-Auth configuration with bearer token plugin and credential provider
 - `better-auth.module.ts` — NestJS module wrapping Better-Auth for DI
+
+### Security default: deny-by-default on `additionalFields`
+
+Any new field added to Better-Auth's `additionalFields` (on `user` or elsewhere) must set `input: false` unless there is a specific, documented reason for a client to set it at sign-up/update time. The default assumption is that a field is server-assigned. This is not optional review-time advice — it's the reason `role` and `isActive` were previously client-writable and let anonymous sign-up self-promote to `ADMIN` (see `openspec/changes/archive/2026-07-12-fix-auth-privilege-escalation/`). Before adding a field, ask: "if a client sends this in the sign-up/update payload, what's the worst thing they could set it to?"
