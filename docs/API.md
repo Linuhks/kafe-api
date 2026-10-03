@@ -467,7 +467,7 @@ Create a new order. Works for anonymous and authenticated users.
 }
 ```
 
-**Errors**: `400` — invalid data or insufficient stock.
+**Errors**: `400` — invalid data, `404` — product not found, `409` — product not available. Stock is not checked at creation (it is deducted on `IN_PREPARATION`).
 
 ---
 
@@ -559,7 +559,22 @@ RECEIVED → IN_PREPARATION → READY → DELIVERED
 
 **Response `200`** — updated order object.
 
-**Errors**: `400` — invalid transition, `401`, `403`, `404`.
+Moving to `IN_PREPARATION` deducts ingredient stock; cancelling an `IN_PREPARATION` order refunds it (see [business rules](./business-rules.md#orders)).
+
+**Errors**: `400` — invalid transition or insufficient stock, `401`, `403`, `404`, `409` — the order status changed concurrently.
+
+---
+
+### `POST /api/v1/orders/:id/cancel`
+
+Cancel your own order. Only allowed while the order is `RECEIVED`; once preparation starts, only staff can cancel via `PATCH /orders/:id/status`.
+
+- **Auth**: Bearer — any authenticated user (must be the order's owner)
+- **Request body**: none
+
+**Response `200`** — the order with `status: "CANCELLED"`. No stock changes.
+
+**Errors**: `400` — order is not `RECEIVED`, `401`, `404` — order not found, owned by someone else, or anonymous (indistinguishable on purpose), `409` — lost a race against the barista's `IN_PREPARATION` transition.
 
 ---
 

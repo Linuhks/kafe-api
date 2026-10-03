@@ -77,9 +77,10 @@ Manages the full order lifecycle, from creation to delivery.
 | `CreateOrderUseCase` | Creates an order; validates products and calculates the total |
 | `GetOrderUseCase` | Fetches an order by ID |
 | `ListOrdersUseCase` | Lists orders (ADMIN: all; CLIENT: own orders) |
-| `UpdateOrderStatusUseCase` | Advances order status (validates transition); when moving to `IN_PREPARATION`, calls `DeductForOrderUseCase` to deduct ingredients from stock |
+| `UpdateOrderStatusUseCase` | Advances order status (validates transition); when moving to `IN_PREPARATION`, calls `DeductForOrderUseCase` to deduct ingredients from stock; cancelling from `IN_PREPARATION` refunds it |
 | `GetBaristaQueueUseCase` | Returns the queue of pending orders for the barista |
 | `GetMyOrdersUseCase` | Returns the authenticated client's orders |
+| `CancelMyOrderUseCase` | Lets a client cancel their own order while `RECEIVED` (no stock change) |
 
 **Entities:** `Order`, `OrderItem`  
 **Repositories:** `IOrderRepository`  

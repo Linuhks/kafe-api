@@ -3,7 +3,8 @@ schema: spec-driven
 context: |
   Tech stack: NestJS, TypeScript, Drizzle ORM, PostgreSQL, Better-Auth, Redis cache.
   Clean architecture: domain / application (use cases) / infrastructure / presentation.
-  Business rules live in docs/business-rules.md and must be kept in sync with behavior.
+  Source of truth for behavior is openspec/specs/. docs/business-rules.md is its
+  human-readable summary and must be updated in the same change; if they disagree, the spec wins.
   Roles: ADMIN, BARISTA, CLIENT. Auth is Better-Auth; role/isActive are server-assigned only.
 
 rules:
@@ -22,11 +23,10 @@ rules:
   tasks:
     - >
       Every task that adds or changes an API contract, a stateful flow (orders,
-      inventory, auth), or a business rule from docs/business-rules.md must end
+      inventory, auth), or a business rule (openspec/specs/ + docs/business-rules.md) must end
       with a subtask that runs `pnpm test:e2e` for the affected suite (or a
       documented manual verification) — not just unit tests — before the task is
       marked complete.
     - >
-      A task is not "done" until any tracker used alongside OpenSpec (e.g. Task
-      Master) is updated to match — do not archive a change while an external
-      tracker still shows it in progress.
+      OpenSpec is the only task tracker. Taskmaster was used once at kickoff and is
+      not kept in sync — do not reintroduce a second tracker.

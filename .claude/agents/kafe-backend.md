@@ -95,7 +95,7 @@ When a **task** (not subtask) completes, check whether these need updating befor
 ## Domain cheat-sheet
 
 - **Roles** (`ADMIN`/`BARISTA`/`CLIENT`) and `isActive` are server-assigned only (`input: false` in the Better-Auth config) — sign-up (`POST /api/auth/sign-up/email`, no `/v1` prefix) always produces `CLIENT`; promotion is SQL or an admin endpoint. Deactivated users are blocked at session creation via a `databaseHooks.session.create.before` hook.
-- **Order lifecycle**: `RECEIVED → IN_PREPARATION → READY → DELIVERED`, with `CANCELLED` reachable only from `RECEIVED`/`IN_PREPARATION`; invalid transitions return `InvalidOrderTransitionError`. Stock is deducted — not reserved at creation — exactly when a barista advances an order to `IN_PREPARATION`; insufficient stock fails the transition with `InsufficientStockError` and deducts nothing. Full rules: `docs/business-rules.md`.
+- **Order lifecycle**: `RECEIVED → IN_PREPARATION → READY → DELIVERED`, with `CANCELLED` reachable only from `RECEIVED`/`IN_PREPARATION`; invalid transitions return `InvalidOrderTransitionError`. Stock is deducted — not reserved at creation — exactly when a barista advances an order to `IN_PREPARATION`; insufficient stock fails the transition with `InsufficientStockError` and deducts nothing. Full rules: `openspec/specs/` (normative) and `docs/business-rules.md` (summary).
 
 ## Landmines
 

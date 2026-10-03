@@ -54,7 +54,7 @@ Then move on to the next subtask or task and repeat.
 
 - If the task adds or changes a controller endpoint, an auth/role check, or a stateful flow (orders, inventory, auth), run the relevant `pnpm test:e2e` suite and confirm it passes — do not defer this to "before opening a PR." A unit test against an in-memory fake proves the use case's logic is right; it does not prove the controller, DB, and auth guard are wired together correctly.
 - If there is no E2E suite for the affected area yet, add one as part of the task, or explicitly note in the commit/PR why a manual run was sufficient (e.g. pure refactor with no behavior change).
-- If the task is tracked in an external tool (e.g. Task Master) in addition to OpenSpec, update both before marking the task done. A change should never be archived in OpenSpec while an external tracker still shows the task in progress — pick one source of truth if this keeps happening.
+- OpenSpec is the only task tracker (`openspec/changes/<name>/tasks.md`). Don't keep a parallel tracker.
 
 ### Security-sensitive tasks
 
@@ -74,6 +74,7 @@ When **all subtasks of a task are done** (task complete, not subtask), review wh
 
 | File | Update when |
 |---|---|
+| `openspec/specs/` | Behavior changed — done by `/opsx:archive` syncing the change's delta specs (the source of truth) |
 | `docs/architecture.md` | New layer, new cross-cutting pattern, or flow change |
 | `docs/modules.md` | New use case, entity, repository, or controller added |
 | `docs/business-rules.md` | New or changed business rule, state transition, or permission |

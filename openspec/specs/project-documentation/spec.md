@@ -42,7 +42,7 @@ O projeto SHALL conter o arquivo `docs/business-rules.md` descrevendo as regras 
 
 #### Scenario: Regras de inventário documentadas
 - **WHEN** um desenvolvedor lê as regras de negócio
-- **THEN** deve encontrar como o inventário é deduzido ao criar pedidos, o que são alertas de estoque e os tipos de movimentação (DEDUCTION, RESTOCK, ADJUSTMENT)
+- **THEN** deve encontrar como o inventário é deduzido ao mover o pedido para IN_PREPARATION (e devolvido ao cancelar a partir dele), o que são alertas de estoque e os tipos de movimentação (DEDUCTION, RESTOCK, ADJUSTMENT)
 
 #### Scenario: Papéis de usuário documentados
 - **WHEN** um desenvolvedor lê as regras de negócio
@@ -59,4 +59,4 @@ O projeto SHALL conter o arquivo `docs/modules.md` indexando os módulos existen
 
 #### Scenario: Use cases listados por módulo
 - **WHEN** um desenvolvedor consulta o módulo de pedidos em `docs/modules.md`
-- **THEN** deve encontrar os use cases: CreateOrder, GetOrder, ListOrders, UpdateOrderStatus, GetBaristaQueue, GetMyOrders
+- **THEN** deve encontrar os use cases: CreateOrder, GetOrder, ListOrders, UpdateOrderStatus, GetBaristaQueue, GetMyOrders, CancelMyOrder
