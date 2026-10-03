@@ -6,7 +6,7 @@
 
 ## 2. Endpoint
 
-- [ ] 2.1 Register the use case via `useFactory` in `src/modules/orders.module.ts` and add `POST :id/cancel` to `OrdersController` (no body, `@CurrentUser()`, no `@Roles`, Swagger responses 200/400/401/404, `throw result.value` on Left). Verify with `pnpm lint && pnpm check`.
+- [x] 2.1 Register the use case via `useFactory` in `src/modules/orders.module.ts` and add `POST :id/cancel` to `OrdersController` (no body, `@CurrentUser()`, no `@Roles`, Swagger responses 200/400/401/404, `throw result.value` on Left). Verify with `pnpm lint && pnpm check`.
 - [ ] 2.2 Add E2E cases to `test/controllers/orders.e2e.spec.ts`: owner 200 with unchanged stock; other user 404; anonymous order 404; no token 401; non-`RECEIVED` statuses 400 and unchanged; concurrent cancel vs barista `IN_PREPARATION` yields one winner and consistent stock. Verify with `pnpm test:e2e -- orders` (requires `docker compose up -d`).
 
 ## 3. Docs and gate

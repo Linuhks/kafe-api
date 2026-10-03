@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { DeductForOrderUseCase } from '../application/use-cases/inventory/deduct-for-order.use-case';
 import { RefundForOrderUseCase } from '../application/use-cases/inventory/refund-for-order.use-case';
+import { CancelMyOrderUseCase } from '../application/use-cases/orders/cancel-my-order.use-case';
 import { CreateOrderUseCase } from '../application/use-cases/orders/create-order.use-case';
 import { GetBaristaQueueUseCase } from '../application/use-cases/orders/get-barista-queue.use-case';
 import { GetMyOrdersUseCase } from '../application/use-cases/orders/get-my-orders.use-case';
@@ -58,6 +59,12 @@ import { MenuModule } from './menu.module';
         unitOfWork: IUnitOfWork,
       ) => new UpdateOrderStatusUseCase(orderRepo, deductForOrder, refundForOrder, unitOfWork),
       inject: [IOrderRepository, DeductForOrderUseCase, RefundForOrderUseCase, IUnitOfWork],
+    },
+    {
+      provide: CancelMyOrderUseCase,
+      useFactory: (orderRepo: IOrderRepository, updateOrderStatus: UpdateOrderStatusUseCase) =>
+        new CancelMyOrderUseCase(orderRepo, updateOrderStatus),
+      inject: [IOrderRepository, UpdateOrderStatusUseCase],
     },
     {
       provide: ListOrdersUseCase,
