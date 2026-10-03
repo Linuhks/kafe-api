@@ -10,7 +10,7 @@ The system has three roles (`user_role`):
 |---|---|
 | `ADMIN` | Full access: manages users, menu, ingredients, and views the dashboard |
 | `BARISTA` | Operates orders: views the queue, updates status, and checks stock |
-| `CLIENT` | Places orders and views their own order history |
+| `CLIENT` | Places orders, views their own order history, and cancels their own order while it is `RECEIVED` |
 
 A user can be active (`isActive: true`) or inactive. Inactive users must not be able to authenticate — this is enforced at session creation by a Better-Auth `databaseHooks.session.create.before` hook that rejects login when `isActive` is `false` (covers both `/api/v1/auth/login` and the native `/api/auth/sign-in/email` route).
 
@@ -62,6 +62,14 @@ Ingredient deduction occurs when the barista advances the order to `IN_PREPARATI
 - Cancelling an order that is `IN_PREPARATION` returns to each ingredient exactly the quantity deducted for that order (summed from the order's `DEDUCTION` movements) and records one `RESTOCK` movement per ingredient, linked to the order (`orderId`) with a note.
 - Cancelling a `RECEIVED` order changes no stock (nothing was deducted).
 - Orders cancelled before this rule existed were not refunded; correct them manually with an `ADJUSTMENT`.
+
+### Client cancellation
+
+- An authenticated user can cancel their own order with `POST /api/v1/orders/:id/cancel` (no body), only while it is `RECEIVED`. The response is the order in status `CANCELLED`.
+- Any other status (`IN_PREPARATION`, `READY`, `DELIVERED`, `CANCELLED`) is rejected with 400 and the order is unchanged; once the barista starts preparation, only staff can cancel via `PATCH /orders/:id/status`.
+- Another user's order, an anonymous order (no client) and a non-existent order all return 404, so order ids cannot be probed. No token returns 401.
+- No stock changes and no inventory movement is created (nothing was deducted while `RECEIVED`).
+- A client cancel racing with the barista's `IN_PREPARATION` transition has exactly one winner: the loser gets 409 (or 400 if it read the order after the winner committed).
 
 ### Atomicity and concurrency
 
