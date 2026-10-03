@@ -57,6 +57,18 @@ Ingredient deduction occurs when the barista advances the order to `IN_PREPARATI
 - If any ingredient has insufficient stock, the transition fails with `InsufficientStockError` and no deduction is performed
 - If stock is sufficient, all ingredients are deducted and a `DEDUCTION` record is created in `inventory_movements`
 
+### Stock refund on cancellation
+
+- Cancelling an order that is `IN_PREPARATION` returns to each ingredient exactly the quantity deducted for that order (summed from the order's `DEDUCTION` movements) and records one `RESTOCK` movement per ingredient, linked to the order (`orderId`) with a note.
+- Cancelling a `RECEIVED` order changes no stock (nothing was deducted).
+- Orders cancelled before this rule existed were not refunded; correct them manually with an `ADJUSTMENT`.
+
+### Atomicity and concurrency
+
+- The status update, the stock deduction/refund and their movement records commit in a single transaction: if any step fails, nothing is applied.
+- The status update is conditional on the status the request was validated against. If another request changed the order first, the request fails (`409 Conflict`, or `400` invalid transition if it read the order after the other committed), so stock is never deducted or refunded twice.
+- A recipe that references a missing ingredient makes the `IN_PREPARATION` transition fail with `NotFoundError` instead of being skipped.
+
 > **Note:** stock is not reserved when the order is created. Two simultaneous orders for the same product can both be accepted even if there are only enough ingredients for one.
 
 ### Barista queue
@@ -103,7 +115,7 @@ Every stock adjustment generates a record in `inventory_movements` with a type (
 | Type | When it occurs |
 |---|---|
 | `DEDUCTION` | Automatic deduction when an order moves to `IN_PREPARATION` |
-| `RESTOCK` | Manual ingredient replenishment |
+| `RESTOCK` | Manual ingredient replenishment, or automatic refund when an `IN_PREPARATION` order is cancelled (has `orderId`) |
 | `ADJUSTMENT` | Manual stock correction (physical inventory) |
 
 ### Stock alerts

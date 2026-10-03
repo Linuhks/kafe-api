@@ -13,5 +13,5 @@
 
 ## 3. E2E and docs
 
-- [ ] 3.1 Add E2E cases in the orders suite: `RECEIVED → IN_PREPARATION → CANCELLED` restores stock and creates a `RESTOCK` movement with `orderId`; concurrent double `IN_PREPARATION` deducts once (requires `docker compose up -d`)
-- [ ] 3.2 Update `docs/business-rules.md` (refund on cancel, atomicity, concurrency, pre-fix data note) and run the full gate: `pnpm lint`, `pnpm check`, `pnpm test`, `pnpm test:e2e -- orders`
+- [x] 3.1 Add E2E cases in the orders suite: `RECEIVED → IN_PREPARATION → CANCELLED` restores stock and creates a `RESTOCK` movement with `orderId`; concurrent double `IN_PREPARATION` deducts once (requires `docker compose up -d`)
+- [x] 3.2 Update `docs/business-rules.md` (refund on cancel, atomicity, concurrency, pre-fix data note) and run the full gate: `pnpm lint`, `pnpm check`, `pnpm test`, `pnpm test:e2e -- orders`

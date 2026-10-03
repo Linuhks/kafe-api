@@ -20,7 +20,7 @@ The system SHALL apply a status update only if the order is still in the status 
 
 #### Scenario: Concurrent IN_PREPARATION requests deduct once
 - **WHEN** two requests move the same `RECEIVED` order to `IN_PREPARATION` at the same time
-- **THEN** exactly one succeeds, the other fails with a conflict, and ingredients are deducted once
+- **THEN** exactly one succeeds, the other fails (conflict, or invalid transition if it read the order after the first committed), and ingredients are deducted once
 
 ### Requirement: Stock changes and status update are atomic
 Deduction (or refund), its movement records and the order status update SHALL commit together or not at all.
