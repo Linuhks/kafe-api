@@ -30,3 +30,10 @@ The system SHALL reject authentication for any user whose `isActive` is `false`.
 - **WHEN** a user with `isActive = true` submits valid credentials to `POST /api/v1/auth/login`
 - **THEN** the server SHALL respond with HTTP 200 and return a valid bearer token
 
+
+### Requirement: Three roles with fixed capabilities
+The system SHALL have roles `ADMIN` (full access: users, menu, ingredients, dashboard), `BARISTA` (order queue, status updates, stock view) and `CLIENT` (places orders, views own history, cancels own order while `RECEIVED`).
+
+#### Scenario: Role restricts access
+- **WHEN** a user calls an endpoint outside their role's capabilities
+- **THEN** the response is 403

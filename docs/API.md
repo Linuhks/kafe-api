@@ -559,7 +559,7 @@ RECEIVED → IN_PREPARATION → READY → DELIVERED
 
 **Response `200`** — updated order object.
 
-Moving to `IN_PREPARATION` deducts ingredient stock; cancelling an `IN_PREPARATION` order refunds it (see [business rules](./business-rules.md#orders)).
+Moving to `IN_PREPARATION` deducts ingredient stock; cancelling an `IN_PREPARATION` order refunds it (see the [`order-stock-consistency`](../openspec/specs/order-stock-consistency/spec.md) spec).
 
 **Errors**: `400` — invalid transition or insufficient stock, `401`, `403`, `404`, `409` — the order status changed concurrently.
 

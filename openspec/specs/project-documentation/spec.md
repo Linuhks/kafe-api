@@ -34,19 +34,19 @@ O projeto SHALL conter o arquivo `docs/code-guide.md` com guia de contribuição
 ---
 
 ### Requirement: Documentação de regras de negócio
-O projeto SHALL conter o arquivo `docs/business-rules.md` descrevendo as regras de negócio por domínio.
+O projeto SHALL conter o arquivo `docs/business-rules.md` como índice das specs OpenSpec que definem as regras de negócio por domínio, sem repetir as regras.
 
 #### Scenario: Regras de pedidos documentadas
 - **WHEN** um desenvolvedor lê `docs/business-rules.md`
-- **THEN** deve encontrar o ciclo de vida de um pedido (RECEIVED → IN_PREPARATION → READY → DELIVERED/CANCELLED) e as regras de transição de status
+- **THEN** deve encontrar links para as specs que definem o ciclo de vida do pedido e as regras de transição de status
 
 #### Scenario: Regras de inventário documentadas
-- **WHEN** um desenvolvedor lê as regras de negócio
-- **THEN** deve encontrar como o inventário é deduzido ao mover o pedido para IN_PREPARATION (e devolvido ao cancelar a partir dele), o que são alertas de estoque e os tipos de movimentação (DEDUCTION, RESTOCK, ADJUSTMENT)
+- **WHEN** um desenvolvedor lê `docs/business-rules.md`
+- **THEN** deve encontrar links para as specs de estoque (dedução/devolução, alertas, tipos de movimentação)
 
 #### Scenario: Papéis de usuário documentados
-- **WHEN** um desenvolvedor lê as regras de negócio
-- **THEN** deve encontrar os três papéis (ADMIN, BARISTA, CLIENT) e o que cada um pode fazer no sistema
+- **WHEN** um desenvolvedor lê `docs/business-rules.md`
+- **THEN** deve encontrar o link para a spec que define os três papéis (ADMIN, BARISTA, CLIENT)
 
 ---
 

@@ -58,7 +58,7 @@ Then move on to the next subtask or task and repeat.
 
 ### Security-sensitive tasks
 
-A task that touches authentication, roles/permissions, `additionalFields` on the user model, or anything in `docs/business-rules.md` needs an explicit answer to these before it's done — not as a follow-up audit:
+A task that touches authentication, roles/permissions, `additionalFields` on the user model, or any rule in `openspec/specs/` needs an explicit answer to these before it's done — not as a follow-up audit:
 
 - Can a client set this field/value directly, and should they be able to?
 - Which roles can reach this endpoint, and is that enforced by `@Roles()` / `@AllowAnonymous()`, not just by the frontend hiding a button?
@@ -77,7 +77,7 @@ When **all subtasks of a task are done** (task complete, not subtask), review wh
 | `openspec/specs/` | Behavior changed — done by `/opsx:archive` syncing the change's delta specs (the source of truth) |
 | `docs/architecture.md` | New layer, new cross-cutting pattern, or flow change |
 | `docs/modules.md` | New use case, entity, repository, or controller added |
-| `docs/business-rules.md` | New or changed business rule, state transition, or permission |
+| `docs/business-rules.md` | Only to add a link when a new spec is created — rules themselves live in `openspec/specs/` |
 | `docs/code-guide.md` | New naming convention, new file type, or changed dev command |
 | `docs/API.md` | New or changed endpoint, DTO, or auth requirement |
 | `src/<layer>/CLAUDE.md` | New invariant or pattern specific to that layer |

@@ -102,7 +102,7 @@ All three had to pass before a commit was created. This gate was not optional an
 
 The following were never delegated to AI without explicit human review:
 
-**Business rules** — the domain rules in `docs/business-rules.md` (order state machine, stock deduction timing, role permissions) were written and validated by the developer. AI implemented what the rules specified; it did not define the rules.
+**Business rules** — the domain rules in `openspec/specs/` (order state machine, stock deduction timing, role permissions) were written and validated by the developer. AI implemented what the rules specified; it did not define the rules.
 
 **Security decisions** — the security review that produced the `security-hardening` change was conducted by a human. The AI implemented the mitigations described in the proposal. Decisions about what constituted an acceptable risk level, what to rate-limit, and what to log were made by the developer.
 
