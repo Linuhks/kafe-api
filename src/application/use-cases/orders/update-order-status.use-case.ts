@@ -1,13 +1,17 @@
 import { Either, left, right } from '../../../domain/either';
 import { Order, OrderStatus } from '../../../domain/entities/order.entity';
-import { DomainError, NotFoundError } from '../../../domain/errors/domain.error';
+import { ConflictError, DomainError, NotFoundError } from '../../../domain/errors/domain.error';
 import { IOrderRepository } from '../../../domain/repositories/order.repository';
+import { IUnitOfWork } from '../../../domain/repositories/unit-of-work';
 import { DeductForOrderUseCase } from '../inventory/deduct-for-order.use-case';
+import { RefundForOrderUseCase } from '../inventory/refund-for-order.use-case';
 
 export class UpdateOrderStatusUseCase {
   constructor(
     private readonly orderRepo: IOrderRepository,
     private readonly deductForOrder: DeductForOrderUseCase,
+    private readonly refundForOrder: RefundForOrderUseCase,
+    private readonly unitOfWork: IUnitOfWork,
   ) {}
 
   async execute(
@@ -21,12 +25,21 @@ export class UpdateOrderStatusUseCase {
     const transitionResult = order.validateTransition(newStatus);
     if (transitionResult.isLeft()) return left(transitionResult.value);
 
-    if (newStatus === 'IN_PREPARATION') {
-      const deductResult = await this.deductForOrder.execute(order);
-      if (deductResult.isLeft()) return left(deductResult.value);
-    }
+    return this.unitOfWork.run<DomainError, Order>(async () => {
+      const updated = await this.orderRepo.transitionStatus(id, order.status, newStatus, baristaId);
+      if (!updated) {
+        return left(new ConflictError('Order status was changed by another request'));
+      }
 
-    const updated = await this.orderRepo.updateStatus(id, newStatus, baristaId);
-    return right(updated);
+      if (newStatus === 'IN_PREPARATION') {
+        const deductResult = await this.deductForOrder.execute(order);
+        if (deductResult.isLeft()) return left(deductResult.value);
+      } else if (newStatus === 'CANCELLED' && order.status === 'IN_PREPARATION') {
+        const refundResult = await this.refundForOrder.execute(order);
+        if (refundResult.isLeft()) return left(refundResult.value);
+      }
+
+      return right(updated);
+    });
   }
 }

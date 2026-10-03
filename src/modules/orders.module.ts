@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { DeductForOrderUseCase } from '../application/use-cases/inventory/deduct-for-order.use-case';
+import { RefundForOrderUseCase } from '../application/use-cases/inventory/refund-for-order.use-case';
 import { CreateOrderUseCase } from '../application/use-cases/orders/create-order.use-case';
 import { GetBaristaQueueUseCase } from '../application/use-cases/orders/get-barista-queue.use-case';
 import { GetMyOrdersUseCase } from '../application/use-cases/orders/get-my-orders.use-case';
@@ -10,6 +11,8 @@ import { IIngredientRepository } from '../domain/repositories/ingredient.reposit
 import { IInventoryMovementRepository } from '../domain/repositories/inventory-movement.repository';
 import { IOrderRepository } from '../domain/repositories/order.repository';
 import { IProductRepository } from '../domain/repositories/product.repository';
+import { IUnitOfWork } from '../domain/repositories/unit-of-work';
+import { DrizzleUnitOfWork } from '../infrastructure/db/drizzle-unit-of-work';
 import { DrizzleIngredientRepository } from '../infrastructure/db/repositories/drizzle-ingredient.repository';
 import { DrizzleInventoryMovementRepository } from '../infrastructure/db/repositories/drizzle-inventory-movement.repository';
 import { DrizzleOrderRepository } from '../infrastructure/db/repositories/drizzle-order.repository';
@@ -31,6 +34,15 @@ import { MenuModule } from './menu.module';
       ) => new DeductForOrderUseCase(ingredientRepo, movementRepo),
       inject: [IIngredientRepository, IInventoryMovementRepository],
     },
+    { provide: IUnitOfWork, useClass: DrizzleUnitOfWork },
+    {
+      provide: RefundForOrderUseCase,
+      useFactory: (
+        ingredientRepo: IIngredientRepository,
+        movementRepo: IInventoryMovementRepository,
+      ) => new RefundForOrderUseCase(ingredientRepo, movementRepo),
+      inject: [IIngredientRepository, IInventoryMovementRepository],
+    },
     {
       provide: CreateOrderUseCase,
       useFactory: (orderRepo: IOrderRepository, productRepo: IProductRepository) =>
@@ -39,9 +51,13 @@ import { MenuModule } from './menu.module';
     },
     {
       provide: UpdateOrderStatusUseCase,
-      useFactory: (orderRepo: IOrderRepository, deductForOrder: DeductForOrderUseCase) =>
-        new UpdateOrderStatusUseCase(orderRepo, deductForOrder),
-      inject: [IOrderRepository, DeductForOrderUseCase],
+      useFactory: (
+        orderRepo: IOrderRepository,
+        deductForOrder: DeductForOrderUseCase,
+        refundForOrder: RefundForOrderUseCase,
+        unitOfWork: IUnitOfWork,
+      ) => new UpdateOrderStatusUseCase(orderRepo, deductForOrder, refundForOrder, unitOfWork),
+      inject: [IOrderRepository, DeductForOrderUseCase, RefundForOrderUseCase, IUnitOfWork],
     },
     {
       provide: ListOrdersUseCase,
