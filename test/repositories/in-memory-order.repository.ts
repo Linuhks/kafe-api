@@ -93,6 +93,17 @@ export class InMemoryOrderRepository extends IOrderRepository {
     return updated;
   }
 
+  async transitionStatus(
+    id: string,
+    from: OrderStatus,
+    to: OrderStatus,
+    baristaId?: string,
+  ): Promise<Order | null> {
+    const existing = this.items.find((o) => o.id === id);
+    if (!existing || existing.status !== from) return null;
+    return this.updateStatus(id, to, baristaId);
+  }
+
   async getSummary(dateRange: DateRange): Promise<OrderSummaryData> {
     let filtered = this.items;
     if (dateRange.from) filtered = filtered.filter((o) => o.createdAt >= new Date(dateRange.from!));

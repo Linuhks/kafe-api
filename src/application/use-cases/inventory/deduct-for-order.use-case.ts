@@ -1,6 +1,6 @@
 import { Either, left, right } from '../../../domain/either';
 import { Order } from '../../../domain/entities/order.entity';
-import { InsufficientStockError } from '../../../domain/errors/domain.error';
+import { InsufficientStockError, NotFoundError } from '../../../domain/errors/domain.error';
 import { IIngredientRepository } from '../../../domain/repositories/ingredient.repository';
 import { IInventoryMovementRepository } from '../../../domain/repositories/inventory-movement.repository';
 
@@ -10,7 +10,7 @@ export class DeductForOrderUseCase {
     private readonly movementRepo: IInventoryMovementRepository,
   ) {}
 
-  async execute(order: Order): Promise<Either<InsufficientStockError, void>> {
+  async execute(order: Order): Promise<Either<InsufficientStockError | NotFoundError, void>> {
     const neededMillis = new Map<string, number>();
 
     for (const item of order.items) {
@@ -29,7 +29,12 @@ export class DeductForOrderUseCase {
     for (const [ingredientId, qtyMillis] of neededMillis) {
       const quantity = (qtyMillis / 1000).toFixed(3);
       const ingredient = await this.ingredientRepo.findById(ingredientId);
-      if (!ingredient) continue;
+      if (!ingredient) {
+        for (const { id, quantity: q } of deducted) {
+          await this.ingredientRepo.restockIngredient(id, q);
+        }
+        return left(new NotFoundError(`Ingredient ${ingredientId}`));
+      }
 
       const ok = await this.ingredientRepo.deductStockIfSufficient(ingredientId, quantity);
 

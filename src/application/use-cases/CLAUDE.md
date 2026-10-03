@@ -38,7 +38,7 @@ if (deductResult.isLeft()) return left(deductResult.value);
 | `users/` | create, list, get, update, delete |
 | `menu/` | categories (create/get/list/update/delete) + products (create/get/list/update/delete/toggle-availability) |
 | `orders/` | create, get, list, get-my-orders, get-barista-queue, update-order-status |
-| `inventory/` | create-ingredient, get-ingredient, list-ingredients, update-ingredient, restock-ingredient, deduct-for-order, list-movements, get-stock-alerts |
+| `inventory/` | create-ingredient, get-ingredient, list-ingredients, update-ingredient, restock-ingredient, deduct-for-order, refund-for-order, list-movements, get-stock-alerts |
 | `dashboard/` | get-summary, get-top-products, get-peak-hours |
 
 ## Tests

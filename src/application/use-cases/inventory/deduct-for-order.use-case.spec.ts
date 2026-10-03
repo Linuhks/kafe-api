@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Ingredient } from '../../../domain/entities/ingredient.entity';
 import { Order } from '../../../domain/entities/order.entity';
 import { OrderItem } from '../../../domain/entities/order-item.entity';
-import { InsufficientStockError } from '../../../domain/errors/domain.error';
+import { InsufficientStockError, NotFoundError } from '../../../domain/errors/domain.error';
 import { DeductForOrderUseCase } from './deduct-for-order.use-case';
 
 function makeOrder(items: OrderItem[]): Order {
@@ -140,5 +140,20 @@ describe('DeductForOrderUseCase', () => {
 
     const updated = ingredientRepo.items.find((i) => i.id === 'ing-1')!;
     expect(parseFloat(updated.currentStock)).toBeCloseTo(0);
+  });
+
+  it('should return Left(NotFoundError) and restore earlier deductions when a recipe ingredient is missing', async () => {
+    ingredientRepo.items.push(
+      new Ingredient('ing-1', 'Café', 'g', '100.000', '0', new Date(), new Date()),
+    );
+    ingredientRepo.recipes.push({ productId: 'prod-1', ingredientId: 'ing-1', quantity: '10' });
+    ingredientRepo.recipes.push({ productId: 'prod-1', ingredientId: 'ing-gone', quantity: '5' });
+
+    const result = await sut.execute(makeOrder([makeOrderItem('prod-1', 1)]));
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotFoundError);
+    expect((await ingredientRepo.findById('ing-1'))?.currentStock).toBe('100.000');
+    expect(movementRepo.items).toHaveLength(0);
   });
 });
