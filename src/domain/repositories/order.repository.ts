@@ -58,6 +58,13 @@ export abstract class IOrderRepository {
   ): Promise<{ data: Order[]; total: number }>;
   abstract findQueue(): Promise<Order[]>;
   abstract create(data: CreateOrderData): Promise<Order>;
+  /** Updates the status only if the order is still in `from`. Returns null when it is not. */
+  abstract transitionStatus(
+    id: string,
+    from: OrderStatus,
+    to: OrderStatus,
+    baristaId?: string,
+  ): Promise<Order | null>;
   abstract updateStatus(id: string, status: OrderStatus, baristaId?: string): Promise<Order>;
   abstract getSummary(dateRange: DateRange): Promise<OrderSummaryData>;
   abstract getTopProducts(limit: number, dateRange: DateRange): Promise<TopProductData[]>;

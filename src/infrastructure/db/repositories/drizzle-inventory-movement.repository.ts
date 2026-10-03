@@ -48,6 +48,14 @@ export class DrizzleInventoryMovementRepository extends IInventoryMovementReposi
     return mapToMovement(row);
   }
 
+  async findByOrderId(orderId: string): Promise<InventoryMovement[]> {
+    const rows = await this.db
+      .select()
+      .from(inventoryMovements)
+      .where(eq(inventoryMovements.orderId, orderId));
+    return rows.map(mapToMovement);
+  }
+
   async findAll(
     page: number,
     limit: number,

@@ -172,6 +172,23 @@ export class DrizzleOrderRepository extends IOrderRepository {
     return this.findById(id) as Promise<Order>;
   }
 
+  async transitionStatus(
+    id: string,
+    from: OrderStatus,
+    to: OrderStatus,
+    baristaId?: string,
+  ): Promise<Order | null> {
+    const values: Partial<typeof orders.$inferInsert> = { status: to, updatedAt: new Date() };
+    if (baristaId !== undefined) values.baristaId = baristaId;
+    const rows = await this.db
+      .update(orders)
+      .set(values)
+      .where(and(eq(orders.id, id), eq(orders.status, from)))
+      .returning({ id: orders.id });
+    if (rows.length === 0) return null;
+    return this.findById(id);
+  }
+
   async getSummary(dateRange: DateRange): Promise<OrderSummaryData> {
     const conditions: SQL[] = [];
     if (dateRange.from) conditions.push(gte(orders.createdAt, new Date(dateRange.from)));

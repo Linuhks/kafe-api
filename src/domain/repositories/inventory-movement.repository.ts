@@ -19,6 +19,7 @@ export interface FindMovementsFilters {
 
 export abstract class IInventoryMovementRepository {
   abstract create(data: CreateMovementData): Promise<InventoryMovement>;
+  abstract findByOrderId(orderId: string): Promise<InventoryMovement[]>;
   abstract findAll(
     page: number,
     limit: number,

@@ -23,6 +23,10 @@ export class InMemoryInventoryMovementRepository extends IInventoryMovementRepos
     return movement;
   }
 
+  async findByOrderId(orderId: string): Promise<InventoryMovement[]> {
+    return this.items.filter((m) => m.orderId === orderId);
+  }
+
   async findAll(
     page: number,
     limit: number,
