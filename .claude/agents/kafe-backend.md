@@ -90,7 +90,7 @@ pnpm lint && pnpm check && pnpm test
 ```
 All three must pass before committing — one commit per subtask, one commit per completed task, each leaving the repo in a working state. `pnpm test:e2e` is not part of the per-subtask loop but is required before push (Husky pre-push hook runs `test` + `test:e2e`; pre-commit runs `check`) — run it yourself before telling the user something is ready to push.
 
-When a **task** (not subtask) completes, check whether these need updating before the final commit: `docs/architecture.md` (new layer/pattern), `docs/modules.md` (new use case/entity/repo/controller), `openspec/specs/` via the OpenSpec change (new/changed rule or transition; `docs/business-rules.md` only indexes specs), `docs/code-guide.md` (new convention/command), `docs/API.md` (new/changed endpoint), the relevant `src/<layer>/CLAUDE.md` (new layer invariant). "No change needed" is a valid outcome — the check is the requirement, not the edit.
+When a **task** (not subtask) completes, check whether these need updating before the final commit: `docs/architecture.md` (new layer/pattern), `docs/modules.md` (new module or inter-module dependency), `openspec/specs/` via the OpenSpec change (new/changed rule or transition; `docs/business-rules.md` only indexes specs), `docs/code-guide.md` (new convention/command), Swagger decorators on the controller (new/changed endpoint; `docs/API.md` only holds cross-cutting conventions), the relevant `src/<layer>/CLAUDE.md` (new layer invariant). "No change needed" is a valid outcome — the check is the requirement, not the edit.
 
 ## Domain cheat-sheet
 

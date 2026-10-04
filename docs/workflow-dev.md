@@ -76,10 +76,10 @@ When **all subtasks of a task are done** (task complete, not subtask), review wh
 |---|---|
 | `openspec/specs/` | Behavior changed — done by `/opsx:archive` syncing the change's delta specs (the source of truth) |
 | `docs/architecture.md` | New layer, new cross-cutting pattern, or flow change |
-| `docs/modules.md` | New use case, entity, repository, or controller added |
+| `docs/modules.md` | New module or a new dependency between modules (use cases/entities are not listed there) |
 | `docs/business-rules.md` | Only to add a link when a new spec is created — rules themselves live in `openspec/specs/` |
 | `docs/code-guide.md` | New naming convention, new file type, or changed dev command |
-| `docs/API.md` | New or changed endpoint, DTO, or auth requirement |
+| `docs/API.md` | New cross-cutting convention only — endpoints are documented by the controllers' Swagger decorators, which you must update |
 | `src/<layer>/CLAUDE.md` | New invariant or pattern specific to that layer |
 
 If nothing changed that affects the docs, no update is needed — the check itself is the requirement, not the update.

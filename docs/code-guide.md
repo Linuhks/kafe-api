@@ -524,7 +524,7 @@ See **Writing an E2E test** below.
 
 ### Step 11 — Update affected docs
 
-After the task is complete (not after each subtask), review the table in `docs/workflow-dev.md`. For a new module, expect updates to `docs/modules.md`, `docs/API.md`, and a new spec under `openspec/specs/` if it introduces business rules (then link it from `docs/business-rules.md`).
+After the task is complete (not after each subtask), review the table in `docs/workflow-dev.md`. For a new module, expect an update to `docs/modules.md` (module table), Swagger decorators on the new controller, and a new spec under `openspec/specs/` if it introduces business rules (then link it from `docs/business-rules.md`).
 
 ---
 

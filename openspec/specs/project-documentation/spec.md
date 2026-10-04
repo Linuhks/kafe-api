@@ -51,12 +51,21 @@ O projeto SHALL conter o arquivo `docs/business-rules.md` como índice das specs
 ---
 
 ### Requirement: Índice de módulos
-O projeto SHALL conter o arquivo `docs/modules.md` indexando os módulos existentes com suas responsabilidades e use cases principais.
+O projeto SHALL conter o arquivo `docs/modules.md` com a responsabilidade e as dependências entre os módulos, sem repetir listas que a árvore de arquivos já mostra (use cases, entidades, repositórios).
 
 #### Scenario: Todos os módulos listados
 - **WHEN** um desenvolvedor abre `docs/modules.md`
-- **THEN** deve encontrar os módulos users, menu, orders, inventory e dashboard, cada um com: responsabilidade principal, lista de use cases e entidades/repositórios relacionados
+- **THEN** deve encontrar os módulos auth, users, menu, orders, inventory e dashboard, cada um com responsabilidade e imports de outros módulos
 
-#### Scenario: Use cases listados por módulo
-- **WHEN** um desenvolvedor consulta o módulo de pedidos em `docs/modules.md`
-- **THEN** deve encontrar os use cases: CreateOrder, GetOrder, ListOrders, UpdateOrderStatus, GetBaristaQueue, GetMyOrders, CancelMyOrder
+#### Scenario: Use cases não são duplicados
+- **WHEN** um desenvolvedor procura os use cases de um módulo
+- **THEN** `docs/modules.md` o aponta para `src/application/use-cases/<módulo>/`
+
+---
+
+### Requirement: Referência de API gerada
+A referência de endpoints SHALL vir do Swagger gerado pelos decorators dos controllers; `docs/API.md` SHALL conter apenas convenções transversais (autenticação, rate limit, paginação, formato de erro) e apontar para `/api/v1/docs`.
+
+#### Scenario: Endpoint novo
+- **WHEN** um endpoint é adicionado ou alterado
+- **THEN** a documentação é atualizada pelos decorators do controller, sem editar `docs/API.md`

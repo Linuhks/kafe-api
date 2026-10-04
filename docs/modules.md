@@ -1,133 +1,25 @@
 # Modules
 
-Index of NestJS modules in `kafe-api`. Each module encapsulates a complete feature: controller, use cases, and repositories.
+Each feature is a NestJS module in `src/modules/<name>.module.ts` that wires controller → use cases → repository interface → Drizzle implementation.
 
----
+The lists of use cases, entities and repositories are **not repeated here** — they are the files in the code:
 
-## UsersModule
+- use cases: `src/application/use-cases/<module>/` (one class per file, `*.use-case.ts`)
+- entities and repository interfaces: `src/domain/entities/`, `src/domain/repositories/`
+- controllers: `src/presentation/controllers/`
+- Drizzle repositories: `src/infrastructure/db/repositories/`
 
-**File:** `src/modules/users.module.ts`
+What follows is only what the file tree can't tell you.
 
-Manages system users. Used by the ADMIN for account administration.
-
-**Use Cases:**
-
-| Use Case | File | Description |
+| Module | Responsibility | Module imports / notes |
 |---|---|---|
-| `CreateUserUseCase` | `users/create-user.use-case.ts` | Creates a new user |
-| `ListUsersUseCase` | `users/list-users.use-case.ts` | Lists all users |
-| `GetUserUseCase` | `users/get-user.use-case.ts` | Fetches a user by ID |
-| `UpdateUserUseCase` | `users/update-user.use-case.ts` | Updates user data |
-| `DeleteUserUseCase` | `users/delete-user.use-case.ts` | Removes a user |
+| `auth` | Login and Better-Auth session wiring | imports `BetterAuthModule` |
+| `users` | Account administration (ADMIN) | — |
+| `menu` | Categories, products, product–ingredient recipes | exports `ICategoryRepository`, `IProductRepository` |
+| `inventory` | Ingredient stock and the movement ledger | — |
+| `orders` | Order lifecycle, barista queue, client self-cancel | imports `MenuModule` (products). Also registers the ingredient/movement repositories and wires `DeductForOrder` / `RefundForOrder` itself, so status changes and stock changes share one unit of work |
+| `dashboard` | Read-only aggregates over orders (ADMIN) | registers its own `IOrderRepository` |
 
-**Entities:** `User`  
-**Repository:** `IUserRepository` → `DrizzleUserRepository`  
-**Controller:** `UsersController` (`src/presentation/controllers/users.controller.ts`)
+Modules register their own Drizzle repository instances rather than importing each other, except where noted.
 
----
-
-## MenuModule
-
-**File:** `src/modules/menu.module.ts`
-
-Manages the menu: categories, products, and the product-ingredient relationship.
-
-**Use Cases — Categories:**
-
-| Use Case | Description |
-|---|---|
-| `CreateCategoryUseCase` | Creates a new category |
-| `ListCategoriesUseCase` | Lists categories (active or all) |
-| `GetCategoryUseCase` | Fetches a category by ID |
-| `UpdateCategoryUseCase` | Updates category data |
-| `DeleteCategoryUseCase` | Removes a category |
-
-**Use Cases — Products:**
-
-| Use Case | Description |
-|---|---|
-| `CreateProductUseCase` | Creates a product linked to a category |
-| `ListProductsUseCase` | Lists products (with availability filters) |
-| `GetProductUseCase` | Fetches a product by ID |
-| `UpdateProductUseCase` | Updates product data |
-| `DeleteProductUseCase` | Removes a product |
-| `ToggleAvailabilityUseCase` | Toggles a product's availability |
-| `AddProductIngredientUseCase` | Links an ingredient to a product with a quantity |
-| `RemoveProductIngredientUseCase` | Removes an ingredient from a product's recipe |
-| `ListProductIngredientsUseCase` | Lists a product's ingredients |
-
-**Entities:** `Category`, `Product`, `ProductIngredient`  
-**Repositories:** `ICategoryRepository`, `IProductRepository`, `IIngredientRepository`, `IProductIngredientRepository`  
-**Controllers:** `CategoriesController`, `ProductsController`
-
-> `ProductsController` caches `GET /products` responses in Redis (TTL 60 s) and invalidates the cache on create, update, and delete operations via `src/infrastructure/cache/product-cache.keys.ts`.
-
----
-
-## OrdersModule
-
-**File:** `src/modules/orders.module.ts`
-
-Manages the full order lifecycle, from creation to delivery.
-
-**Use Cases:**
-
-| Use Case | Description |
-|---|---|
-| `CreateOrderUseCase` | Creates an order; validates products and calculates the total |
-| `GetOrderUseCase` | Fetches an order by ID |
-| `ListOrdersUseCase` | Lists orders (ADMIN: all; CLIENT: own orders) |
-| `UpdateOrderStatusUseCase` | Advances order status (validates transition); when moving to `IN_PREPARATION`, calls `DeductForOrderUseCase` to deduct ingredients from stock; cancelling from `IN_PREPARATION` refunds it |
-| `GetBaristaQueueUseCase` | Returns the queue of pending orders for the barista |
-| `GetMyOrdersUseCase` | Returns the authenticated client's orders |
-| `CancelMyOrderUseCase` | Lets a client cancel their own order while `RECEIVED` (no stock change) |
-
-**Entities:** `Order`, `OrderItem`  
-**Repositories:** `IOrderRepository`  
-**Controller:** `OrdersController`
-
-> `OrdersModule` imports `MenuModule` to access `IProductRepository` and `InventoryModule` to access `IIngredientRepository` and `IInventoryMovementRepository` when creating orders.
-
----
-
-## InventoryModule
-
-**File:** `src/modules/inventory.module.ts`
-
-Controls ingredient stock and records all movements.
-
-**Use Cases:**
-
-| Use Case | Description |
-|---|---|
-| `CreateIngredientUseCase` | Registers a new ingredient |
-| `ListIngredientsUseCase` | Lists all ingredients |
-| `GetIngredientUseCase` | Fetches an ingredient by ID |
-| `UpdateIngredientUseCase` | Updates ingredient data |
-| `RestockIngredientUseCase` | Adds stock to an ingredient (generates a `RESTOCK` movement) |
-| `DeductForOrderUseCase` | Deducts ingredients from stock for an order (generates `DEDUCTION`) |
-| `ListMovementsUseCase` | Lists stock movement history |
-| `GetStockAlertsUseCase` | Returns ingredients with stock below the minimum |
-
-**Entities:** `Ingredient`, `InventoryMovement`  
-**Repositories:** `IIngredientRepository`, `IInventoryMovementRepository`  
-**Controller:** `InventoryController`
-
----
-
-## DashboardModule
-
-**File:** `src/modules/dashboard.module.ts`
-
-Aggregates metrics and analytical data for the management panel (ADMIN).
-
-**Use Cases:**
-
-| Use Case | Description |
-|---|---|
-| `GetSummaryUseCase` | Returns order totals, revenue, and period metrics |
-| `GetTopProductsUseCase` | Lists best-selling products |
-| `GetPeakHoursUseCase` | Order distribution by hour of the day |
-
-**Repositories:** uses `IOrderRepository` (imported from `OrdersModule`)  
-**Controller:** `DashboardController`
+Behavior of each area: see the specs listed in [`business-rules.md`](./business-rules.md).

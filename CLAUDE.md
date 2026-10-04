@@ -76,7 +76,8 @@ Non-negotiable patterns:
 |---|---|---|
 | Behavior / business rules (order state machine, stock deduction and refund, role permissions) | `openspec/specs/<capability>/spec.md` | **Normative.** Changed only through an OpenSpec change (`/opsx:propose` → `/opsx:archive` syncs the delta specs). |
 | Index of the specs | [`docs/business-rules.md`](docs/business-rules.md) | Links only — no rules are restated there. Add a row when a new spec is created. |
-| Endpoints, modules, architecture, how-to | `docs/API.md`, `docs/modules.md`, `docs/architecture.md`, `docs/code-guide.md` | Describe the code; the code wins on conflict. |
+| Endpoints | Swagger (`/api/v1/docs`), generated from controller decorators | Generated — never hand-copy into docs. `docs/API.md` only keeps cross-cutting conventions. |
+| Modules, architecture, how-to | `docs/modules.md`, `docs/architecture.md`, `docs/code-guide.md` | Describe the code; the code wins on conflict. No lists the file tree already shows. |
 | Architectural invariants and workflow | this file + `src/<layer>/CLAUDE.md` + `docs/workflow-dev.md` | Rules for working in the repo. |
 | Task tracking | `openspec/changes/<name>/tasks.md` | The only tracker. |
 
