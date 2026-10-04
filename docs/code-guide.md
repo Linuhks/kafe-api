@@ -524,7 +524,7 @@ See **Writing an E2E test** below.
 
 ### Step 11 — Update affected docs
 
-After the task is complete (not after each subtask), review the table in `docs/workflow-dev.md`. For a new module, expect updates to `docs/modules.md`, `docs/API.md`, and a new spec under `openspec/specs/` if it introduces business rules (then link it from `docs/business-rules.md`).
+After the task is complete (not after each subtask), review the table in `.claude/rules/workflow.md`. For a new module, expect updates to `docs/modules.md`, `docs/API.md`, and a new spec under `openspec/specs/` if it introduces business rules (then link it from `docs/business-rules.md`).
 
 ---
 
@@ -707,7 +707,7 @@ Use this as a PR review checklist. Each rule maps to a layer. Most are auto-enfo
 - [ ] In-memory fakes live in `test/repositories/`, imported via `@test/repositories/*`.
 - [ ] `pnpm lint && pnpm check && pnpm test` all pass before each commit.
 - [ ] `pnpm test:e2e` passes before push (Husky enforces).
-- [ ] Affected docs reviewed when a **task** completes — see the table in `docs/workflow-dev.md`.
+- [ ] Affected docs reviewed when a **task** completes — see the table in `.claude/rules/workflow.md`.
 
 ---
 
