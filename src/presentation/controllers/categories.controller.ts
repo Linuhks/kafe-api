@@ -93,6 +93,7 @@ export class CategoriesController {
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Categoria não encontrada' })
+  @ApiResponse({ status: 409, description: 'Categoria possui produtos vinculados' })
   async remove(@Param('id') id: string): Promise<void> {
     const result = await this.deleteCategory.execute(id);
     if (result.isLeft()) throw result.value;
