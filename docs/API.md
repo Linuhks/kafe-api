@@ -6,7 +6,7 @@ The endpoint reference is **generated from the code** — don't duplicate it her
 - **OpenAPI JSON**: `http://localhost:3333/api/v1/docs-json` (this is what `kafe-web` feeds to Orval)
 - **Behavior and business rules**: [`openspec/specs/`](../openspec/specs/) (index in [`business-rules.md`](./business-rules.md))
 
-Endpoints, DTOs, auth requirements and error codes live in the controllers' Swagger decorators (`@ApiOperation`, `@ApiResponse`, `@Roles`). Changing an endpoint means updating those decorators — that *is* the documentation update.
+Endpoints, DTOs, auth requirements and error codes live in the controllers' Swagger decorators (`@ApiOperation`, `@ApiResponse`, `@Roles`). Changing an endpoint means updating those decorators — that *is* the documentation update. `test/controllers/swagger.e2e.spec.ts` fails if an operation has no summary or 2xx response, or a protected route has no documented 401.
 
 Below are only the cross-cutting conventions that Swagger doesn't express well.
 

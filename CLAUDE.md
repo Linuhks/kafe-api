@@ -87,6 +87,7 @@ Implement the rules, don't redefine them. If code and spec disagree, that's a bu
 
 - Vitest only picks up unit specs under `src/application/use-cases/`, `src/domain/errors/`, and `src/presentation/filters/` (see `vitest.config.ts`).
 - Fakes live in `test/repositories/` (`InMemory*Repository` extending the abstract interface, public `items` array for assertions), imported via `@test/repositories/...`.
+- `test/controllers/swagger.e2e.spec.ts` enforces that every route has `@ApiOperation`, a 2xx `@ApiResponse`, and a 401 when it needs a bearer token.
 - Each E2E suite creates a fresh `kafe_test_<uuid>` database, migrates it, boots the full `AppModule`, and drops the DB on teardown even when tests fail. Requires `CREATEDB` privilege and PostgreSQL ≥ 13.
 
 ## API
