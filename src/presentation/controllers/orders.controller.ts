@@ -8,6 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { AllowAnonymous, UserSession } from '@thallesp/nestjs-better-auth';
 import { IsDateString, IsEnum, IsOptional } from 'class-validator';
+import { CancelMyOrderUseCase } from '../../application/use-cases/orders/cancel-my-order.use-case';
 import { CreateOrderUseCase } from '../../application/use-cases/orders/create-order.use-case';
 import { GetBaristaQueueUseCase } from '../../application/use-cases/orders/get-barista-queue.use-case';
 import { GetMyOrdersUseCase } from '../../application/use-cases/orders/get-my-orders.use-case';
@@ -51,6 +52,7 @@ export class OrdersController {
     private readonly updateOrderStatus: UpdateOrderStatusUseCase,
     private readonly getBaristaQueue: GetBaristaQueueUseCase,
     private readonly getMyOrders: GetMyOrdersUseCase,
+    private readonly cancelMyOrder: CancelMyOrderUseCase,
   ) {}
 
   @Post()
@@ -166,6 +168,20 @@ export class OrdersController {
     @CurrentUser() user: UserSession<Auth> | undefined,
   ): Promise<Order> {
     const result = await this.updateOrderStatus.execute(id, dto.status, user?.user.id);
+    if (result.isLeft()) throw result.value;
+    return result.value;
+  }
+
+  @Post(':id/cancel')
+  @HttpCode(200)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Cliente cancela o próprio pedido enquanto RECEIVED' })
+  @ApiResponse({ status: 200, type: OrderResponseDto })
+  @ApiResponse({ status: 400, description: 'Pedido não está mais em RECEIVED' })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  @ApiResponse({ status: 404, description: 'Pedido não encontrado' })
+  async cancel(@Param('id') id: string, @CurrentUser() user: UserSession<Auth>): Promise<Order> {
+    const result = await this.cancelMyOrder.execute(id, user.user.id);
     if (result.isLeft()) throw result.value;
     return result.value;
   }

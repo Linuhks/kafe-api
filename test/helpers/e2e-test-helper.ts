@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { BadRequestException, type INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { THROTTLER_OPTIONS } from '@nestjs/throttler/dist/throttler.constants';
 import { ValidationError } from 'class-validator';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
@@ -49,7 +50,11 @@ export class E2ETestHelper {
 
     const moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      // the global 10 req/min limit is per client IP; suites send far more than that from one address
+      .overrideProvider(THROTTLER_OPTIONS)
+      .useValue({ throttlers: [{ ttl: 60_000, limit: 100_000 }] })
+      .compile();
 
     this.app = moduleFixture.createNestApplication({ bodyParser: false });
     this.app.setGlobalPrefix('api/v1');

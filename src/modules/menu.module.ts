@@ -53,8 +53,9 @@ import { ProductsController } from '../presentation/controllers/products.control
     },
     {
       provide: DeleteCategoryUseCase,
-      useFactory: (repo: ICategoryRepository) => new DeleteCategoryUseCase(repo),
-      inject: [ICategoryRepository],
+      useFactory: (categoryRepo: ICategoryRepository, productRepo: IProductRepository) =>
+        new DeleteCategoryUseCase(categoryRepo, productRepo),
+      inject: [ICategoryRepository, IProductRepository],
     },
     {
       provide: CreateProductUseCase,

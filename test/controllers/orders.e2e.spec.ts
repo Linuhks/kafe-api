@@ -177,4 +177,121 @@ describe('OrdersController (e2e)', () => {
       expect(order.body.status).toBe('RECEIVED');
     });
   });
+
+  describe('POST /api/v1/orders/:id/cancel', () => {
+    let cancelProductId: string;
+    let cancelIngredientId: string;
+    let otherClientToken: string;
+
+    const server = () => helper.app.getHttpServer();
+    const auth = (token: string) => ({ Authorization: `Bearer ${token}` });
+
+    const stockOf = async (): Promise<string> => {
+      const res = await request(server()).get(`/api/v1/inventory/${cancelIngredientId}`).set(auth(adminToken));
+      return res.body.currentStock as string;
+    };
+    const createOrder = async (token?: string): Promise<string> => {
+      const req = request(server()).post('/api/v1/orders');
+      if (token) req.set(auth(token));
+      const res = await req.send({ clientName: 'Cancel test', items: [{ productId: cancelProductId, quantity: 1 }] });
+      return res.body.id as string;
+    };
+    const setStatus = (id: string, status: string) =>
+      request(server()).patch(`/api/v1/orders/${id}/status`).set(auth(baristaToken)).send({ status });
+    const cancel = (id: string, token?: string) => {
+      const req = request(server()).post(`/api/v1/orders/${id}/cancel`);
+      return token ? req.set(auth(token)) : req;
+    };
+    const statusOf = async (id: string): Promise<string> => {
+      const res = await request(server()).get(`/api/v1/orders/${id}`).set(auth(adminToken));
+      return res.body.status as string;
+    };
+
+    beforeAll(async () => {
+      otherClientToken = await helper.createUserAndLogin({
+        email: 'other-client@orders.com',
+        password: 'OtherPass1234!',
+        name: 'Other Client',
+        role: 'CLIENT',
+      });
+      const cat = await request(server()).post('/api/v1/categories').set(auth(adminToken)).send({ name: 'Cancel drinks' });
+      const prod = await request(server())
+        .post('/api/v1/products')
+        .set(auth(adminToken))
+        .send({ categoryId: cat.body.id, name: 'Cancel latte', price: '6.00' });
+      cancelProductId = prod.body.id as string;
+      const ing = await request(server())
+        .post('/api/v1/inventory')
+        .set(auth(adminToken))
+        .send({ name: 'Cancel milk', unit: 'ml', currentStock: '100.000', minimumStock: '1.000' });
+      cancelIngredientId = ing.body.id as string;
+      await request(server())
+        .post(`/api/v1/products/${cancelProductId}/ingredients`)
+        .set(auth(adminToken))
+        .send({ ingredientId: cancelIngredientId, quantity: '10.000' });
+    });
+
+    it('owner cancels a RECEIVED order and stock is unchanged', async () => {
+      const id = await createOrder(clientToken);
+
+      const res = await cancel(id, clientToken);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toMatchObject({ id, status: 'CANCELLED' });
+      expect(await stockOf()).toBe('100.000');
+    });
+
+    it("another user's order returns 404 and stays unchanged", async () => {
+      const id = await createOrder(clientToken);
+
+      expect((await cancel(id, otherClientToken)).status).toBe(404);
+      expect(await statusOf(id)).toBe('RECEIVED');
+    });
+
+    it('anonymous order returns 404 and stays unchanged', async () => {
+      const id = await createOrder();
+
+      expect((await cancel(id, clientToken)).status).toBe(404);
+      expect(await statusOf(id)).toBe('RECEIVED');
+    });
+
+    it('returns 401 without a token', async () => {
+      const id = await createOrder(clientToken);
+
+      expect((await cancel(id)).status).toBe(401);
+      expect(await statusOf(id)).toBe('RECEIVED');
+    });
+
+    it.each([
+      ['IN_PREPARATION', ['IN_PREPARATION']],
+      ['READY', ['IN_PREPARATION', 'READY']],
+      ['DELIVERED', ['IN_PREPARATION', 'READY', 'DELIVERED']],
+      ['CANCELLED', ['CANCELLED']],
+    ])('rejects cancelling a %s order with 400 and leaves it unchanged', async (expected, steps) => {
+      const id = await createOrder(clientToken);
+      for (const step of steps) expect((await setStatus(id, step)).status).toBe(200);
+
+      expect((await cancel(id, clientToken)).status).toBe(400);
+      expect(await statusOf(id)).toBe(expected);
+    });
+
+    it('concurrent client cancel and barista start yield one winner and consistent stock', async () => {
+      const before = Number(await stockOf());
+      const id = await createOrder(clientToken);
+
+      const [cancelRes, startRes] = await Promise.all([cancel(id, clientToken), setStatus(id, 'IN_PREPARATION')]);
+
+      const finalStatus = await statusOf(id);
+      if (cancelRes.status === 200) {
+        expect(startRes.status).not.toBe(200);
+        expect(finalStatus).toBe('CANCELLED');
+        expect(Number(await stockOf())).toBe(before);
+      } else {
+        expect([400, 409]).toContain(cancelRes.status);
+        expect(startRes.status).toBe(200);
+        expect(finalStatus).toBe('IN_PREPARATION');
+        expect(Number(await stockOf())).toBe(before - 10);
+      }
+    });
+  });
 });

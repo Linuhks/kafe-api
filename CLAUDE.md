@@ -23,7 +23,7 @@ When a **task** is complete (not subtask), review and update affected docs befor
 ## Commands
 
 ```bash
-pnpm start:dev                       # dev server with hot reload → http://localhost:3000/api/v1
+pnpm start:dev                       # dev server with hot reload → http://localhost:3333/api/v1
 pnpm test                            # unit tests
 pnpm test -- path/to/file.spec.ts    # single unit test file
 pnpm test:e2e                        # E2E suites (requires docker compose up -d)
@@ -70,7 +70,17 @@ Non-negotiable patterns:
 - **Every use case has a sibling `.spec.ts`** tested against in-memory fakes — no DB, no NestJS bootstrap.
 - **No `any`** — explicit types, or `unknown` + narrowing.
 
-Business rules (order state machine, stock deduction on `RECEIVED → IN_PREPARATION`, role permissions) are specified in [`docs/business-rules.md`](docs/business-rules.md) — implement them, don't redefine them.
+## Source of truth
+
+| What | Where | Authority |
+|---|---|---|
+| Behavior / business rules (order state machine, stock deduction and refund, role permissions) | `openspec/specs/<capability>/spec.md` | **Normative.** Changed only through an OpenSpec change (`/opsx:propose` → `/opsx:archive` syncs the delta specs). |
+| Index of the specs | [`docs/business-rules.md`](docs/business-rules.md) | Links only — no rules are restated there. Add a row when a new spec is created. |
+| Endpoints, modules, architecture, how-to | `docs/API.md`, `docs/modules.md`, `docs/architecture.md`, `docs/code-guide.md` | Describe the code; the code wins on conflict. |
+| Architectural invariants and workflow | this file + `src/<layer>/CLAUDE.md` + `docs/workflow-dev.md` | Rules for working in the repo. |
+| Task tracking | `openspec/changes/<name>/tasks.md` | The only tracker. |
+
+Implement the rules, don't redefine them. If code and spec disagree, that's a bug in one of them — surface it, don't pick silently.
 
 ## Testing
 
