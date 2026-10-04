@@ -42,6 +42,8 @@ git add <changed files>
 git commit -m "feat(scope): description of what was done"
 ```
 
+> **Hooks:** pre-commit runs `pnpm check`.
+>
 > **Note:** `git push` runs the pre-push Husky hook, which executes both `pnpm run test` and `pnpm run test:e2e` before the push is allowed. A running PostgreSQL instance is required for the e2e suite to pass. Use `git push --no-verify` only when you have a deliberate reason to skip the gate.
 
 Then move on to the next subtask or task and repeat.
@@ -80,9 +82,23 @@ When **all subtasks of a task are done** (task complete, not subtask), review wh
 | `docs/business-rules.md` | Only to add a link when a new spec is created — rules themselves live in `openspec/specs/` |
 | `docs/code-guide.md` | New naming convention, new file type, or changed dev command |
 | `docs/API.md` | New or changed endpoint, DTO, or auth requirement |
+| `.claude/rules/` | New project-wide convention, testing rule, or workflow change |
 | `src/<layer>/CLAUDE.md` | New invariant or pattern specific to that layer |
 
 If nothing changed that affects the docs, no update is needed — the check itself is the requirement, not the update.
+
+---
+
+## Opening a PR (last step)
+
+The flow ends with a pull request — never push straight to `master`.
+
+1. Work on a branch off `master`, named `<type>/<short-kebab-description>` (e.g. `fix/order-cancel-stock-refund`, `feat/inventory-restock`). If you are on `master`, branch before the first commit.
+2. When all tasks are done and docs are updated, run the full gate (`pnpm lint`, `pnpm check`, `pnpm test`) **and** `pnpm test:e2e` (requires `docker compose up -d`), then `git push -u origin <branch>` — the pre-push hook runs unit and E2E tests again.
+3. Open the PR against `master` with `gh pr create`:
+   - Title: the Conventional Commit subject of the change (`fix(orders): ...`).
+   - Body: a short summary of what changed and why, how it was verified (unit + E2E suites run), and the OpenSpec change name if there is one.
+4. Merge happens on GitHub after review; archive the OpenSpec change (`/opsx:archive`) once it is merged.
 
 ---
 
@@ -120,41 +136,8 @@ git commit -m "feat(inventory): add RestockIngredientUseCase"
 Implement 2.2  →  gate  →  commit
   ↓
 ── Task 2 complete: gate  →  update docs  →  commit ──
+  ↓
+── All tasks done: push branch  →  open PR ──
 ```
 
 One commit per subtask, one commit per completed task. Each commit must leave the codebase in a working state.
-
----
-
-## Code standards
-
-### Use cases must have a spec file
-
-Every use case file must have a sibling test file:
-
-```
-create-order.use-case.ts      ← implementation
-create-order.use-case.spec.ts ← required
-```
-
-Tests use in-memory repositories — no database, no NestJS bootstrapping. See [Code Guide](./code-guide.md) for the pattern.
-
-### No `any`
-
-Never use `any`. Always declare explicit types:
-
-```typescript
-// ❌
-const result: any = await repo.findById(id);
-
-// ✅
-const result: Order | null = await repo.findById(id);
-```
-
-If the type is unknown (e.g. external error), use `unknown` and narrow it:
-
-```typescript
-error: (err: unknown) => {
-  const statusCode = err instanceof HttpException ? err.getStatus() : 500;
-}
-```

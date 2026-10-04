@@ -4,21 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Workflow
 
-**Before starting any feature, refactoring, or bug fix**, read [`docs/workflow-dev.md`](docs/workflow-dev.md). Non-trivial changes go through the OpenSpec flow: `/opsx:propose` → `/opsx:apply` → `/opsx:archive`, with artifacts under `openspec/changes/<name>/`.
-
-The mandatory gate after every **subtask** and every **task** — run in order:
-
-```bash
-pnpm lint    # Biome linter with auto-fix
-pnpm check   # Biome full check (format + lint) with auto-fix
-pnpm test    # Vitest unit tests
-```
-
-All three must pass before committing. One commit per subtask, one commit per completed task.
-
-Husky hooks: pre-commit runs `pnpm check`; pre-push runs `pnpm test` **and** `pnpm test:e2e` — pushing requires PostgreSQL running (`docker compose up -d`).
-
-When a **task** is complete (not subtask), review and update affected docs before committing — see [`docs/workflow-dev.md`](docs/workflow-dev.md) for the full table.
+Rules in [`.claude/rules/`](.claude/rules/) (`workflow.md`, `code-style.md`, `testing.md`) are loaded automatically — follow them for every feature, refactor and bug fix. Non-trivial changes go through the OpenSpec flow: `/opsx:propose` → `/opsx:apply` → `/opsx:archive`, with artifacts under `openspec/changes/<name>/`.
 
 ## Commands
 
@@ -59,17 +45,6 @@ test/
 
 Feature modules in `src/modules/` (`auth`, `users`, `menu`, `orders`, `inventory`, `dashboard` — `src/modules/<name>.module.ts`) wire everything via NestJS DI: controller → use cases → repository interface → Drizzle implementation.
 
-Non-negotiable patterns:
-
-- **Either, never throw**: use cases return `Either<DomainError, T>` (`src/domain/either.ts`); domain errors are returned as `left(...)`. Controllers unwrap with `if (result.isLeft()) throw result.value;` — `HttpExceptionFilter` maps `DomainError.statusCode`/`code` to the HTTP response. When composing use cases, propagate the `Left` as-is, never re-wrap.
-- **Use cases are framework-free**: no `@Injectable()`, no `@nestjs/*` imports. Modules wire them with `useFactory`:
-  ```typescript
-  { provide: CreateUserUseCase, useFactory: (repo) => new CreateUserUseCase(repo), inject: [IUserRepository] }
-  ```
-- **Repository interfaces are `abstract class`** (NestJS needs a runtime DI token), registered as `{ provide: IUserRepository, useClass: DrizzleUserRepository }`.
-- **Every use case has a sibling `.spec.ts`** tested against in-memory fakes — no DB, no NestJS bootstrap.
-- **No `any`** — explicit types, or `unknown` + narrowing.
-
 ## Source of truth
 
 | What | Where | Authority |
@@ -77,16 +52,10 @@ Non-negotiable patterns:
 | Behavior / business rules (order state machine, stock deduction and refund, role permissions) | `openspec/specs/<capability>/spec.md` | **Normative.** Changed only through an OpenSpec change (`/opsx:propose` → `/opsx:archive` syncs the delta specs). |
 | Index of the specs | [`docs/business-rules.md`](docs/business-rules.md) | Links only — no rules are restated there. Add a row when a new spec is created. |
 | Endpoints, modules, architecture, how-to | `docs/API.md`, `docs/modules.md`, `docs/architecture.md`, `docs/code-guide.md` | Describe the code; the code wins on conflict. |
-| Architectural invariants and workflow | this file + `src/<layer>/CLAUDE.md` + `docs/workflow-dev.md` | Rules for working in the repo. |
+| Architectural invariants and workflow | this file + `.claude/rules/` + `src/<layer>/CLAUDE.md` | Rules for working in the repo. |
 | Task tracking | `openspec/changes/<name>/tasks.md` | The only tracker. |
 
 Implement the rules, don't redefine them. If code and spec disagree, that's a bug in one of them — surface it, don't pick silently.
-
-## Testing
-
-- Vitest only picks up unit specs under `src/application/use-cases/`, `src/domain/errors/`, and `src/presentation/filters/` (see `vitest.config.ts`).
-- Fakes live in `test/repositories/` (`InMemory*Repository` extending the abstract interface, public `items` array for assertions), imported via `@test/repositories/...`.
-- Each E2E suite creates a fresh `kafe_test_<uuid>` database, migrates it, boots the full `AppModule`, and drops the DB on teardown even when tests fail. Requires `CREATEDB` privilege and PostgreSQL ≥ 13.
 
 ## API
 

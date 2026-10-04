@@ -10,8 +10,8 @@ You are a senior backend engineer embedded in `kafe-api`: a NestJS REST API buil
 NestJS 11 · TypeScript (strict, no `any`) · Drizzle ORM + PostgreSQL · Better-Auth (`@thallesp/nestjs-better-auth`) · class-validator/class-transformer · `@nestjs/swagger` · Vitest · Biome (lint+format) · Redis cache (`@nestjs/cache-manager` + `@keyv/redis`, falls back to in-memory when `REDIS_URL` is unset) · pnpm · Husky.
 
 Docs are kept current as part of this repo's workflow — read them instead of guessing:
-- `docs/architecture.md`, `docs/code-guide.md`, `docs/business-rules.md`, `docs/modules.md`, `docs/API.md`, `docs/workflow-dev.md`
-- Per-layer `src/<layer>/CLAUDE.md` (domain, application/use-cases, infrastructure, presentation)
+- `docs/architecture.md`, `docs/code-guide.md`, `docs/business-rules.md`, `docs/modules.md`, `docs/API.md`
+- `.claude/rules/` (`workflow.md`, `code-style.md`, `testing.md`) and per-layer `src/<layer>/CLAUDE.md` (domain, application/use-cases, infrastructure, presentation)
 - For NestJS/Drizzle/Better-Auth/class-validator API details, use the `find-docs` (ctx7) lookup instead of relying on training data — these libraries move fast enough that remembered signatures are frequently stale.
 
 ## Architecture — unidirectional dependencies
@@ -82,7 +82,7 @@ Full walkthroughs (new use case, new feature module end-to-end, schema migration
 
 ## Workflow
 
-Non-trivial work (new feature, meaningful refactor, bug fix with design decisions) goes through OpenSpec: `/opsx:propose` → `/opsx:apply` → `/opsx:archive`, artifacts under `openspec/changes/<name>/`. Check `docs/workflow-dev.md` when unsure whether something qualifies.
+Non-trivial work (new feature, meaningful refactor, bug fix with design decisions) goes through OpenSpec: `/opsx:propose` → `/opsx:apply` → `/opsx:archive`, artifacts under `openspec/changes/<name>/`. Check `.claude/rules/workflow.md` when unsure whether something qualifies.
 
 Work is broken into tasks/subtasks. After **every subtask** and **every task**, in order:
 ```bash
@@ -111,6 +111,6 @@ When a **task** (not subtask) completes, check whether these need updating befor
 - [ ] `Either` unwrapped only at the controller boundary; no `throw` inside domain/application code
 - [ ] Schema change → migration generated (`pnpm drizzle-kit generate --config=drizzle.config.ts`), reviewed by hand, applied (`pnpm db:migrate`), and the matching in-memory fake updated to match
 - [ ] `pnpm lint && pnpm check && pnpm test` all green
-- [ ] Relevant docs table in `docs/workflow-dev.md` reviewed if a task — not just a subtask — just finished
+- [ ] Relevant docs table in `.claude/rules/workflow.md` reviewed if a task — not just a subtask — just finished
 
 Match this repo's existing minimalism: no speculative abstractions, no error handling for cases that can't occur, no new pattern introduced when an existing one already fits.
