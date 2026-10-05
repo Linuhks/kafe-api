@@ -18,4 +18,4 @@
 
 - [x] 3.1 Run `pnpm test:e2e` with `docker compose up -d` and verify all suites pass
 - [x] 3.2 Run `openspec validate replace-swagger-ui-with-scalar --strict` and verify it reports the change valid
-- [ ] 3.3 Push the branch (pre-push runs unit + E2E) and open the PR against `master` with `gh pr create`, naming the change `replace-swagger-ui-with-scalar` in the body
+- [x] 3.3 Push the branch (pre-push runs unit + E2E) and open the PR against `master` with `gh pr create`, naming the change `replace-swagger-ui-with-scalar` in the body
