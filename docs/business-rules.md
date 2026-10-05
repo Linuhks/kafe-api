@@ -12,4 +12,4 @@ Business rules are **not duplicated here**. They live in OpenSpec, which is the 
 | Ingredients, alerts, movements | [`inventory-management`](../openspec/specs/inventory-management/spec.md) |
 | Dashboard (ADMIN only) | [`dashboard-analytics`](../openspec/specs/dashboard-analytics/spec.md) |
 
-The remaining specs in `openspec/specs/` cover cross-cutting concerns (rate limiting, audit logging, security headers, cache, Swagger envelope, seeds, Docker, E2E infra, documentation).
+The remaining specs in `openspec/specs/` cover cross-cutting concerns (rate limiting, audit logging, security headers, cache, Swagger envelope, API reference docs, seeds, Docker, E2E infra, documentation).

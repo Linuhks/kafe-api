@@ -3,7 +3,7 @@
 REST API for a coffee shop management system built with NestJS + Clean Architecture.
 
 - **Base URL**: `/api/v1`
-- **Swagger UI**: `/api/v1/docs`
+- **API reference (Scalar)**: `/api/v1/docs` — OpenAPI spec at `/api/v1/docs-json`
 - **Auth**: Bearer token (obtained via `POST /api/v1/auth/login`)
 
 ## Roles

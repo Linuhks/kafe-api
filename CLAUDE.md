@@ -59,7 +59,7 @@ Implement the rules, don't redefine them. If code and spec disagree, that's a bu
 
 ## API
 
-- Base path: `/api/v1` — Swagger docs at `/api/v1/docs`
+- Base path: `/api/v1` — Scalar API docs at `/api/v1/docs` (OpenAPI JSON at `/api/v1/docs-json`)
 - Login: `POST /api/v1/auth/login` → `{ token, user }`, then `Authorization: Bearer <token>`
 - Sign-up is a Better-Auth route **without** the `/v1` prefix: `POST /api/auth/sign-up/email` — always creates a `CLIENT`; role promotion happens via SQL or admin endpoint
 - Controller decorators: `@Roles(['ADMIN'])`, `@AllowAnonymous()`, `@CurrentUser()`

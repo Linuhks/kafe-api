@@ -33,7 +33,7 @@ Built with Clean Architecture, separating domain, use cases, infrastructure, and
 
 **Validation and documentation**
 - class-validator / class-transformer
-- Swagger / OpenAPI (`@nestjs/swagger`)
+- Swagger / OpenAPI (`@nestjs/swagger`) with Scalar as the docs UI (`@scalar/nestjs-api-reference`)
 
 **Security**
 - Helmet (HTTP headers)
@@ -91,7 +91,7 @@ pnpm run start:prod
 ```
 
 API available at `http://localhost:3333/api/v1`.  
-Swagger docs at `http://localhost:3333/api/v1/docs`.
+API docs (Scalar) at `http://localhost:3333/api/v1/docs`; OpenAPI JSON at `http://localhost:3333/api/v1/docs-json`. The page loads Scalar from a CDN, so it needs internet access in the browser.
 
 ## Database
 
