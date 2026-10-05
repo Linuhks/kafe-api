@@ -30,7 +30,7 @@ Express path-prefix matching is by segment, so it matches `/api/v1/docs` and `/a
 *Alternative:* a Nest controller. Rejected: it would need `@AllowAnonymous()` and a body that bypasses the response interceptors and the audit interceptor, for a static page.
 
 **3. Per-request nonce CSP on the docs route only.**
-The handler generates a nonce with `crypto.randomBytes(16)`, sets `Content-Security-Policy` for that response (overriding helmet's header), and passes the same nonce to the plugin. `script-src` is the nonce plus `https://cdn.jsdelivr.net`. `style-src` keeps `'unsafe-inline'` because the bundle injects styles at runtime; `font-src`, `img-src` and `connect-src` are widened just enough for the page and its "try it" client (`connect-src 'self' https://proxy.scalar.com`).
+The handler generates a nonce with `crypto.randomBytes(16)`, sets `Content-Security-Policy` for that response (overriding helmet's header), and passes the same nonce to the plugin. `script-src` is the nonce plus `https://cdn.jsdelivr.net`. `style-src` keeps `'unsafe-inline'` because the bundle injects styles at runtime; `font-src` allows `https://fonts.scalar.com` (the only extra origin a real-browser run showed the page needs; Google Fonts origins were removed as unused), and `connect-src 'self' https://proxy.scalar.com` covers the "try it" client.
 *Alternatives:* (a) mount the route before `helmet()` so it has no CSP: rejected, drops all headers on the page. (b) `'unsafe-inline'` in `script-src`: rejected, defeats the CSP. (c) Loosen helmet's CSP globally: rejected, the relaxation would apply to API responses.
 
 **4. Theme and options.**
