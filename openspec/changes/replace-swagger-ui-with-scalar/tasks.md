@@ -2,7 +2,7 @@
 
 ## 1. Dependency
 
-- [ ] 1.1 Add `@scalar/nestjs-api-reference` with `pnpm add` and verify it appears under `dependencies` in `package.json` and `pnpm install --frozen-lockfile` succeeds
+- [x] 1.1 Add `@scalar/nestjs-api-reference` with `pnpm add` and verify it appears under `dependencies` in `package.json` and `pnpm install --frozen-lockfile` succeeds
 
 ## 2. Serve the API reference with Scalar
 
