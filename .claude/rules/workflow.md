@@ -19,6 +19,16 @@ Task 2 — Another feature
 
 ---
 
+## Before you code: check current docs
+
+Before implementing a task (and before the first subtask of it), look up the up-to-date documentation of every library or framework the task touches (NestJS, Drizzle, Better-Auth, class-validator, Vitest, etc.) using the **Context7 MCP** (`.mcp.json`, no manual install). Don't rely on memory — APIs change between versions.
+
+1. `resolve-library-id` for the library, then `query-docs` (or `get-library-docs`) with the specific topic you need.
+2. Match the version in `package.json`; if the docs differ from what the repo already does, follow the docs and surface the discrepancy.
+3. Skip it only for changes that touch no external API (pure domain logic, renames, doc edits).
+
+---
+
 ## Quality gate
 
 The gate runs after **every subtask** and after **every task** (when all its subtasks are done):
