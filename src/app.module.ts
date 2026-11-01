@@ -6,6 +6,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { BetterAuthModule } from './infrastructure/auth/better-auth.module';
 import { DrizzleModule } from './infrastructure/db/drizzle.module';
+import { throttleLimit } from './infrastructure/throttle/throttle-limit';
 import { AuthModule } from './modules/auth.module';
 import { DashboardModule } from './modules/dashboard.module';
 import { InventoryModule } from './modules/inventory.module';
@@ -28,7 +29,7 @@ import { UsersModule } from './modules/users.module';
         } as never;
       },
     }),
-    ThrottlerModule.forRoot([{ ttl: 60_000, limit: 10 }]),
+    ThrottlerModule.forRoot([{ ttl: 60_000, limit: throttleLimit('THROTTLE_LIMIT', 10) }]),
     DrizzleModule,
     BetterAuthModule,
     AuthModule,
