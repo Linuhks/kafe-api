@@ -2,7 +2,7 @@
 
 ## 1. Spec and dead code
 
-- [ ] 1.1 Make sure #10 is merged and this branch is up to date with `master` (`swagger-response-envelope` must have a `## Purpose`). Update that Purpose in `openspec/specs/swagger-response-envelope/spec.md` to describe the real contract: no global envelope; single objects and arrays are returned and documented unwrapped; only paginated lists use `{ data, pagination }`.
+- [x] 1.1 Make sure #10 is merged and this branch is up to date with `master` (`swagger-response-envelope` must have a `## Purpose`). Update that Purpose in `openspec/specs/swagger-response-envelope/spec.md` to describe the real contract: no global envelope; single objects and arrays are returned and documented unwrapped; only paginated lists use `{ data, pagination }`.
 - [ ] 1.2 Delete `src/presentation/interceptors/transform.interceptor.ts` (confirm there are no importers with `grep -rn transform.interceptor src test`). Remove its line from `src/presentation/CLAUDE.md`. Verify with `pnpm lint && pnpm check && pnpm test` and that `pnpm build` succeeds.
 
 ## 2. Tests and verification
