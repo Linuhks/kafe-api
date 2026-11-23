@@ -3,7 +3,7 @@
 ## 1. Enforce the minimum on admin creation
 
 - [x] 1.1 Change `CreateUserDto.password` to `@MinLength(12)`, with `@ApiProperty` `minLength: 12`, a 12+ character example and a comment pointing to `minPasswordLength` in `better-auth.ts`. Check the class-validator docs on Context7 for the installed version. Verify with `pnpm lint && pnpm check && pnpm test`.
-- [ ] 1.2 Add E2E cases to `test/controllers/users.e2e.spec.ts` for `POST /api/v1/users`: 11 characters → 400 with no user created; 12 characters → 201 and login works; CLIENT → 403; no token → 401. Verify with `pnpm test:e2e` (requires `docker compose up -d`).
+- [x] 1.2 Add E2E cases to `test/controllers/users.e2e.spec.ts` for `POST /api/v1/users`: 11 characters → 400 with no user created; 12 characters → 201 and login works; CLIENT → 403; no token → 401. Verify with `pnpm test:e2e` (requires `docker compose up -d`).
 
 ## 2. Docs and gate
 
