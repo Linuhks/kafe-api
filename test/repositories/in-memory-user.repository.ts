@@ -4,6 +4,7 @@ import {
   IUserRepository,
   type UpdateUserData,
 } from '../../src/domain/repositories/user.repository';
+import type { Email } from '../../src/domain/value-objects/email';
 
 export class InMemoryUserRepository extends IUserRepository {
   items: User[] = [];
@@ -13,8 +14,8 @@ export class InMemoryUserRepository extends IUserRepository {
     return this.items.find((u) => u.id === id) ?? null;
   }
 
-  async findByEmail(email: string): Promise<User | null> {
-    return this.items.find((u) => u.email === email) ?? null;
+  async findByEmail(email: Email): Promise<User | null> {
+    return this.items.find((u) => u.email === email.value) ?? null;
   }
 
   async findAll(page: number, limit: number): Promise<{ data: User[]; total: number }> {
@@ -29,7 +30,7 @@ export class InMemoryUserRepository extends IUserRepository {
     const user = new User(
       `user-${++this.counter}`,
       data.name,
-      data.email,
+      data.email.value,
       data.role,
       true,
       new Date(),

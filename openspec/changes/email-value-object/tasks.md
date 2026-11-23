@@ -7,8 +7,8 @@
 
 ## 2. Use case and repositories
 
-- [ ] 2.1 Change `IUserRepository`: `CreateUserData.email: Email`, `findByEmail(email: Email)`. Update `DrizzleUserRepository` (writes and queries `email.value`) and `test/repositories/in-memory-user.repository.ts` to match. Check the Drizzle docs on Context7 for the installed version before touching the query.
-- [ ] 2.2 Update `CreateUserUseCase`: add an exported `CreateUserInput` with a raw `email: string`, build the `Email` and propagate `Left(InvalidEmailError)` as-is, then run the conflict check and create with the normalized value. Update the return type to `Either<InvalidEmailError | ConflictError, User>`. Extend `create-user.use-case.spec.ts`: invalid email → Left with nothing persisted; `  Ana@Example.com ` is stored as `ana@example.com`; a case-variant duplicate → `ConflictError`. Confirm `UsersController` still compiles with the DTO as input. Verify with `pnpm test`.
+- [x] 2.1 Change `IUserRepository`: `CreateUserData.email: Email`, `findByEmail(email: Email)`. Update `DrizzleUserRepository` (writes and queries `email.value`) and `test/repositories/in-memory-user.repository.ts` to match. Check the Drizzle docs on Context7 for the installed version before touching the query.
+- [x] 2.2 Update `CreateUserUseCase`: add an exported `CreateUserInput` with a raw `email: string`, build the `Email` and propagate `Left(InvalidEmailError)` as-is, then run the conflict check and create with the normalized value. Update the return type to `Either<InvalidEmailError | ConflictError, User>`. Extend `create-user.use-case.spec.ts`: invalid email → Left with nothing persisted; `  Ana@Example.com ` is stored as `ana@example.com`; a case-variant duplicate → `ConflictError`. Confirm `UsersController` still compiles with the DTO as input. Verify with `pnpm test`.
 
 ## 3. Data migration
 
