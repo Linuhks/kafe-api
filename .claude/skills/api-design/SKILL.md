@@ -174,8 +174,10 @@ Location: /api/v1/users/abc-123
 
 ### Response Envelope Variants
 
+In kafe-api, success bodies use Option B (no global envelope); only paginated lists return `{ data, pagination }` — see `.claude/rules/code-style.md`.
+
 ```typescript
-// Option A: Envelope with data wrapper (recommended for public APIs)
+// Option A: Envelope with data wrapper
 interface ApiResponse<T> {
   data: T;
   meta?: PaginationMeta;
