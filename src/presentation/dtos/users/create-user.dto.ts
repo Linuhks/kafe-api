@@ -11,9 +11,11 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty({ example: 'senha1234', minLength: 8 })
+  // Keep in sync with emailAndPassword.minPasswordLength in src/infrastructure/auth/better-auth.ts:
+  // this path hashes the password directly and never runs Better-Auth's sign-up check.
+  @ApiProperty({ example: 'senhaSegura2026', minLength: 12 })
   @IsString()
-  @MinLength(8)
+  @MinLength(12)
   password: string;
 
   @ApiPropertyOptional({ enum: ['ADMIN', 'BARISTA', 'CLIENT'], default: 'CLIENT' })
