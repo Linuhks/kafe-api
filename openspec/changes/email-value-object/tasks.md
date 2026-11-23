@@ -12,7 +12,7 @@
 
 ## 3. Data migration
 
-- [ ] 3.1 Generate a custom migration with `pnpm drizzle-kit generate --custom --name=normalize_user_email --config=drizzle.config.ts` and fill it with the collision-safe `UPDATE "user"` from design.md (check the column names against `auth-schema.ts`). Review the SQL and journal entry. Apply it locally with `pnpm db:migrate` against a DB that has one mixed-case user and one colliding pair, and confirm only the non-colliding row changed.
+- [x] 3.1 Generate a custom migration with `pnpm drizzle-kit generate --custom --name=normalize_user_email --config=drizzle.config.ts` and fill it with the collision-safe `UPDATE "user"` from design.md (check the column names against `auth-schema.ts`). Review the SQL and journal entry. Apply it locally with `pnpm db:migrate` against a DB that has one mixed-case user and one colliding pair, and confirm only the non-colliding row changed.
 
 ## 4. E2E
 
