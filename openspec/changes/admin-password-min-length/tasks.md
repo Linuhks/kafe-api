@@ -7,5 +7,5 @@
 
 ## 2. Docs and gate
 
-- [ ] 2.1 Confirm `docs/API.md` (already 12) and the Swagger annotation agree, and add the `auth-access-control` row wording to `docs/business-rules.md` if needed. Run the `security-review` skill on the diff.
-- [ ] 2.2 Run the full gate `pnpm lint`, `pnpm check`, `pnpm test`, `pnpm test:e2e` and confirm all pass.
+- [x] 2.1 Confirm `docs/API.md` (already 12) and the Swagger annotation agree, and add the `auth-access-control` row wording to `docs/business-rules.md` if needed. Run the `security-review` skill on the diff.
+- [x] 2.2 Run the full gate `pnpm lint`, `pnpm check`, `pnpm test`, `pnpm test:e2e` and confirm all pass.

@@ -4,7 +4,7 @@ Business rules are **not duplicated here**. They live in OpenSpec, which is the 
 
 | Area | Spec |
 |---|---|
-| Roles, server-assigned `role`/`isActive`, deactivated users | [`auth-access-control`](../openspec/specs/auth-access-control/spec.md) |
+| Roles, server-assigned `role`/`isActive`, deactivated users, 12-character password minimum | [`auth-access-control`](../openspec/specs/auth-access-control/spec.md) |
 | Order creation, status state machine, barista queue | [`order-lifecycle`](../openspec/specs/order-lifecycle/spec.md) |
 | Stock deduction, refund on cancel, atomicity, concurrency | [`order-stock-consistency`](../openspec/specs/order-stock-consistency/spec.md) |
 | Client cancels own order | [`client-order-cancellation`](../openspec/specs/client-order-cancellation/spec.md) |
