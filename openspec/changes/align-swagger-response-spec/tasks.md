@@ -13,4 +13,5 @@
 ## 3. Docs and gate
 
 - [x] 3.1 Update `docs/business-rules.md` ("Swagger envelope" → "Swagger response docs" in the cross-cutting list). Check `docs/API.md` and `docs/architecture.md` for envelope mentions.
-- [x] 3.2 Run the full gate (`pnpm lint`, `pnpm check`, `pnpm test`, `pnpm test:e2e`) and `openspec validate align-swagger-response-spec --strict`.
+- [x] 3.2 Isolate the response cache in `E2ETestHelper`: set `REDIS_URL` to `''` before importing `AppModule` (an empty runtime value wins over `.env`, and the app falls back to its per-instance in-memory cache) and restore it on teardown. Verify that `pnpm test:e2e products` passes twice in a row.
+- [x] 3.3 Run the full gate (`pnpm lint`, `pnpm check`, `pnpm test`, `pnpm test:e2e`) and `openspec validate align-swagger-response-spec --strict`.

@@ -17,6 +17,7 @@ export class E2ETestHelper {
   app!: INestApplication;
   private dbName!: string;
   private originalDatabaseUrl!: string;
+  private originalRedisUrl: string | undefined;
   private suitePool!: Pool;
 
   getDbName(): string {
@@ -46,6 +47,11 @@ export class E2ETestHelper {
     // Override DATABASE_URL before importing AppModule so Better-Auth's top-level
     // pool captures the suite URL at module-load time
     process.env.DATABASE_URL = suiteUrl;
+    // Use the per-app in-memory cache instead of the shared Redis: cached responses
+    // (e.g. the product list, 60s TTL) would otherwise leak across suites and runs.
+    // An empty string, not delete: ConfigModule would refill a missing key from .env.
+    this.originalRedisUrl = process.env.REDIS_URL;
+    process.env.REDIS_URL = '';
     const { AppModule } = await import('../../src/app.module');
 
     const moduleFixture = await Test.createTestingModule({
@@ -94,6 +100,8 @@ export class E2ETestHelper {
     }
 
     process.env.DATABASE_URL = this.originalDatabaseUrl;
+    if (this.originalRedisUrl === undefined) delete process.env.REDIS_URL;
+    else process.env.REDIS_URL = this.originalRedisUrl;
 
     const adminUrl = this.getAdminUrl(this.originalDatabaseUrl);
     const adminPool = new Pool({ connectionString: adminUrl });

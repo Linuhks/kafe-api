@@ -31,6 +31,7 @@ None.
 
 ### Modified Capabilities
 - `swagger-response-envelope`: rewritten to describe the actual contract (no global envelope; exact wire shape documented per endpoint).
+- `e2e-test-infrastructure`: suites must not share the response cache. The new body-shape test exposed this: the product list cached in the shared Redis (60s TTL) leaked into the next run's "empty list on fresh database" test and blocked the push.
 
 ## Impact
 
