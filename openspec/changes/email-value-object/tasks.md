@@ -21,4 +21,4 @@
 ## 5. Docs and gate
 
 - [x] 5.1 Update `src/domain/CLAUDE.md` (a value objects section: `value-objects/`, `static create` returning `Either`, always valid, entity fields stay primitives), `docs/architecture.md` (value objects in the domain layer), `docs/modules.md` (`Email`, `InvalidEmailError`), `.claude/rules/testing.md` (new Vitest include path), and `docs/business-rules.md` (index row for `user-email`). Run the `security-review` skill on the diff.
-- [ ] 5.2 Run the full gate `pnpm lint`, `pnpm check`, `pnpm test`, `pnpm test:e2e` and confirm all pass. In the PR body, list the query to find leftover case-colliding rows: `SELECT lower(trim(email)), array_agg(email) FROM "user" GROUP BY 1 HAVING count(*) > 1;`.
+- [x] 5.2 Run the full gate `pnpm lint`, `pnpm check`, `pnpm test`, `pnpm test:e2e` and confirm all pass. In the PR body, list the query to find leftover case-colliding rows: `SELECT lower(trim(email)), array_agg(email) FROM "user" GROUP BY 1 HAVING count(*) > 1;`.
