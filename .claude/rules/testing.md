@@ -4,7 +4,7 @@
 
 - Every use case has a sibling `.spec.ts` (`create-order.use-case.ts` → `create-order.use-case.spec.ts`). Not optional.
 - Specs run against in-memory fakes — no database, no NestJS bootstrap.
-- Vitest only picks up specs under `src/application/use-cases/`, `src/domain/errors/` and `src/presentation/filters/` (see `vitest.config.ts`).
+- Vitest only picks up specs under `src/application/use-cases/`, `src/domain/errors/`, `src/domain/value-objects/`, `src/infrastructure/throttle/` and `src/presentation/filters/` (see `vitest.config.ts`). Every value object has a sibling `.spec.ts`.
 - Fakes live in `test/repositories/` (`InMemory*Repository` extending the abstract interface, public `items` array for assertions) and are imported via `@test/repositories/...`. When `schema.ts` changes, mirror it in the matching fake.
 - A passing unit test proves the use case's logic, not that controller, DB and auth guard are wired together.
 
