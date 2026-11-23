@@ -3,6 +3,7 @@ import {
   ConflictError,
   DomainError,
   InsufficientStockError,
+  InvalidEmailError,
   InvalidOrderTransitionError,
   NotFoundError,
 } from './domain.error';
@@ -89,5 +90,18 @@ describe('InsufficientStockError', () => {
 
   it('should set name to InsufficientStockError', () => {
     expect(new InsufficientStockError('X').name).toBe('InsufficientStockError');
+  });
+});
+
+describe('InvalidEmailError', () => {
+  it('should produce correct message, code, and statusCode without echoing the input', () => {
+    const error = new InvalidEmailError();
+    expect(error.message).toBe('Invalid email address');
+    expect(error.code).toBe('INVALID_EMAIL');
+    expect(error.statusCode).toBe(400);
+  });
+
+  it('should be an instance of DomainError', () => {
+    expect(new InvalidEmailError()).toBeInstanceOf(DomainError);
   });
 });

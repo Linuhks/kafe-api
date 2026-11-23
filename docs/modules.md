@@ -14,13 +14,14 @@ Manages system users. Used by the ADMIN for account administration.
 
 | Use Case | File | Description |
 |---|---|---|
-| `CreateUserUseCase` | `users/create-user.use-case.ts` | Creates a new user |
+| `CreateUserUseCase` | `users/create-user.use-case.ts` | Creates a new user (validates and normalizes the email via `Email`; 400 `INVALID_EMAIL`, 409 on a case-insensitive duplicate) |
 | `ListUsersUseCase` | `users/list-users.use-case.ts` | Lists all users |
 | `GetUserUseCase` | `users/get-user.use-case.ts` | Fetches a user by ID |
 | `UpdateUserUseCase` | `users/update-user.use-case.ts` | Updates user data |
 | `DeleteUserUseCase` | `users/delete-user.use-case.ts` | Removes a user |
 
 **Entities:** `User`  
+**Value objects:** `Email` (`src/domain/value-objects/email.ts`)  
 **Repository:** `IUserRepository` → `DrizzleUserRepository`  
 **Controller:** `UsersController` (`src/presentation/controllers/users.controller.ts`)
 
