@@ -1,3 +1,11 @@
+# project-documentation Specification
+
+## Purpose
+
+Documentação técnica voltada para desenvolvedores na pasta `docs/`: arquitetura e fluxo de requisição, guia de código e comandos, índice das specs de regras de negócio e índice de módulos com seus use cases.
+
+## Requirements
+
 ### Requirement: Pasta docs/ criada na raiz do projeto
 O projeto SHALL conter uma pasta `docs/` na raiz com arquivos de documentação técnica e de negócio voltados para desenvolvedores humanos.
 

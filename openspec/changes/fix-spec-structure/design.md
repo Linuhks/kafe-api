@@ -13,7 +13,8 @@ The spec-driven schema requires every main spec to have `## Purpose` (at least 5
 1. **Edit the main specs directly; no delta specs.** A delta's `## Purpose` is ignored for an existing capability, and `## ADDED/MODIFIED Requirements` can only add or replace requirement blocks, not file headers. Archive with `--skip-specs`.
 2. **The Purpose is written from the spec's own requirements**, not from the code. It summarises the existing contract and doesn't introduce new rules.
 3. **The Purpose follows each spec's language.** The Portuguese specs (`orders-seed`, `product-ingredient-seed`, `product-list-cache`, `products-list-filter`, `project-documentation`) get a Portuguese Purpose, and the rest get English.
-4. **The header format matches the specs that already pass** (`# <capability> Specification` / `## Purpose` / `## Requirements`), so archive-time tooling sees one consistent shape.
+4. **Split the long requirement in `audit-logging`.** Strict validation rejects requirement text over 500 characters. The field list moves verbatim into its own requirement with one restating scenario. This is the only edit to requirement content, and it carries no behavioural change.
+5. **The header format matches the specs that already pass** (`# <capability> Specification` / `## Purpose` / `## Requirements`), so archive-time tooling sees one consistent shape.
 
 ## Risks / Trade-offs
 

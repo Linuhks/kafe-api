@@ -1,3 +1,9 @@
+# api-rate-limiting Specification
+
+## Purpose
+
+Protect the API from abuse and brute force: a global per-IP request limit on every endpoint, a stricter limit on authentication routes, and rate-limit headers so clients can self-throttle.
+
 ## Requirements
 
 ### Requirement: Global rate limit enforced on all endpoints

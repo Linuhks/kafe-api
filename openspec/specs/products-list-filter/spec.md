@@ -1,4 +1,10 @@
-## ADDED Requirements
+# products-list-filter Specification
+
+## Purpose
+
+Filtro opcional por categoria na listagem de produtos (`GET /api/v1/products?categoryId=`), com validação do formato UUID e documentação da resposta paginada no Swagger.
+
+## Requirements
 
 ### Requirement: Filtro por categoria aceito como parâmetro opcional
 O endpoint `GET /api/v1/products` SHALL aceitar o query param `categoryId` como UUID opcional. Quando presente, SHALL retornar apenas os produtos da categoria informada. Quando ausente, SHALL retornar todos os produtos sem filtragem por categoria. A resposta SHALL ser documentada no Swagger com o schema `{ data: ProductResponseDto[], pagination: { page, limit, total, totalPages } }` via o decorator `@ApiPaginatedResponse(ProductResponseDto)`, em vez de um schema inline.

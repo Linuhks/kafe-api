@@ -1,4 +1,10 @@
-## ADDED Requirements
+# orders-seed Specification
+
+## Purpose
+
+Dados de exemplo de pedidos gerados pelo seed: pedidos em todos os status, itens com snapshot de nome e preço do produto, e movimentações de estoque dos três tipos, sem duplicar dados em re-execuções.
+
+## Requirements
 
 ### Requirement: Seed insere pedidos em todos os status possíveis
 O seed SHALL inserir pedidos cobrindo todos os valores do enum `order_status`: `RECEIVED`, `IN_PREPARATION`, `READY`, `DELIVERED` e `CANCELLED`. Pedidos SHALL referenciar `clientId` e `baristaId` de usuários existentes no seed. A seção de pedidos SHALL ser pulada se já existir qualquer pedido no banco.

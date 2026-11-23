@@ -1,4 +1,10 @@
-## ADDED Requirements
+# docker-build Specification
+
+## Purpose
+
+Container image contract for deploying the API: a multi-stage Dockerfile that ships only compiled output and production dependencies, runs as a non-root user, and a .dockerignore that keeps secrets, tests and tooling out of the build context.
+
+## Requirements
 
 ### Requirement: Multi-stage Dockerfile
 The project SHALL have a `Dockerfile` at the repository root that uses a multi-stage build: a `builder` stage that compiles TypeScript and a `production` stage that contains only compiled output and production dependencies.

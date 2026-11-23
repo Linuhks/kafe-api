@@ -16,7 +16,7 @@ Invalid specs make strict validation useless as a gate, because a real problem g
 - Each of the 12 specs gets the standard header: `# <capability> Specification`, then `## Purpose` with a real description of what the capability covers (in the spec's own language), then `## Requirements`.
 - `## ADDED Requirements` → `## Requirements` in the 6 delta-format files.
 - `dashboard-analytics` gets a fuller Purpose.
-- **No requirement or scenario text changes.** The diff is limited to headers and Purpose paragraphs.
+- **No requirement or scenario text changes**, with one exception: once its Purpose was added, `audit-logging` still failed strict validation because its first requirement is over 500 characters. The inline field list moves verbatim into a new requirement, "Audit log entries have a fixed set of fields", with a scenario that restates it. The behaviour is unchanged.
 
 ## Capabilities
 

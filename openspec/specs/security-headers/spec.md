@@ -1,3 +1,9 @@
+# security-headers Specification
+
+## Purpose
+
+Baseline HTTP hardening: security headers on every response including errors, a mandatory explicit CORS origin with no permissive fallback, and SameSite=Strict, HttpOnly session cookies.
+
 ## Requirements
 
 ### Requirement: Security headers set on every HTTP response

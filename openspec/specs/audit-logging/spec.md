@@ -1,15 +1,13 @@
+# audit-logging Specification
+
+## Purpose
+
+Traceability of state changes: every mutating HTTP request (POST, PATCH, PUT, DELETE) emits a structured audit log entry with actor, action, entity, outcome and status, without logging reads or letting logger failures affect responses.
+
 ## Requirements
 
 ### Requirement: Mutating operations produce a structured audit log entry
 The system SHALL emit a structured audit log entry for every HTTP request that creates, updates, or deletes a resource (POST, PATCH, PUT, DELETE methods).
-
-Each log entry SHALL contain:
-- `userId` — the authenticated user's ID, or `"anonymous"` for unauthenticated requests
-- `action` — the HTTP method and path (e.g., `POST /api/v1/orders`)
-- `entityType` — the resource type derived from the path (e.g., `orders`, `products`)
-- `outcome` — `"success"` or `"failure"`
-- `statusCode` — the HTTP response status code
-- `timestamp` — ISO-8601 UTC timestamp
 
 #### Scenario: Authenticated user creates a resource
 - **WHEN** an authenticated user makes a POST request that succeeds
@@ -22,6 +20,21 @@ Each log entry SHALL contain:
 #### Scenario: Mutating request that results in an error
 - **WHEN** a mutating request fails (4xx or 5xx response)
 - **THEN** the system SHALL emit an audit log entry with outcome `"failure"` and the actual status code
+
+---
+
+### Requirement: Audit log entries have a fixed set of fields
+Each audit log entry SHALL contain:
+- `userId` — the authenticated user's ID, or `"anonymous"` for unauthenticated requests
+- `action` — the HTTP method and path (e.g., `POST /api/v1/orders`)
+- `entityType` — the resource type derived from the path (e.g., `orders`, `products`)
+- `outcome` — `"success"` or `"failure"`
+- `statusCode` — the HTTP response status code
+- `timestamp` — ISO-8601 UTC timestamp
+
+#### Scenario: Entry contains every field
+- **WHEN** an audit log entry is emitted for a mutating request
+- **THEN** it SHALL contain `userId`, `action`, `entityType`, `outcome`, `statusCode` and `timestamp` as defined above
 
 ---
 
