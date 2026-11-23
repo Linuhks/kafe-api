@@ -24,6 +24,52 @@ describe('UsersController (e2e)', () => {
 
   afterAll(() => helper.teardown());
 
+  describe('POST /api/v1/users password length', () => {
+    it('returns 401 without auth', async () => {
+      const res = await request(helper.app.getHttpServer())
+        .post('/api/v1/users')
+        .send({ name: 'No Auth', email: 'pwd-noauth@users.com', password: 'TwelveChars1' });
+
+      expect(res.status).toBe(401);
+    });
+
+    it('returns 403 for non-ADMIN users', async () => {
+      const res = await request(helper.app.getHttpServer())
+        .post('/api/v1/users')
+        .set('Authorization', `Bearer ${clientToken}`)
+        .send({ name: 'Wrong Role', email: 'pwd-client@users.com', password: 'TwelveChars1' });
+
+      expect(res.status).toBe(403);
+    });
+
+    it('rejects an 11-character password with 400 and creates no user', async () => {
+      const res = await request(helper.app.getHttpServer())
+        .post('/api/v1/users')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ name: 'Short Pwd', email: 'pwd-short@users.com', password: 'ElevenChar1' });
+
+      expect(res.status).toBe(400);
+      expect(await helper.getUserRole('pwd-short@users.com')).toBeNull();
+    });
+
+    it('accepts a 12-character password and the user can log in', async () => {
+      const password = 'TwelveChars1';
+      const createRes = await request(helper.app.getHttpServer())
+        .post('/api/v1/users')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ name: 'Ok Pwd', email: 'pwd-ok@users.com', password });
+
+      expect(createRes.status).toBe(201);
+
+      const loginRes = await request(helper.app.getHttpServer())
+        .post('/api/v1/auth/login')
+        .send({ email: 'pwd-ok@users.com', password });
+
+      expect(loginRes.status).toBe(200);
+      expect(loginRes.body.token).toEqual(expect.any(String));
+    });
+  });
+
   describe('GET /api/v1/users', () => {
     it('returns 401 without auth', async () => {
       const res = await request(helper.app.getHttpServer()).get('/api/v1/users');
