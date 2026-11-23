@@ -51,4 +51,59 @@ describe('UsersController (e2e)', () => {
       });
     });
   });
+
+  describe('POST /api/v1/users', () => {
+    const password = 'CasePass1234!';
+
+    it('returns 401 without auth', async () => {
+      const res = await request(helper.app.getHttpServer())
+        .post('/api/v1/users')
+        .send({ name: 'No Auth', email: 'noauth@users.com', password });
+
+      expect(res.status).toBe(401);
+    });
+
+    it('returns 403 for non-ADMIN users', async () => {
+      const res = await request(helper.app.getHttpServer())
+        .post('/api/v1/users')
+        .set('Authorization', `Bearer ${clientToken}`)
+        .send({ name: 'Wrong Role', email: 'wrongrole@users.com', password });
+
+      expect(res.status).toBe(403);
+    });
+
+    it('stores a mixed-case email lowercased and the user can log in with any case', async () => {
+      const createRes = await request(helper.app.getHttpServer())
+        .post('/api/v1/users')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ name: 'Maria Case', email: 'Maria.Case@Users.com', password });
+
+      expect(createRes.status).toBe(201);
+      expect(createRes.body).toMatchObject({ email: 'maria.case@users.com' });
+
+      for (const email of ['maria.case@users.com', 'MARIA.CASE@USERS.COM']) {
+        const loginRes = await request(helper.app.getHttpServer())
+          .post('/api/v1/auth/login')
+          .send({ email, password });
+
+        expect(loginRes.status).toBe(200);
+        expect(loginRes.body.token).toEqual(expect.any(String));
+      }
+    });
+
+    it('returns 409 for an email that differs only by case', async () => {
+      const first = await request(helper.app.getHttpServer())
+        .post('/api/v1/users')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ name: 'Dup One', email: 'dup@users.com', password });
+      expect(first.status).toBe(201);
+
+      const res = await request(helper.app.getHttpServer())
+        .post('/api/v1/users')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ name: 'Dup Two', email: 'DUP@Users.com', password });
+
+      expect(res.status).toBe(409);
+    });
+  });
 });

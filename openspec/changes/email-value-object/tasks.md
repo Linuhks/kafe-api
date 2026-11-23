@@ -16,7 +16,7 @@
 
 ## 4. E2E
 
-- [ ] 4.1 Add cases to `test/controllers/users.e2e.spec.ts` for `POST /api/v1/users`: ADMIN creates `Maria.Case@Kafe.com` → 201 with email `maria.case@kafe.com`; that user logs in via `POST /api/v1/auth/login` with both lower and upper case → 200; a case-variant duplicate → 409; a CLIENT → 403; no token → 401. Verify with `pnpm test:e2e -- users` and `pnpm test:e2e -- auth` (requires `docker compose up -d`).
+- [x] 4.1 Add cases to `test/controllers/users.e2e.spec.ts` for `POST /api/v1/users`: ADMIN creates `Maria.Case@Kafe.com` → 201 with email `maria.case@kafe.com`; that user logs in via `POST /api/v1/auth/login` with both lower and upper case → 200; a case-variant duplicate → 409; a CLIENT → 403; no token → 401. Verify with `pnpm test:e2e -- users` and `pnpm test:e2e -- auth` (requires `docker compose up -d`).
 
 ## 5. Docs and gate
 
