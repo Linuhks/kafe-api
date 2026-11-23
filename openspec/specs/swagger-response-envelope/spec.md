@@ -6,43 +6,39 @@ The contract for success response bodies and how they are documented: there is n
 
 ## Requirements
 
-### Requirement: ApiDataResponse decorator wraps single-object responses
-The `ApiDataResponse<T>(type, status, isArray?)` decorator SHALL generate a Swagger schema of `{ data: T }` (when `isArray` is false/omitted) or `{ data: T[] }` (when `isArray` is true), matching the envelope applied by `TransformInterceptor`.
-
-#### Scenario: Single-object response documented correctly
-- **WHEN** a controller method is decorated with `@ApiDataResponse(SomeDto, 200)`
-- **THEN** Swagger documents the 200 response schema as `{ data: SomeDto }`
-
-#### Scenario: Array response documented correctly
-- **WHEN** a controller method is decorated with `@ApiDataResponse(SomeDto, 200, true)`
-- **THEN** Swagger documents the 200 response schema as `{ data: SomeDto[] }`
-
-#### Scenario: Created response documented correctly
-- **WHEN** a controller method is decorated with `@ApiDataResponse(SomeDto, 201)`
-- **THEN** Swagger documents the 201 response schema as `{ data: SomeDto }`
-
 ### Requirement: ApiPaginatedResponse decorator wraps paginated list responses
-The `ApiPaginatedResponse<T>(type)` decorator SHALL generate a Swagger schema of `{ data: T[], pagination: { page: number, limit: number, total: number, totalPages: number } }`, matching the shape returned by paginated use cases and passed through `TransformInterceptor` unchanged.
+Paginated list endpoints SHALL return and document a body of `{ data: T[], pagination: { page: number, limit: number, total: number, totalPages: number } }`. This is the only success shape that contains a `data` property. It is assembled by the endpoint itself, not by a global interceptor, and is documented with the `ApiPaginatedResponse<T>(type)` decorator.
 
 #### Scenario: Paginated response documented correctly
 - **WHEN** a controller method is decorated with `@ApiPaginatedResponse(SomeDto)`
 - **THEN** Swagger documents the 200 response schema as `{ data: SomeDto[], pagination: { page, limit, total, totalPages } }`
 
-### Requirement: All controller success responses use envelope decorators
-Every controller endpoint that returns a body SHALL use `@ApiDataResponse` or `@ApiPaginatedResponse` for its success status code instead of `@ApiResponse({ type: ... })`. Endpoints returning 204 (no body) and error responses SHALL continue using plain `@ApiResponse`.
+#### Scenario: Paginated response body matches the documented shape
+- **WHEN** a client calls `GET /api/v1/products`
+- **THEN** the response is HTTP 200 with body `{ data: [...], pagination: { page, limit, total, totalPages } }`
 
-#### Scenario: GET single-entity endpoint
-- **WHEN** a GET endpoint returns a single entity wrapped by `TransformInterceptor`
-- **THEN** its success `@ApiResponse` is replaced with `@ApiDataResponse(EntityDto, 200)`
+### Requirement: Success bodies are returned without a global envelope
+The system SHALL return a successful response body exactly as the endpoint produces it, with no global wrapper. A single resource SHALL be the resource object itself, and a non-paginated list SHALL be a JSON array. Responses with status 204 SHALL have no body.
 
-#### Scenario: POST create endpoint
-- **WHEN** a POST endpoint returns the created entity wrapped by `TransformInterceptor`
-- **THEN** its success `@ApiResponse` is replaced with `@ApiDataResponse(EntityDto, 201)`
+#### Scenario: Single resource is returned unwrapped
+- **WHEN** a client calls `GET /api/v1/products/:id` for an existing product
+- **THEN** the response is HTTP 200 and the body is the product object, with `id` at the top level and no `data` property
 
-#### Scenario: GET list (non-paginated) endpoint
-- **WHEN** a GET endpoint returns a plain array wrapped by `TransformInterceptor`
-- **THEN** its success `@ApiResponse` is replaced with `@ApiDataResponse(EntityDto, 200, true)`
+#### Scenario: Non-paginated list is returned as an array
+- **WHEN** a BARISTA calls `GET /api/v1/orders/queue`
+- **THEN** the response is HTTP 200 and the body is a JSON array
 
-#### Scenario: DELETE no-body endpoint
-- **WHEN** a DELETE endpoint returns 204 with no body
-- **THEN** its `@ApiResponse({ status: 204 })` is kept unchanged
+### Requirement: Success responses are documented with their exact wire shape
+The OpenAPI document SHALL describe each success response with the shape actually returned: the resource schema for a single object, an array of the resource schema for a non-paginated list, the paginated schema for paginated lists, and no body for 204 responses.
+
+#### Scenario: Single-object response documented unwrapped
+- **WHEN** the OpenAPI document is generated
+- **THEN** the 200 response of `GET /api/v1/products/{id}` references `ProductResponseDto` directly, not an object with a `data` property
+
+#### Scenario: Array response documented as an array
+- **WHEN** the OpenAPI document is generated
+- **THEN** the 200 response of `GET /api/v1/orders/queue` is an array of `OrderResponseDto`
+
+#### Scenario: No-body response documented without content
+- **WHEN** the OpenAPI document is generated
+- **THEN** the 204 response of `DELETE /api/v1/products/{id}` has a description and no content schema
