@@ -73,7 +73,7 @@ Authenticate with email and password. Returns a Bearer token.
 
 | Field | Type | Required | Constraints |
 |-------|------|----------|-------------|
-| `email` | string | yes | valid email |
+| `email` | string | yes | valid email; trimmed and stored lowercase |
 | `password` | string | yes | min 12 chars |
 
 **Response `200`**
@@ -836,9 +836,9 @@ Create a new user.
 | `password` | string | yes | min 12 chars |
 | `role` | string | no | `ADMIN`, `BARISTA`, or `CLIENT` (default `CLIENT`) |
 
-**Response `201`** — created user object (password not returned).
+**Response `201`** — created user object (password not returned). `email` is returned normalized (`Maria@Kafe.com` → `maria@kafe.com`).
 
-**Errors**: `401`, `403`, `409` — email already registered.
+**Errors**: `400` — invalid body (`INVALID_EMAIL` if the email fails the domain check), `401`, `403`, `409` — email already registered (case-insensitive).
 
 ---
 

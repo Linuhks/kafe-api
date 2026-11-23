@@ -13,6 +13,7 @@ export default defineConfig({
     include: [
       'src/application/use-cases/**/*.spec.ts',
       'src/domain/errors/**/*.spec.ts',
+      'src/domain/value-objects/**/*.spec.ts',
       'src/infrastructure/throttle/**/*.spec.ts',
       'src/presentation/filters/**/*.spec.ts',
     ],
@@ -21,6 +22,7 @@ export default defineConfig({
       include: [
         'src/application/use-cases/**',
         'src/domain/errors/**',
+        'src/domain/value-objects/**',
         'src/infrastructure/throttle/**',
         'src/presentation/filters/**',
       ],

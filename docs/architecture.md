@@ -19,8 +19,9 @@ The core of the system. Has no dependency on any framework, external library, or
 
 Contains:
 - **Entities**: classes representing business concepts (`Order`, `Product`, `Ingredient`, `User`, etc.) that encapsulate validation rules and state transitions
+- **Value objects**: identity-less, always-valid values (`Email`) built via `static create()` returning `Either`; used at the repository boundary so persistence never receives unvalidated input
 - **Repository interfaces**: contracts (`IOrderRepository`, `IUserRepository`, etc.) that define what the application needs to persist — without specifying *how*
-- **Domain errors**: typed errors representing business rule violations (`InvalidOrderTransitionError`, `InsufficientStockError`, etc.)
+- **Domain errors**: typed errors representing business rule violations (`InvalidOrderTransitionError`, `InsufficientStockError`, `InvalidEmailError`, etc.)
 
 Rule: no `import` from `@nestjs/*`, Drizzle, Better-Auth, or any external dependency in this layer.
 

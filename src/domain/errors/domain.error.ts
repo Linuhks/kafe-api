@@ -32,3 +32,9 @@ export class InsufficientStockError extends DomainError {
     super(`Insufficient stock for ingredient: ${ingredient}`, 'INSUFFICIENT_STOCK', 400);
   }
 }
+
+export class InvalidEmailError extends DomainError {
+  constructor() {
+    super('Invalid email address', 'INVALID_EMAIL', 400);
+  }
+}

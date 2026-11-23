@@ -7,6 +7,7 @@ import {
   IUserRepository,
   type UpdateUserData,
 } from '../../../domain/repositories/user.repository';
+import type { Email } from '../../../domain/value-objects/email';
 import { account as accountTable, user as userTable } from '../auth-schema';
 import { DrizzleService } from '../drizzle.service';
 
@@ -36,8 +37,12 @@ export class DrizzleUserRepository extends IUserRepository {
     return rows[0] ? mapToUser(rows[0]) : null;
   }
 
-  async findByEmail(email: string): Promise<User | null> {
-    const rows = await this.db.select().from(userTable).where(eq(userTable.email, email)).limit(1);
+  async findByEmail(email: Email): Promise<User | null> {
+    const rows = await this.db
+      .select()
+      .from(userTable)
+      .where(eq(userTable.email, email.value))
+      .limit(1);
     return rows[0] ? mapToUser(rows[0]) : null;
   }
 
@@ -64,7 +69,7 @@ export class DrizzleUserRepository extends IUserRepository {
       await tx.insert(userTable).values({
         id,
         name: data.name,
-        email: data.email,
+        email: data.email.value,
         emailVerified: false,
         role: data.role,
         isActive: true,
