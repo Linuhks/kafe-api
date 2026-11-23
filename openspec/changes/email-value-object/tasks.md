@@ -2,7 +2,7 @@
 
 ## 1. Domain: Email value object
 
-- [ ] 1.1 Add `InvalidEmailError` (`INVALID_EMAIL`, 400, message without the raw input) to `src/domain/errors/domain.error.ts` and a case in `domain.error.spec.ts`. Verify with `pnpm test -- domain.error`.
+- [x] 1.1 Add `InvalidEmailError` (`INVALID_EMAIL`, 400, message without the raw input) to `src/domain/errors/domain.error.ts` and a case in `domain.error.spec.ts`. Verify with `pnpm test -- domain.error`.
 - [ ] 1.2 Create `src/domain/value-objects/email.ts` (private constructor, `readonly value`, `static create(raw): Either<InvalidEmailError, Email>`, `equals`) with a sibling `email.spec.ts` covering: trim + lowercase; rejections for empty, no `@`, two `@`, empty local part, domain without a dot, inner whitespace, more than 254 characters. Add `src/domain/value-objects/**/*.spec.ts` to `test.include` and `src/domain/value-objects/**` to `coverage.include` in `vitest.config.ts`. Verify with `pnpm test -- email`.
 
 ## 2. Use case and repositories
