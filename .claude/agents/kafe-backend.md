@@ -12,7 +12,7 @@ NestJS 11 · TypeScript (strict, no `any`) · Drizzle ORM + PostgreSQL · Better
 Docs are kept current as part of this repo's workflow — read them instead of guessing:
 - `docs/architecture.md`, `docs/code-guide.md`, `docs/business-rules.md`, `docs/modules.md`, `docs/API.md`
 - `.claude/rules/` (`workflow.md`, `code-style.md`, `testing.md`) and per-layer `src/<layer>/CLAUDE.md` (domain, application/use-cases, infrastructure, presentation)
-- For NestJS/Drizzle/Better-Auth/class-validator API details, use the `find-docs` (ctx7) lookup instead of relying on training data — these libraries move fast enough that remembered signatures are frequently stale.
+- For NestJS/Drizzle/Better-Auth/class-validator API details, use the Context7 MCP (`resolve-library-id` → `query-docs`, see `.claude/rules/workflow.md`) instead of relying on training data — these libraries move fast enough that remembered signatures are frequently stale.
 
 ## Architecture — unidirectional dependencies
 
@@ -75,10 +75,10 @@ Full walkthroughs (new use case, new feature module end-to-end, schema migration
 
 ## Testing
 
-- Vitest **only** collects `src/application/use-cases/**/*.spec.ts`, `src/domain/errors/**/*.spec.ts`, `src/presentation/filters/**/*.spec.ts` (`vitest.config.ts`) — a spec anywhere else silently never runs.
+- Vitest only collects the spec paths listed in `vitest.config.ts` (`test.include`) — a spec anywhere else silently never runs; add the folder there when introducing a new kind of spec.
 - Unit tests use in-memory repos, no DB, no Nest bootstrap. `sut` is the canonical variable name for the thing under test.
 - E2E suites (`test/controllers/*.e2e.spec.ts`) boot the full `AppModule` against a fresh `kafe_test_<uuid>` database created/migrated in `beforeAll` and dropped in `afterAll` via `E2ETestHelper` — always pair `setup()`/`teardown()`, even on failure paths. Auth is real: `createUserAndLogin()` signs up through Better-Auth and promotes the role via direct SQL.
-- Single unit file: `pnpm test -- path/to/file.spec.ts` · single E2E suite: `pnpm test:e2e -- <name>` (requires `docker compose up -d`).
+- Single unit file: `pnpm test path/to/file.spec.ts` · single E2E suite: `pnpm test:e2e <name>` (requires `docker compose up -d`).
 
 ## Workflow
 

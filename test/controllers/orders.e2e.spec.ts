@@ -294,4 +294,15 @@ describe('OrdersController (e2e)', () => {
       }
     });
   });
+
+  describe('GET /api/v1/orders/queue body shape', () => {
+    it('returns a plain JSON array, not an envelope', async () => {
+      const res = await request(helper.app.getHttpServer())
+        .get('/api/v1/orders/queue')
+        .set('Authorization', `Bearer ${baristaToken}`);
+
+      expect(res.status).toBe(200);
+      expect(Array.isArray(res.body)).toBe(true);
+    });
+  });
 });

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-How success response bodies are documented in the OpenAPI spec: decorators that describe single-object, array and paginated response envelopes, and the rule that every controller endpoint returning a body uses them.
+The contract for success response bodies and how they are documented: there is no global envelope, so single objects and arrays are returned and documented unwrapped; only paginated lists use `{ data, pagination }`; and the OpenAPI document describes each success response with the exact shape sent.
 
 ## Requirements
 

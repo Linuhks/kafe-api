@@ -67,4 +67,3 @@ Shared DTOs to reuse:
 
 - `filters/http-exception.filter.ts` — converts `DomainError` to standardized error response
 - `interceptors/audit.interceptor.ts` — global (registered in `main.ts`); logs mutating requests (POST/PATCH/PUT/DELETE) as structured JSON
-- `interceptors/transform.interceptor.ts` — pass-through, **not registered anywhere**; its `PaginationMeta`/`PaginatedResult` types are also unused — candidate for deletion

@@ -44,7 +44,7 @@ Do not treat the plan as permission to skip TDD. The plan supplies intent and ta
 ALWAYS write tests first, then implement code to make tests pass.
 
 ### 2. Coverage Requirements
-- Minimum 80% coverage (unit + integration + E2E)
+- Cover the behaviour the change adds; this repo sets no numeric coverage threshold (see `.claude/rules/testing.md`)
 - All edge cases covered
 - Error scenarios tested
 - Boundary conditions verified
@@ -63,11 +63,9 @@ ALWAYS write tests first, then implement code to make tests pass.
 - Service interactions
 - External API calls
 
-#### E2E Tests (Playwright)
-- Critical user flows
-- Complete workflows
-- Browser automation
-- UI interactions
+#### E2E Tests (supertest via `E2ETestHelper`)
+- HTTP flows against the full `AppModule` and a fresh database (`test/controllers/*.e2e.spec.ts`)
+- Real auth, role checks and negative cases (wrong role, unauthenticated, deactivated)
 
 ### 4. Git Checkpoints
 - If the repository is under Git, create a checkpoint commit after each TDD stage

@@ -11,9 +11,9 @@ Rules in [`.claude/rules/`](.claude/rules/) (`workflow.md`, `code-style.md`, `te
 ```bash
 pnpm start:dev                       # dev server with hot reload → http://localhost:3333/api/v1
 pnpm test                            # unit tests
-pnpm test -- path/to/file.spec.ts    # single unit test file
+pnpm test path/to/file.spec.ts       # single unit test file (no "--": pnpm passes it through and Vitest runs everything)
 pnpm test:e2e                        # E2E suites (requires docker compose up -d)
-pnpm test:e2e -- orders              # single E2E suite
+pnpm test:e2e orders                 # single E2E suite
 pnpm seed                            # seed sample data
 pnpm db:studio                       # Drizzle Studio (browser DB UI)
 pnpm drizzle-kit generate --config=drizzle.config.ts   # generate migration after editing schema.ts
