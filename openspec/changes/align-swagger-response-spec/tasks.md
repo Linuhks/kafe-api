@@ -13,4 +13,4 @@
 ## 3. Docs and gate
 
 - [x] 3.1 Update `docs/business-rules.md` ("Swagger envelope" → "Swagger response docs" in the cross-cutting list). Check `docs/API.md` and `docs/architecture.md` for envelope mentions.
-- [ ] 3.2 Run the full gate (`pnpm lint`, `pnpm check`, `pnpm test`, `pnpm test:e2e`) and `openspec validate align-swagger-response-spec --strict`.
+- [x] 3.2 Run the full gate (`pnpm lint`, `pnpm check`, `pnpm test`, `pnpm test:e2e`) and `openspec validate align-swagger-response-spec --strict`.
