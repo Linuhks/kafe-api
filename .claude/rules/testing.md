@@ -10,7 +10,7 @@
 
 ```bash
 pnpm test                          # all unit tests
-pnpm test -- path/to/file.spec.ts  # one file
+pnpm test path/to/file.spec.ts     # one file
 ```
 
 ## E2E tests
@@ -27,7 +27,7 @@ pnpm test -- path/to/file.spec.ts  # one file
 
 ```bash
 pnpm test:e2e              # all suites
-pnpm test:e2e -- orders    # one suite
+pnpm test:e2e orders       # one suite
 ```
 
 `test:e2e` is excluded from the per-subtask gate (slow, needs PostgreSQL) but runs in the pre-push hook and before opening a PR.
