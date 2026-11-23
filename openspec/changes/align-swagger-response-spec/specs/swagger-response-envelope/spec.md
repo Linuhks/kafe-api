@@ -29,7 +29,7 @@ The OpenAPI document SHALL describe each success response with the shape actuall
 ## MODIFIED Requirements
 
 ### Requirement: ApiPaginatedResponse decorator wraps paginated list responses
-Paginated list endpoints SHALL return and document a body of `{ data: T[], pagination: { page: number, limit: number, total: number, totalPages: number } }`. This is the only success shape that contains a `data` property. It is built by the paginated use cases, not by a global interceptor, and is documented with the `ApiPaginatedResponse<T>(type)` decorator.
+Paginated list endpoints SHALL return and document a body of `{ data: T[], pagination: { page: number, limit: number, total: number, totalPages: number } }`. This is the only success shape that contains a `data` property. It is assembled by the endpoint itself, not by a global interceptor, and is documented with the `ApiPaginatedResponse<T>(type)` decorator.
 
 #### Scenario: Paginated response documented correctly
 - **WHEN** a controller method is decorated with `@ApiPaginatedResponse(SomeDto)`
