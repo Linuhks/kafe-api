@@ -1,4 +1,10 @@
-## ADDED Requirements
+# swagger-response-envelope Specification
+
+## Purpose
+
+How success response bodies are documented in the OpenAPI spec: decorators that describe single-object, array and paginated response envelopes, and the rule that every controller endpoint returning a body uses them.
+
+## Requirements
 
 ### Requirement: ApiDataResponse decorator wraps single-object responses
 The `ApiDataResponse<T>(type, status, isArray?)` decorator SHALL generate a Swagger schema of `{ data: T }` (when `isArray` is false/omitted) or `{ data: T[] }` (when `isArray` is true), matching the envelope applied by `TransformInterceptor`.

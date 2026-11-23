@@ -1,4 +1,10 @@
-## ADDED Requirements
+# e2e-test-infrastructure Specification
+
+## Purpose
+
+How end-to-end tests run: each suite gets an isolated, freshly migrated PostgreSQL database that is always dropped afterwards, an app instance wired like main.ts, Better-Auth bound to the suite database, and one E2E suite per HTTP controller.
+
+## Requirements
 
 ### Requirement: E2E suites run against an isolated, freshly migrated PostgreSQL database
 Each `*.e2e.spec.ts` suite SHALL execute against a dedicated PostgreSQL database whose name is `kafe_test_<uuid>` (UUID with dashes replaced by underscores). The database SHALL be created at the start of the suite via `CREATE DATABASE`, have all Drizzle migrations from `src/infrastructure/db/migrations/` applied to it, and SHALL be dropped at the end of the suite. No two suites SHALL ever share a database.

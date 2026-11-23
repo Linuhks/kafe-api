@@ -1,7 +1,7 @@
 # dashboard-analytics Specification
 
 ## Purpose
-Management overview aggregates, ADMIN only.
+Management overview for administrators: order and revenue summary, best-selling products by period and order distribution by hour of day, restricted to the ADMIN role.
 
 ## Requirements
 

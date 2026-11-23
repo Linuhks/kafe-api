@@ -1,3 +1,9 @@
+# product-list-cache Specification
+
+## Purpose
+
+Cache da listagem de produtos no Redis para reduzir a carga no banco: respostas cacheadas por combinação de parâmetros com TTL, invalidação ao criar, atualizar ou remover produtos, e fallback para o banco quando o Redis está indisponível.
+
 ## Requirements
 
 ### Requirement: Resposta da listagem de produtos é servida do cache no Redis

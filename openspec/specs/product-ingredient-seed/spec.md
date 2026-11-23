@@ -1,4 +1,10 @@
-## ADDED Requirements
+# product-ingredient-seed Specification
+
+## Purpose
+
+Receitas de exemplo geradas pelo seed: vínculos entre produtos e ingredientes com quantidades realistas para todas as categorias, inseridos de forma idempotente.
+
+## Requirements
 
 ### Requirement: Seed vincula produtos a ingredientes com quantidades de receita
 O seed SHALL inserir registros na tabela `product_ingredients` associando cada produto aos seus ingredientes com quantidades realistas. Cada produto de café SHALL ter ao menos dois ingredientes. A inserção SHALL ser idempotente via `onConflictDoNothing`.
